@@ -1,6 +1,7 @@
 
 import { ShaderMaterial } from 'three';
 import Defaults from '../../utils/Defaults.js';
+import FontMaterialDefault from "../../materials/FontMaterialDefault";
 
 /**
 
@@ -103,16 +104,24 @@ export default function MaterialManager( Base = class {} ) {
         /** Update existing fontMaterial uniforms */
         updateTextMaterial() {
 
-            if ( this.textUniforms ) {
+            if( this.fontMaterial ){
 
-                this.textUniforms.u_texture.value = this.getFontTexture();
-                this.textUniforms.u_color.value = this.getFontColor();
-                this.textUniforms.u_opacity.value = this.getFontOpacity();
-                this.textUniforms.u_pxRange.value = this.getFontPXRange();
-                this.fontMaterial.u_useRGSS = this.getFontSupersampling();
+                if( this.fontMaterial.isDefault ){
+                    // The look-up-table would be FontMaterialDefault itself ? What ?
+                    // this.fontMaterial.glyphMap = this.getFontTexture();
+                    this.fontMaterial.uniforms.u_texture.value = this.getFontTexture();
+
+                    this.fontMaterial.uniforms.u_color.value = this.getFontColor();
+                    this.fontMaterial.uniforms.u_opacity.value = this.getFontOpacity();
+                    this.fontMaterial.uniforms.u_pxRange.value = this.getFontPXRange();
+                    //this.fontMaterial.uniforms.u_useRGSS.value = this.getFontSupersampling();
+
+                    this.fontMaterial.noRGSS = !this.getFontSupersampling();
+                }else{
+                    this.fontMaterial.userData.glyphMap.value = this.getFontTexture();
+                }
 
             }
-
         }
 
         /**
@@ -189,55 +198,22 @@ export default function MaterialManager( Base = class {} ) {
         /** Called by Text to get the font material */
         getFontMaterial() {
 
-            const newUniforms = {
-                'u_texture': this.getFontTexture(),
-                'u_color': this.getFontColor(),
-                'u_opacity': this.getFontOpacity(),
-                'u_pxRange': this.getFontPXRange(),
-                'u_useRGSS': this.getFontSupersampling()
-            };
 
-            if ( !this.fontMaterial || !this.textUniforms ) {
+            if ( !this.fontMaterial ) {
+                const newUniforms = {
+                    'u_texture': this.getFontTexture(),
+                    'u_color': this.getFontColor(),
+                    'u_opacity': this.getFontOpacity(),
+                    'u_pxRange': this.getFontPXRange(),
+                    'noRGSS': !this.getFontSupersampling()
+                };
 
-                this.fontMaterial = this._makeTextMaterial( newUniforms );
-
-            } else if (
-                newUniforms.u_texture !== this.textUniforms.u_texture.value ||
-                newUniforms.u_color !== this.textUniforms.u_color.value ||
-                newUniforms.u_opacity !== this.textUniforms.u_opacity.value ||
-                newUniforms.u_pxRange !== this.textUniforms.u_pxRange.value ||
-                newUniforms.u_useRGSS !== this.textUniforms.u_useRGSS.value
-            ) {
-
+                this.fontMaterial = new FontMaterialDefault(newUniforms);
+            } else {
                 this.updateTextMaterial();
-
             }
 
             return this.fontMaterial
-
-        }
-
-        /** @private */
-        _makeTextMaterial( materialOptions ) {
-
-            this.textUniforms = {
-                'u_texture': { value: materialOptions.u_texture },
-                'u_color': { value: materialOptions.u_color },
-                'u_opacity': { value: materialOptions.u_opacity },
-                'u_pxRange': { value: materialOptions.u_pxRange },
-                'u_useRGSS': { value: materialOptions.u_useRGSS }
-            }
-
-            return new ShaderMaterial({
-                uniforms: this.textUniforms,
-                transparent: true,
-                clipping: true,
-                vertexShader: textVertex,
-                fragmentShader: textFragment,
-                extensions: {
-                    derivatives: true
-                }
-            })
 
         }
 
@@ -289,108 +265,6 @@ export default function MaterialManager( Base = class {} ) {
 
 }
 
-////////////////
-// Text shaders
-////////////////
-
-const textVertex = `
-	varying vec2 vUv;
-
-	#include <clipping_planes_pars_vertex>
-
-	void main() {
-
-		vUv = uv;
-		vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-		gl_Position = projectionMatrix * mvPosition;
-		gl_Position.z -= 0.00001;
-
-		#include <clipping_planes_vertex>
-
-	}
-`;
-
-//
-
-const textFragment = `
-	uniform sampler2D u_texture;
-	uniform vec3 u_color;
-	uniform float u_opacity;
-    uniform float u_pxRange;
-    uniform bool u_useRGSS;
-
-	varying vec2 vUv;
-
-	#include <clipping_planes_pars_fragment>
-
-    // functions from the original msdf repo:
-    // https://github.com/Chlumsky/msdfgen#using-a-multi-channel-distance-field
-
-	float median(float r, float g, float b) {
-		return max(min(r, g), min(max(r, g), b));
-	}
-
-    float screenPxRange() {
-        vec2 unitRange = vec2(u_pxRange)/vec2(textureSize(u_texture, 0));
-        vec2 screenTexSize = vec2(1.0)/fwidth(vUv);
-        return max(0.5*dot(unitRange, screenTexSize), 1.0);
-    }
-
-    float tap(vec2 offsetUV) {
-        vec3 msd = texture( u_texture, offsetUV ).rgb;
-        float sd = median(msd.r, msd.g, msd.b);
-        float screenPxDistance = screenPxRange() * (sd - 0.5);
-        float alpha = clamp(screenPxDistance + 0.5, 0.0, 1.0);
-        return alpha;
-    }
-
-    void main() {
-
-        float alpha;
-
-        if ( u_useRGSS ) {
-
-            // shader-based supersampling based on https://bgolus.medium.com/sharper-mipmapping-using-shader-based-supersampling-ed7aadb47bec
-            // per pixel partial derivatives
-            vec2 dx = dFdx(vUv);
-            vec2 dy = dFdy(vUv);
-
-            // rotated grid uv offsets
-            vec2 uvOffsets = vec2(0.125, 0.375);
-            vec2 offsetUV = vec2(0.0, 0.0);
-
-            // supersampled using 2x2 rotated grid
-            alpha = 0.0;
-            offsetUV.xy = vUv + uvOffsets.x * dx + uvOffsets.y * dy;
-            alpha += tap(offsetUV);
-            offsetUV.xy = vUv - uvOffsets.x * dx - uvOffsets.y * dy;
-            alpha += tap(offsetUV);
-            offsetUV.xy = vUv + uvOffsets.y * dx - uvOffsets.x * dy;
-            alpha += tap(offsetUV);
-            offsetUV.xy = vUv - uvOffsets.y * dx + uvOffsets.x * dy;
-            alpha += tap(offsetUV);
-            alpha *= 0.25;
-
-        } else {
-
-            alpha = tap( vUv );
-
-        }
-
-
-        // apply the opacity
-        alpha *= u_opacity;
-
-        // this is useful to avoid z-fighting when quads overlap because of kerning
-        if ( alpha < 0.02) discard;
-
-
-        gl_FragColor = vec4( u_color, alpha );
-
-        #include <clipping_planes_fragment>
-    }
-
-`;
 
 //////////////////////
 // Background shaders

@@ -295,6 +295,10 @@ export default function MeshUIComponent( Base = class {} ) {
             return (this.bestFit === undefined) ? DEFAULTS.bestFit : this.bestFit;
         }
 
+        getSegments(){
+            return (this.segments === undefined) ? DEFAULTS.segments : this.segments;
+        }
+
         ///////////////
         ///  UPDATE
         ///////////////
@@ -426,6 +430,7 @@ export default function MeshUIComponent( Base = class {} ) {
 
                     case "letterSpacing" :
                     case "interLine" :
+                    case "segments" :
                         if ( this.isBlock && this[ "bestFit" ] == true ) parsingNeedsUpdate = true;
                         layoutNeedsUpdate = true;
                         this[ prop ] = options[ prop ];
@@ -463,7 +468,6 @@ export default function MeshUIComponent( Base = class {} ) {
 
                     }
                 }
-
             }
 
             // special cases, this.update() must be called only when some files finished loading
@@ -483,6 +487,21 @@ export default function MeshUIComponent( Base = class {} ) {
             if( parent && parent.getBestFit()) parent.update(true, true, false);
 
             // Call component update
+
+            // Transfer properties to material
+            if( this.fontMaterial ){
+                console.log( "has FontMaterial", this.fontMaterial.name );
+                // @TODO: Pass those list as global static
+                let textToMaterialProperties = [{p:"fontColor",m:'color'},{p:"fontOpacity",m:'opacity'}];
+                for ( let i = 0; i < textToMaterialProperties.length; i++ ) {
+                    const tTMP = textToMaterialProperties[i];
+                    if( options[tTMP.p] !== undefined ){
+                        this.fontMaterial[tTMP.m] = options[tTMP.p];
+                    }
+
+                }
+            }
+
 
             this.update( parsingNeedsUpdate, layoutNeedsUpdate, innerNeedsUpdate );
 

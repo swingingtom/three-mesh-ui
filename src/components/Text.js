@@ -41,6 +41,23 @@ export default class Text extends mix.withBase( Object3D )(
     }
 
     ///////////
+    // GETTERS & SETTERS
+    ///////////
+
+    get fontMaterial(){
+        return this._fontMaterial;
+    }
+
+    set fontMaterial( fontMaterial ){
+        // @TODO : place the glyphMap on it
+        this._fontMaterial = fontMaterial;
+
+        // update children to use new fontMaterial
+        // this seems to be automatically done
+    }
+
+
+    ///////////
     // UPDATES
     ///////////
 
