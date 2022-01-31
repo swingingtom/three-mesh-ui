@@ -141,6 +141,7 @@ export default class Text extends mix.withBase( Object3D )(
         }
 
         this._setMaterialProperties( {
+            fontColor: this.getFontColor(),
             fontPXRange: this.getFontPXRange(),//@TODO should we go as const?
             fontSupersampling: this.getFontSupersampling()
         } );
