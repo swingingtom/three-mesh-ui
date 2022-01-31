@@ -1,35 +1,30 @@
 export default /* glsl */`
 	float alpha;
-	// @TODO: Pass as DEFINE
-	if ( u_useRGSS ) {
+#ifdef NO_RGSS
+	alpha = tap( vUvG );
+#else
 
-		// shader-based supersampling based on https://bgolus.medium.com/sharper-mipmapping-using-shader-based-supersampling-ed7aadb47bec
-		// per pixel partial derivatives
-		vec2 dx = dFdx(vUv);
-		vec2 dy = dFdy(vUv);
+	// shader-based supersampling based on https://bgolus.medium.com/sharper-mipmapping-using-shader-based-supersampling-ed7aadb47bec
+	// per pixel partial derivatives
+	vec2 dx = dFdx(vUvG);
+	vec2 dy = dFdy(vUvG);
 
-		// rotated grid uv offsets
-		vec2 uvOffsets = vec2(0.125, 0.375);
-		vec2 offsetUV = vec2(0.0, 0.0);
+	// rotated grid uv offsets
+	vec2 uvOffsets = vec2(0.125, 0.375);
+	vec2 offsetUV = vec2(0.0, 0.0);
 
-		// supersampled using 2x2 rotated grid
-		alpha = 0.0;
-		offsetUV.xy = vUv + uvOffsets.x * dx + uvOffsets.y * dy;
-		alpha += tap(offsetUV);
-		offsetUV.xy = vUv - uvOffsets.x * dx - uvOffsets.y * dy;
-		alpha += tap(offsetUV);
-		offsetUV.xy = vUv + uvOffsets.y * dx - uvOffsets.x * dy;
-		alpha += tap(offsetUV);
-		offsetUV.xy = vUv - uvOffsets.y * dx + uvOffsets.x * dy;
-		alpha += tap(offsetUV);
-		alpha *= 0.25;
-
-	} else {
-		alpha = tap( vUv );
-	}
+	// supersampled using 2x2 rotated grid
+	alpha = 0.0;
+	offsetUV.xy = vUvG + uvOffsets.x * dx + uvOffsets.y * dy;
+	alpha += tap(offsetUV);
+	offsetUV.xy = vUvG - uvOffsets.x * dx - uvOffsets.y * dy;
+	alpha += tap(offsetUV);
+	offsetUV.xy = vUvG + uvOffsets.y * dx - uvOffsets.x * dy;
+	alpha += tap(offsetUV);
+	offsetUV.xy = vUvG - uvOffsets.y * dx + uvOffsets.x * dy;
+	alpha += tap(offsetUV);
+	alpha *= 0.25;
+#endif
 
 	diffuseColor.a *= alpha;
-
-	// apply the opacity ( on the diffuseColor )
-	//alpha *= u_opacity;
 `

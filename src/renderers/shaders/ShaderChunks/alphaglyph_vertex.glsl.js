@@ -1,3 +1,3 @@
 export default /* glsl */`
-vUv = uv;
+vUvG = uvG;
 `

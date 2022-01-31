@@ -1,3 +1,4 @@
 export default /* glsl */`
-varying vec2 vUv;
+attribute vec2 uvG;
+varying vec2 vUvG;
 `

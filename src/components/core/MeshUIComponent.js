@@ -135,9 +135,7 @@ export default function MeshUIComponent( Base = class {} ) {
 
             }
 
-            return DEFAULTS[ propName ]
-
-            ;
+            return DEFAULTS[ propName ];
 
         }
 
@@ -371,6 +369,12 @@ export default function MeshUIComponent( Base = class {} ) {
 
             this.fontTexture = texture;
 
+            // This usually happen on Block, but if on Text
+            // set its material
+            if( this.fontMaterial ){
+                this.fontMaterial.glyphMap = texture;
+            }
+
             this.getHighestParent().update( false, true, false );
 
         }
@@ -446,9 +450,7 @@ export default function MeshUIComponent( Base = class {} ) {
                         this[ prop ] = options[ prop ];
                         break;
 
-                    case "fontColor" :
-                    case "fontOpacity" :
-                    case "fontSupersampling" :
+
                     case "offset" :
                     case "backgroundColor" :
                     case "backgroundOpacity" :
@@ -466,6 +468,15 @@ export default function MeshUIComponent( Base = class {} ) {
                         this[ prop ] = options[ prop ];
                         break
 
+
+                    case "fontColor" :
+                    case "fontOpacity" :
+                        case "fontSupersampling" :
+                        // these properties are owned by Text material
+                        // If set on Block, request an innerUpdate
+                        if( this.isBlock ) innerNeedsUpdate = true;
+                       this[ prop ] = options[ prop ];
+                       break;
                     }
                 }
             }
@@ -482,31 +493,28 @@ export default function MeshUIComponent( Base = class {} ) {
                 layoutNeedsUpdate = false;
             }
 
+            // some properties impacts materials
+            this._setMaterialProperties(options);
+
             // if font kerning changes for a child of a block with Best Fit enabled, we need to trigger parsing for the parent as well.
             const parent = this.getUIParent();
             if( parent && parent.getBestFit()) parent.update(true, true, false);
 
             // Call component update
-
-            // Transfer properties to material
-            if( this.fontMaterial ){
-                console.log( "has FontMaterial", this.fontMaterial.name );
-                // @TODO: Pass those list as global static
-                let textToMaterialProperties = [{p:"fontColor",m:'color'},{p:"fontOpacity",m:'opacity'}];
-                for ( let i = 0; i < textToMaterialProperties.length; i++ ) {
-                    const tTMP = textToMaterialProperties[i];
-                    if( options[tTMP.p] !== undefined ){
-                        this.fontMaterial[tTMP.m] = options[tTMP.p];
-                    }
-
-                }
-            }
-
-
             this.update( parsingNeedsUpdate, layoutNeedsUpdate, innerNeedsUpdate );
 
             if ( layoutNeedsUpdate ) this.getHighestParent().update( false, true, false );
 
+        }
+
+        /**
+         * According to a list of materialProperties
+         * some properties are sent to material and acts differently from Text, InlineBlock and Block
+         * @param options
+         * @private
+         */
+        _setMaterialProperties(options){
+            // Therefore this can be overriden by Text, InlineBlock and Block
         }
 
         /////////////////////

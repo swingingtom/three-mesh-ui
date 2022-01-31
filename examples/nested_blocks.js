@@ -81,11 +81,16 @@ function makeTextPanel() {
     fontSize: 0.09,
   });
 
-  title.add(
-    new ThreeMeshUI.Text({
-      content: "spiny bush viper",
+    const text = new ThreeMeshUI.Text({
+        content: "spiny bush viper",
     })
+  title.add(
+    text
   );
+
+    setInterval( ()=>{
+        text.set({fontOpacity:Math.random(), fontColor: new THREE.Color(Math.random(),Math.random(), Math.random())});
+    },500);
 
   container.add(title);
 

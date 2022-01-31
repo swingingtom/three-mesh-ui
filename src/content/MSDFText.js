@@ -94,7 +94,7 @@ function buildText() {
 
     this.inlines.forEach( (inline, i)=> {
 
-        translatedGeom[ i ] = new MSDFGlyph( inline, this.getFontFamily() );
+        translatedGeom[ i ] = new MSDFGlyph( inline, this.getFontFamily(), this.getSegments() );
 
         translatedGeom[ i ].translate( inline.offsetX, inline.offsetY, 0 );
 
@@ -102,7 +102,12 @@ function buildText() {
 
     const mergedGeom = mergeBufferGeometries( translatedGeom );
 
-    const mesh = new Mesh( mergedGeom, this.getFontMaterial() );
+    // be sure it have its glyphMap update
+    // this is only required for font not added to FontLibrary
+    // so this could be prevented
+    this._refreshMaterial();
+
+    const mesh = new Mesh( mergedGeom, this._fontMaterial );
 
     return mesh
 

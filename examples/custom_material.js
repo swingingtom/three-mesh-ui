@@ -111,7 +111,7 @@ function makeTextPanel() {
 
 
     let text = new ThreeMeshUI.Text({content:"ThreeMeshUI"});
-    let newFontMat = new FontStandardMaterial({color:0x00FF99, /* wireframe:true*/});
+    let newFontMat = new FontStandardMaterial({/* wireframe:true*/});
     /*newFontMat = new FontPhysicalMaterial({color: 0xffffff,
         transmission: 1,
         opacity: 1,
@@ -127,6 +127,7 @@ function makeTextPanel() {
     newFontMat.name = "customMat";
 
     text.fontMaterial = newFontMat;
+    console.log(text.fontMaterial);
     // text.fontMaterial
 
     text.onAfterUpdate = ()=>{
@@ -134,7 +135,7 @@ function makeTextPanel() {
         if( text.children.length > 0){
             for ( let i = 0; i < text.children.length; i++ ) {
                 const child = text.children[i];
-                console.log(child.material.name);
+                console.log(child.material);
             }
         }
     }
@@ -145,13 +146,13 @@ function makeTextPanel() {
         text.set({fontColor: color, fontOpacity:Math.random()});
 
     },2500);
-
-
-    // change segments
-    setInterval( ()=>{
-        text.set({segments: Math.ceil(Math.random()*15 ) });
-
-    },500);
+    //
+    //
+    // // change segments
+    // setInterval( ()=>{
+    //     text.set({segments: Math.ceil(Math.random()*15 ) });
+    //
+    // },500);
 
     outerContainer.add( text );
 
@@ -172,7 +173,7 @@ function onWindowResize() {
 
 function loop() {
 
-    lightContainer.rotation.y += 1/60;
+    lightContainer.rotation.y += 1/30;
 
 	// Don't forget, ThreeMeshUI must be updated manually.
 	// This has been introduced in version 3.0.0 in order

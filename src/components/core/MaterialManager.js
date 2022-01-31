@@ -101,29 +101,6 @@ export default function MaterialManager( Base = class {} ) {
 
         }
 
-        /** Update existing fontMaterial uniforms */
-        updateTextMaterial() {
-
-            if( this.fontMaterial ){
-
-                if( this.fontMaterial.isDefault ){
-                    // The look-up-table would be FontMaterialDefault itself ? What ?
-                    // this.fontMaterial.glyphMap = this.getFontTexture();
-                    this.fontMaterial.uniforms.u_texture.value = this.getFontTexture();
-
-                    this.fontMaterial.uniforms.u_color.value = this.getFontColor();
-                    this.fontMaterial.uniforms.u_opacity.value = this.getFontOpacity();
-                    this.fontMaterial.uniforms.u_pxRange.value = this.getFontPXRange();
-                    //this.fontMaterial.uniforms.u_useRGSS.value = this.getFontSupersampling();
-
-                    this.fontMaterial.noRGSS = !this.getFontSupersampling();
-                }else{
-                    this.fontMaterial.userData.glyphMap.value = this.getFontTexture();
-                }
-
-            }
-        }
-
         /**
          * Update a component's materials clipping planes.
          * Called every frame
@@ -195,27 +172,7 @@ export default function MaterialManager( Base = class {} ) {
 
         }
 
-        /** Called by Text to get the font material */
-        getFontMaterial() {
 
-
-            if ( !this.fontMaterial ) {
-                const newUniforms = {
-                    'u_texture': this.getFontTexture(),
-                    'u_color': this.getFontColor(),
-                    'u_opacity': this.getFontOpacity(),
-                    'u_pxRange': this.getFontPXRange(),
-                    'noRGSS': !this.getFontSupersampling()
-                };
-
-                this.fontMaterial = new FontMaterialDefault(newUniforms);
-            } else {
-                this.updateTextMaterial();
-            }
-
-            return this.fontMaterial
-
-        }
 
         /** @private */
         _makeBackgroundMaterial( materialOptions ) {

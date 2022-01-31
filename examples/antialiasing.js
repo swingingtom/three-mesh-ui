@@ -50,7 +50,7 @@ function init() {
   // TEXT PANEL
 
   // attempt to have a pixel-perfect match to the reference MSDF implementation
-  
+
   makeTextPanel(  0.6, 0, 0, 0, true );
   makeTextPanel( -0.6, 0, 0, 0, false );
 
@@ -68,7 +68,7 @@ function makeTextPanel( x, rotX, rotY, rotZ, supersample ) {
   fontSupersampling: ${ supersample }
 
   Three-mesh-ui uses rotated-grid-super-sampling (RGSS) to smooth out the rendering of small characters on low res displays.
-  
+
   This is especially important in VR. However you can improve performance slightly by disabling it, especially if you only render big texts.
   `;
 
@@ -87,17 +87,29 @@ function makeTextPanel( x, rotX, rotY, rotZ, supersample ) {
     fontSupersampling: supersample,
   });
 
+
+
   scene.add( container );
   container.position.set( x, 1.5, -4 );
   container.rotation.set( rotX, rotY, rotZ );
 
+  const text = new ThreeMeshUI.Text( {
+        content: textContent,
+        fontKerning: "normal",
+        fontSize: 0.045,
+    } );
   container.add(
-    new ThreeMeshUI.Text( {
-      content: textContent,
-      fontKerning: "normal",
-      fontSize: 0.045,
-    } ),
+    text
   );
+
+    if( !supersample ){
+        setInterval(()=>{
+
+            supersample = !supersample;
+            container.set({fontSupersampling:supersample});
+
+        },2500)
+    }
 
   return container;
 };
@@ -127,7 +139,7 @@ function loop() {
       -4
     );
   }
-  
+
   controls.update();
   renderer.render( scene, camera );
 };
