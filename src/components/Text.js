@@ -37,7 +37,6 @@ const _textMaterialProperties = [
 export default class Text extends mix.withBase( Object3D )(
     InlineComponent,
     TextManager,
-    MaterialManager,
     MeshUIComponent
 ) {
 
