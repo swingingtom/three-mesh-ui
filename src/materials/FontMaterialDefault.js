@@ -6,8 +6,6 @@ export default class FontMaterialDefault extends ShaderMaterial {
 
     constructor( materialOptions = {} ) {
 
-        console.log("New FMD");
-
         super( {
 
             // @TODO: Uniformize names
@@ -29,10 +27,6 @@ export default class FontMaterialDefault extends ShaderMaterial {
         } );
 
         this.needsUpdate = true;
-
-        this.onBeforeCompile = (shader)=>{
-            console.log("REC - FMD")
-        }
 
         // initiate additional properties
         this.noRGSS = materialOptions.noRGSS || false;

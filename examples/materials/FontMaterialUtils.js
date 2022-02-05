@@ -4,31 +4,36 @@ import offsetglyph_vertex from "three-mesh-ui/renderers/shaders/ShaderChunks/off
 import alphaglyph_pars_fragment from "three-mesh-ui/renderers/shaders/ShaderChunks/alphaglyph_pars_fragment.glsl";
 import alphaglyph_fragment from "three-mesh-ui/renderers/shaders/ShaderChunks/alphaglyph_fragment.glsl";
 
-export default class FontMaterialUtils{
+export default class FontMaterialUtils {
 
-    static ensureMaterialOptions(materialOptions){
+    static ensureMaterialOptions( materialOptions ) {
         materialOptions.transparent = true;
         materialOptions.alphaTest = materialOptions.alphaTest || 0.02;
     }
 
-    static ensureDefines(threeMaterial){
-        if( !threeMaterial.defines ){
+    static ensureDefines( threeMaterial ) {
+        if ( !threeMaterial.defines ) {
             threeMaterial.defines = {};
         }
     }
 
-    static ensureUserData(threeMaterial, materialOptions ){
-        threeMaterial.userData.glyphMap = {value: materialOptions.glyphMap};
-        threeMaterial.userData.u_pxRange = {value: materialOptions.u_pxRange || 4};
+    static ensureUserData( threeMaterial, materialOptions ) {
+        threeMaterial.userData.glyphMap = { value: materialOptions.glyphMap };
+        threeMaterial.userData.u_pxRange = { value: materialOptions.u_pxRange || 4 };
     }
 
-    static bindUniformsWithUserData( shader, threeMaterial ){
+    static bindUniformsWithUserData( shader, threeMaterial ) {
 
         shader.uniforms.glyphMap = threeMaterial.userData.glyphMap;
         shader.uniforms.u_pxRange = threeMaterial.userData.u_pxRange;
     }
 
-    static injectVertexShaderChunks( shader ){
+    static injectShaders( shader ){
+        FontMaterialUtils.injectVertexShaderChunks(shader);
+        FontMaterialUtils.injectFragmentShaderChunks(shader);
+    }
+
+    static injectVertexShaderChunks( shader ) {
         shader.vertexShader = shader.vertexShader.replace(
             '#include <uv_pars_vertex>',
             '#include <uv_pars_vertex>\n' + alphaglyph_pars_vertex
@@ -46,7 +51,7 @@ export default class FontMaterialUtils{
         )
     }
 
-    static injectFragmentShaderChunks( shader ){
+    static injectFragmentShaderChunks( shader ) {
         shader.fragmentShader = shader.fragmentShader.replace(
             '#include <uv_pars_fragment>',
             '#include <uv_pars_fragment>\n' + alphaglyph_pars_fragment
@@ -59,4 +64,37 @@ export default class FontMaterialUtils{
         )
     }
 
+    static from( materialClass ) {
+        return class extends materialClass {
+
+            constructor( options = {} ) {
+                FontMaterialUtils.ensureMaterialOptions( options );
+                super( options );
+                FontMaterialUtils.ensureDefines( this );
+                FontMaterialUtils.ensureUserData( this, options );
+
+                this._userDefinedOnBeforeCompile = shader => {};
+                this._onBeforeCompile = this._cumulativeOnBeforeCompile.bind(this);
+            }
+
+            set onBeforeCompile( fct ){
+                this._userDefinedOnBeforeCompile = fct;
+            }
+
+            get onBeforeCompile(){
+                return this._onBeforeCompile;
+            }
+
+            _cumulativeOnBeforeCompile(shader) {
+                // bind uniforms
+                FontMaterialUtils.bindUniformsWithUserData( shader, this );
+
+                // inject both vertex and fragment shaders
+                FontMaterialUtils.injectShaders( shader );
+
+                // user defined additional onBeforeCompile
+                this._userDefinedOnBeforeCompile(shader);
+            }
+        }
+    }
 }

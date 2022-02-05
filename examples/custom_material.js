@@ -17,6 +17,7 @@ import FontToonMaterial from "./materials/FontToonMaterial";
 import FontLambertMaterial from "./materials/FontLambertMaterial";
 import FontNormalMaterial from "./materials/FontNormalMaterial";
 import FontVertexMaterial from "./materials/FontVertexMaterial";
+import FontMaterialUtils from "three-mesh-ui/examples/materials/FontMaterialUtils";
 
 
 const WIDTH = window.innerWidth;
@@ -158,9 +159,34 @@ function makeTextPanel() {
     vertexMaterial = new FontVertexMaterial();
     vertexText.fontMaterial = vertexMaterial;
 
+    let mixedText = new ThreeMeshUI.Text({content:"Mixined",fontColor:new THREE.Color(0x99ff00)});
+
+    // Mix a threejs material to obtain an TMU Font Material
+    const mixedMaterial = FontMaterialUtils.from(MeshStandardMaterial);
+    console.log(mixedMaterial);
+    mixedText.fontMaterial = new mixedMaterial();
+
+    mixedText.fontMaterial.onBeforeCompile = (shader) => {
+
+    }
+    console.log( mixedText.fontMaterial.onBeforeCompile );
+
     setInterval(()=>{
+
+
         vertexMaterial.wireframe = !vertexMaterial.wireframe;
-        vertexText.set({segments:Math.ceil(Math.random()*24)})
+
+        // setting segments, could only replace the text geometry
+        // currently any other inline components on the same levels are rebuilt
+        // which is a performance issue
+        // its also recompile any existing material
+        // geometryNeedUpdate = true ? Overkill? Could gather splitChars and splitLines
+
+
+        //vertexText.set({segments:Math.ceil(Math.random()*24)})
+
+
+
     }, 500)
 
     // setInterval( ()=>{
@@ -177,7 +203,7 @@ function makeTextPanel() {
     //
     // },500);
 
-    outerContainer.add( defaultText, /*standardText , lambertText, normalText, physicalText, wireText,*/ vertexText );
+    outerContainer.add( defaultText, standardText , lambertText, normalText, physicalText, wireText, vertexText , mixedText );
 
 };
 

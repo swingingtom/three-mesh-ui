@@ -26,8 +26,6 @@ export default class FontVertexMaterial extends MeshStandardMaterial{
 
         this.onBeforeCompile = shader => {
 
-            console.log("REC - V");
-
             shader.uniforms.glyphMap = this.userData.glyphMap;
             shader.uniforms.u_pxRange = this.userData.u_pxRange;
             shader.uniforms.progress = this.userData.progress;
