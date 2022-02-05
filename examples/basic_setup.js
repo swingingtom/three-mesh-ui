@@ -70,7 +70,8 @@ function makeTextPanel() {
 		justifyContent: 'center',
 		alignContent: 'left',
 		fontFamily: FontJSON,
-		fontTexture: FontImage
+		fontTexture: FontImage,
+        interLine: -0.05
 	});
 
 	container.position.set( 0, 1, -1.8 );

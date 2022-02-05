@@ -10,21 +10,26 @@ import FontJSON from './assets/Roboto-msdf.json';
 import FontImage from './assets/Roboto-msdf.png';
 
 import Stats from 'three/examples/jsm/libs/stats.module.js';
-import {Object3D, PointLight, PointLightHelper} from "three";
+import { BoxGeometry, Mesh, MeshLambertMaterial, MeshStandardMaterial, Object3D, PointLight, PointLightHelper } from "three";
 import FontStandardMaterial from "./materials/FontStandardMaterial";
 import FontPhysicalMaterial from "./materials/FontTransmissionMaterial";
+import FontToonMaterial from "./materials/FontToonMaterial";
+import FontLambertMaterial from "./materials/FontLambertMaterial";
+import FontNormalMaterial from "./materials/FontNormalMaterial";
+import FontVertexMaterial from "./materials/FontVertexMaterial";
 
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
 
-let scene, camera, renderer, controls, stats;
+let cube, scene, camera, renderer, controls, stats;
 let light, lightContainer, lightHelper;
 let outerContainer, innerContainer;
-let text;
+let vertexMaterial;
 
 window.addEventListener('load', init );
 window.addEventListener('resize', onWindowResize );
+
 
 //
 
@@ -75,6 +80,14 @@ function init() {
 
     scene.add(lightContainer);
 
+    cube = new THREE.Mesh(
+        new THREE.BoxGeometry(0.5,0.5,0.5),
+        new MeshLambertMaterial({color:0x99ff00})
+    )
+    cube.position.set(0,1,-2.5);
+    scene.add( cube );
+
+
 
 	// TEXT PANEL
 
@@ -99,7 +112,7 @@ function makeTextPanel() {
         interLine:-0.1,
 		justifyContent: 'center',
 		alignContent: 'center',
-		fontColor: new THREE.Color( 0xFF9900 ),
+		// fontColor: new THREE.Color( 0xFF9900 ),
 		fontFamily: FontJSON,
 		fontTexture: FontImage,
         fontSize: 0.25,
@@ -110,51 +123,61 @@ function makeTextPanel() {
 	scene.add( outerContainer );
 
 
-    let text = new ThreeMeshUI.Text({content:"ThreeMeshUI"});
-    let newFontMat = new FontStandardMaterial({/* wireframe:true*/});
-    /*newFontMat = new FontPhysicalMaterial({color: 0xffffff,
+    let defaultText = new ThreeMeshUI.Text({content:"Default\n", fontColor: new THREE.Color(0x0099ff)});
+
+    let standardText = new ThreeMeshUI.Text({content:"Standard\n", fontColor: new THREE.Color(0x0099ff).convertSRGBToLinear()});
+    let standardMaterial = new FontStandardMaterial();
+    standardText.fontMaterial = standardMaterial;
+
+    let physicalText = new ThreeMeshUI.Text({content:"Physical\n"});
+    let physicalMaterial = new FontPhysicalMaterial({color: 0xffffff,
         transmission: 1,
         opacity: 1,
         metalness: 0,
         roughness: 0,
-        ior: 1.5,
-        thickness: 0.01,
+        ior: 2,
+        thickness: 0.1,
         specularIntensity: 1,
         specularColor: 0xffffff,
-        envMapIntensity: 1,
-        lightIntensity: 1,
-        exposure: 1});*/
-    newFontMat.name = "customMat";
+        envMapIntensity: 1});
+    physicalText.fontMaterial = physicalMaterial;
 
-    text.fontMaterial = newFontMat;
-    console.log(text.fontMaterial);
-    // text.fontMaterial
+    let lambertText = new ThreeMeshUI.Text({content:"Lambert\n", fontColor:new THREE.Color(0x0099ff).convertSRGBToLinear()});
+    let lambertMaterial = new FontLambertMaterial({});
+    lambertText.fontMaterial = lambertMaterial;
 
-    text.onAfterUpdate = ()=>{
-        console.log(text.fontMaterial.name);
-        if( text.children.length > 0){
-            for ( let i = 0; i < text.children.length; i++ ) {
-                const child = text.children[i];
-                console.log(child.material);
-            }
-        }
-    }
+    let normalText = new ThreeMeshUI.Text({content:"Normal\n", fontColor:new THREE.Color(0x0099ff).convertSRGBToLinear()});
+    // let normalMaterial = new FontNormalMaterial({});
+    // normalText.fontMaterial = normalMaterial;
 
-    setInterval( ()=>{
+    let wireText = new ThreeMeshUI.Text({content:"Wireframe\n", fontColor:new THREE.Color(0x0099ff), segments:12});
+    let wireMaterial = new FontStandardMaterial({wireframe:true});
+    wireText.fontMaterial = wireMaterial;
 
-        let color = new THREE.Color(Math.random(),Math.random(),Math.random());
-        text.set({fontColor: color, fontOpacity:Math.random()});
+    let vertexText = new ThreeMeshUI.Text({content:"VertexEffect\n", fontColor:new THREE.Color(0x0099ff), segments:12});
+    vertexMaterial = new FontVertexMaterial();
+    vertexText.fontMaterial = vertexMaterial;
 
-    },2500);
+    setInterval(()=>{
+        vertexMaterial.wireframe = !vertexMaterial.wireframe;
+        vertexText.set({segments:Math.ceil(Math.random()*24)})
+    }, 500)
+
+    // setInterval( ()=>{
+    //
+    //     let color = new THREE.Color(Math.random(),Math.random(),Math.random());
+    //     text.set({fontColor: color, fontOpacity:Math.random()});
+    //
+    // },2500);
     //
     //
-    // // change segments
+    // change segments
     // setInterval( ()=>{
     //     text.set({segments: Math.ceil(Math.random()*15 ) });
     //
     // },500);
 
-    outerContainer.add( text );
+    outerContainer.add( defaultText, /*standardText , lambertText, normalText, physicalText, wireText,*/ vertexText );
 
 };
 
@@ -173,7 +196,16 @@ function onWindowResize() {
 
 function loop() {
 
-    lightContainer.rotation.y += 1/30;
+    lightContainer.rotation.y += 1/60;
+
+    vertexMaterial.userData.progress.value += 1/30;
+    if( vertexMaterial.userData.progress.value >= 1 ){
+        vertexMaterial.userData.progress.value = 0;
+    }
+
+
+    cube.rotation.y += 1/30;
+    cube.rotation.z += 1/30;
 
 	// Don't forget, ThreeMeshUI must be updated manually.
 	// This has been introduced in version 3.0.0 in order
@@ -182,5 +214,5 @@ function loop() {
 
 	controls.update();
 	renderer.render( scene, camera );
-	// stats.update()
+	stats.update()
 };

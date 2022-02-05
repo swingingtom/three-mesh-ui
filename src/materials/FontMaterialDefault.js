@@ -6,6 +6,8 @@ export default class FontMaterialDefault extends ShaderMaterial {
 
     constructor( materialOptions = {} ) {
 
+        console.log("New FMD");
+
         super( {
 
             // @TODO: Uniformize names
@@ -14,16 +16,23 @@ export default class FontMaterialDefault extends ShaderMaterial {
                 'diffuse': { value: materialOptions.u_color },
                 'opacity': { value: materialOptions.u_opacity },
                 'u_pxRange': { value: materialOptions.u_pxRange },
+                'alphaTest':{ value: 0.02 },
             },
             transparent: true,
             clipping: true,
-            alphaTest: 0.02,
+            alphaTest: 0.5,
             vertexShader,
             fragmentShader,
             extensions: {
                 derivatives: true
-            }
+            },
         } );
+
+        this.needsUpdate = true;
+
+        this.onBeforeCompile = (shader)=>{
+            console.log("REC - FMD")
+        }
 
         // initiate additional properties
         this.noRGSS = materialOptions.noRGSS || false;

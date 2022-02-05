@@ -170,6 +170,7 @@ export default class Text extends mix.withBase( Object3D )(
 
         if ( this.inlines ) {
 
+            console.log( 'CRT -' , this.content );
             // happening in TextManager
             this.textContent = this.createText();
 

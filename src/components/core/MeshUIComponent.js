@@ -434,12 +434,12 @@ export default function MeshUIComponent( Base = class {} ) {
 
                     case "letterSpacing" :
                     case "interLine" :
-                    case "segments" :
                         if ( this.isBlock && this[ "bestFit" ] == true ) parsingNeedsUpdate = true;
                         layoutNeedsUpdate = true;
                         this[ prop ] = options[ prop ];
                         break;
 
+                    case "segments" :
                     case "margin" :
                     case "contentDirection" :
                     case "justifyContent" :
@@ -471,7 +471,7 @@ export default function MeshUIComponent( Base = class {} ) {
 
                     case "fontColor" :
                     case "fontOpacity" :
-                        case "fontSupersampling" :
+                    case "fontSupersampling" :
                         // these properties are owned by Text material
                         // If set on Block, request an innerUpdate
                         if( this.isBlock ) innerNeedsUpdate = true;
@@ -498,7 +498,7 @@ export default function MeshUIComponent( Base = class {} ) {
 
             // if font kerning changes for a child of a block with Best Fit enabled, we need to trigger parsing for the parent as well.
             const parent = this.getUIParent();
-            if( parent && parent.getBestFit()) parent.update(true, true, false);
+            //if( parent && parent.getBestFit()) parent.update(true, true, false);
 
             // Call component update
             this.update( parsingNeedsUpdate, layoutNeedsUpdate, innerNeedsUpdate );

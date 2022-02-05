@@ -68,6 +68,9 @@ export default class MSDFGlyph extends PlaneBufferGeometry {
 
         //
 
+
+        const originalUvArray = this.getAttribute('uv').array.slice()
+
         // const uvAttribute = this.attributes.uv;
         //
         // for ( let i = 0; i < uvAttribute.count; i ++ ) {
@@ -84,7 +87,6 @@ export default class MSDFGlyph extends PlaneBufferGeometry {
 
 
         const uvGlyph = [];
-        const originalUvArray = this.getAttribute('uv').array;
         for (let i = 0; i < originalUvArray.length; i += 2) {
             const u = originalUvArray[i];
             const v = originalUvArray[i + 1];
