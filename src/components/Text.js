@@ -15,6 +15,7 @@ import FontMaterialDefault from "../materials/FontMaterialDefault";
 
 /**
  * Transfer table of ThreeMeshUI.Text properties to its font Material
+ * @TODO : Need more properties : uPXRange,etc...
  * @type {{p,m}[]}
  */
 const _textMaterialProperties = [
@@ -102,7 +103,6 @@ export default class Text extends mix.withBase( Object3D )(
 
             if ( options['fontSupersampling'] !== undefined ) {
 
-                console.log("fontSuperSampling");
                 /**
                  * use_RGSS has been inverted to noRGSS and passed as a webgl preprocessor.
                  *       + it gains one if() per voxel

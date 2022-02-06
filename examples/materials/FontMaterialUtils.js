@@ -3,36 +3,69 @@ import alphaglyph_vertex from "three-mesh-ui/renderers/shaders/ShaderChunks/alph
 import offsetglyph_vertex from "three-mesh-ui/renderers/shaders/ShaderChunks/offsetglyph_vertex.glsl";
 import alphaglyph_pars_fragment from "three-mesh-ui/renderers/shaders/ShaderChunks/alphaglyph_pars_fragment.glsl";
 import alphaglyph_fragment from "three-mesh-ui/renderers/shaders/ShaderChunks/alphaglyph_fragment.glsl";
+import { ALPHA_TEST, PX_RANGE } from "three-mesh-ui/materials/FontMaterialDefault";
 
+/**
+ * FontMaterialUtils provides utilities
+ * for customizing other threejs or custom materials
+ * into a three-mesh-ui FontMaterial
+ */
 export default class FontMaterialUtils {
 
+    /**
+     * Alter a material options with required fontMaterial options and or default values
+     * @param {Object} materialOptions
+     */
     static ensureMaterialOptions( materialOptions ) {
         materialOptions.transparent = true;
-        materialOptions.alphaTest = materialOptions.alphaTest || 0.02;
+        materialOptions.alphaTest = materialOptions.alphaTest || ALPHA_TEST;
     }
 
+    /**
+     * As three-mesh-ui FontMaterial relies on webgl preprocessors,
+     * lets force the material to have a proper defines object
+     * @param {Material} threeMaterial
+     */
     static ensureDefines( threeMaterial ) {
         if ( !threeMaterial.defines ) {
             threeMaterial.defines = {};
         }
     }
 
+    /**
+     *
+     * @param {Material} threeMaterial
+     * @param {Object} materialOptions
+     */
     static ensureUserData( threeMaterial, materialOptions ) {
         threeMaterial.userData.glyphMap = { value: materialOptions.glyphMap };
-        threeMaterial.userData.u_pxRange = { value: materialOptions.u_pxRange || 4 };
+        threeMaterial.userData.u_pxRange = { value: materialOptions.u_pxRange || PX_RANGE };
     }
 
+    /**
+     *
+     * @param {*} shader
+     * @param {Material} threeMaterial
+     */
     static bindUniformsWithUserData( shader, threeMaterial ) {
 
         shader.uniforms.glyphMap = threeMaterial.userData.glyphMap;
         shader.uniforms.u_pxRange = threeMaterial.userData.u_pxRange;
     }
 
-    static injectShaders( shader ){
-        FontMaterialUtils.injectVertexShaderChunks(shader);
-        FontMaterialUtils.injectFragmentShaderChunks(shader);
+    /**
+     *
+     * @param shader
+     */
+    static injectShaders( shader ) {
+        FontMaterialUtils.injectVertexShaderChunks( shader );
+        FontMaterialUtils.injectFragmentShaderChunks( shader );
     }
 
+    /**
+     *
+     * @param shader
+     */
     static injectVertexShaderChunks( shader ) {
         shader.vertexShader = shader.vertexShader.replace(
             '#include <uv_pars_vertex>',
@@ -51,6 +84,10 @@ export default class FontMaterialUtils {
         )
     }
 
+    /**
+     *
+     * @param shader
+     */
     static injectFragmentShaderChunks( shader ) {
         shader.fragmentShader = shader.fragmentShader.replace(
             '#include <uv_pars_fragment>',
@@ -64,28 +101,61 @@ export default class FontMaterialUtils {
         )
     }
 
+    /**
+     * Mix a threejs Material into a three-mesh-ui FontMaterial
+     * @param {Class} materialClass
+     * @returns {Material}
+     */
     static from( materialClass ) {
         return class extends materialClass {
 
             constructor( options = {} ) {
+
+                // same as FontMaterial extension
                 FontMaterialUtils.ensureMaterialOptions( options );
                 super( options );
                 FontMaterialUtils.ensureDefines( this );
                 FontMaterialUtils.ensureUserData( this, options );
 
+                // defines two internal properties in order to kept
+                // user allowed to use onBeforeCompile for its own stuff
+                // 1- store an callback for user
                 this._userDefinedOnBeforeCompile = shader => {};
-                this._onBeforeCompile = this._cumulativeOnBeforeCompile.bind(this);
+                // 2- store the cumulative callback
+                this._onBeforeCompile = this._cumulativeOnBeforeCompile.bind( this );
             }
 
-            set onBeforeCompile( fct ){
+            ////////////////////////////
+            // OnBeforeCompile Override
+            ///////////////////////////
+
+            /**
+             * Override the setter of onBeforeCompile in order to never overwrite
+             * the three-mesh-ui fontMaterial onBeforeCompile
+             * @param fct
+             */
+            set onBeforeCompile( fct ) {
+                // only store it as userDefinedCallback
                 this._userDefinedOnBeforeCompile = fct;
             }
 
-            get onBeforeCompile(){
+            /**
+             * Override the getter of onBeforeCompile in order to
+             * always deliver the cumulativeCallbacks to threejs
+             * @returns {*}
+             */
+            get onBeforeCompile() {
                 return this._onBeforeCompile;
             }
 
-            _cumulativeOnBeforeCompile(shader) {
+            /**
+             * @TODO : Change babel rules in order to allows _cumulativeOnBeforeCompile = (shader) => {}
+             * On before compile that first run three-mesh-ui fontMaterial
+             * then user defined onBeforeCompile
+             * @param shader
+             * @private
+             */
+            _cumulativeOnBeforeCompile( shader ) {
                 // bind uniforms
                 FontMaterialUtils.bindUniformsWithUserData( shader, this );
 
@@ -93,7 +163,7 @@ export default class FontMaterialUtils {
                 FontMaterialUtils.injectShaders( shader );
 
                 // user defined additional onBeforeCompile
-                this._userDefinedOnBeforeCompile(shader);
+                this._userDefinedOnBeforeCompile( shader );
             }
         }
     }

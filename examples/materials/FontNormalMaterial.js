@@ -49,13 +49,24 @@ export default class FontNormalMaterial extends MeshNormalMaterial{
             //fragment pars
             shader.fragmentShader = shader.fragmentShader.replace(
                 '#include <normalmap_pars_fragment>',
-                '#include <normalmap_pars_fragment>\n'+ alphaglyph_pars_fragment
-            )
+                `#include <normalmap_pars_fragment>
+vec4 diffuseColor;
+uniform float alphaTest;
+${alphaglyph_pars_fragment}`
+            );
 
             // fragment chunks
             shader.fragmentShader = shader.fragmentShader.replace(
                 '#include <normal_fragment_maps>',
-                '#include <normal_fragment_maps>\n' + alphaglyph_fragment
+                `#include <normal_fragment_maps>
+diffuseColor = vec4( packNormalToRGB( normal ), opacity );
+${alphaglyph_fragment}`
+            );
+
+            shader.fragmentShader = shader.fragmentShader.replace(
+                'gl_FragColor = vec4( packNormalToRGB( normal ), opacity );',
+                `if( diffuseColor.a < alphaTest ) discard;
+                gl_FragColor = diffuseColor;`
             )
         }
     }

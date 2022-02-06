@@ -148,8 +148,8 @@ function makeTextPanel() {
     lambertText.fontMaterial = lambertMaterial;
 
     let normalText = new ThreeMeshUI.Text({content:"Normal\n", fontColor:new THREE.Color(0x0099ff).convertSRGBToLinear()});
-    // let normalMaterial = new FontNormalMaterial({});
-    // normalText.fontMaterial = normalMaterial;
+    let normalMaterial = new FontNormalMaterial({});
+    normalText.fontMaterial = normalMaterial;
 
     let wireText = new ThreeMeshUI.Text({content:"Wireframe\n", fontColor:new THREE.Color(0x0099ff), segments:12});
     let wireMaterial = new FontStandardMaterial({wireframe:true});
@@ -163,13 +163,12 @@ function makeTextPanel() {
 
     // Mix a threejs material to obtain an TMU Font Material
     const mixedMaterial = FontMaterialUtils.from(MeshStandardMaterial);
-    console.log(mixedMaterial);
     mixedText.fontMaterial = new mixedMaterial();
 
     mixedText.fontMaterial.onBeforeCompile = (shader) => {
-
+        // custom user code
     }
-    console.log( mixedText.fontMaterial.onBeforeCompile );
+
 
     setInterval(()=>{
 

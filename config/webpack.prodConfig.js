@@ -101,6 +101,7 @@ module.exports = env => {
             alias: {
                 "three-mesh-ui/examples": path.resolve(__dirname, "../examples/"),
                 "three-mesh-ui/renderers": path.resolve(__dirname, "../src/renderers"),
+                "three-mesh-ui/materials": path.resolve(__dirname, "../src/materials"),
                 "three-mesh-ui": path.resolve(__dirname, "../src/three-mesh-ui.js")
             }
         },

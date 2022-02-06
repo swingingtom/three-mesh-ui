@@ -1,6 +1,8 @@
 import { Color, ShaderMaterial } from "three";
 import { vertexShader, fragmentShader } from "../renderers/shaders/ShaderLib/fontmaterialdefault.glsl";
 
+export const ALPHA_TEST = 0.02;
+export const PX_RANGE = 4;
 
 export default class FontMaterialDefault extends ShaderMaterial {
 
@@ -14,11 +16,10 @@ export default class FontMaterialDefault extends ShaderMaterial {
                 'diffuse': { value: materialOptions.u_color },
                 'opacity': { value: materialOptions.u_opacity },
                 'u_pxRange': { value: materialOptions.u_pxRange },
-                'alphaTest':{ value: 0.02 },
+                'alphaTest':{ value: ALPHA_TEST },
             },
             transparent: true,
             clipping: true,
-            alphaTest: 0.5,
             vertexShader,
             fragmentShader,
             extensions: {
