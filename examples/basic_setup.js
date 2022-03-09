@@ -63,13 +63,14 @@ function init() {
 function makeTextPanel() {
 
 	const container = new ThreeMeshUI.Block( {
-		width: 1.2,
+		width: 0.25,
 		height: 0.5,
-		padding: 0.05,
+		padding: 0.02,
+		fontSize: 0.055,
 		justifyContent: 'center',
 		alignContent: 'left',
 		fontFamily: FontJSON,
-		fontTexture: FontImage
+		fontTexture: FontImage,
 	} );
 
 	container.position.set( 0, 1, -1.8 );
@@ -78,17 +79,46 @@ function makeTextPanel() {
 
 	//
 
+
 	container.add(
 		new ThreeMeshUI.Text( {
-			content: 'This library supports line-break-friendly-characters,',
-			fontSize: 0.055
-		} ),
+			content: 'This library supports line-break-friendly-characters, As well as multi-font-size lines with consistent vertical spacing.',
 
-		new ThreeMeshUI.Text( {
-			content: ' As well as multi-font-size lines with consistent vertical spacing.',
-			fontSize: 0.08
 		} )
 	);
+
+	container.onAfterUpdate = function(){
+
+		if( container.lines.length > 1 ){
+
+			// add the width of all lines
+			let newWidth = container.lines.reduce( (accu, line) => { return accu + line.width }, 0);
+
+			// also add one space per line ( to handle additional space when both lines would be end-to-end )
+			// Ideally instead of container.getFontSize(), the space character size should be used
+			// Also, this can cause issue when container is really thin, because each char will be a line, then add space
+			//newWidth += (container.lines.length-1) * container.getFontSize();
+			// or
+			// use a constant compensator
+			newWidth += container.getFontSize() * 3;
+
+			// also apply its padding
+			newWidth += ( container.padding * 2 || 0 );
+
+
+			setTimeout( ()=>{
+
+				// then update the container size
+				container.set({width:newWidth});
+
+				// the set timeout is useless, just to show the 2 passes
+
+			}, 1000 )
+
+
+		}
+	}
+
 
 }
 
