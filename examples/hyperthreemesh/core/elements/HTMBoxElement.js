@@ -1,6 +1,6 @@
 import HTMBaseElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMBaseElement';
-import BoxElement from '../../../../src/elements/basic/BoxElement';
 import { Vector3 } from 'three';
+import { Box } from 'three-mesh-ui';
 
 /**
  * @extends {MeshUIBaseElement}
@@ -15,9 +15,9 @@ export default class HTMBoxElement extends HTMBaseElement {
 	constructor( properties= {}, values= {}) {
 
 
-		BoxElement.definePropertiesValues( properties, values );
+		Box.definePropertiesValues( properties, values );
 		super( properties, values );
-		BoxElement.init( this );
+		Box.init( this );
 
 	}
 

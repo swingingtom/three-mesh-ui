@@ -1,7 +1,6 @@
 import CSSQuery from './core/utils/css/CSSQuery';
 import CSSRuleVR from './core/utils/css/CSSRuleVR';
 import CSSMediaQuery from './core/utils/css/CSSMediaQuery';
-import UpdateManager from '../../src/components/core/UpdateManager';
 import HTMTextElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMTextElement';
 import HTMInlineElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMInlineElement';
 import HTMBlockElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMBlockElement';
@@ -13,6 +12,7 @@ import HTMButtonRadio from 'three-mesh-ui/examples/hyperthreemesh/elements/HTMBu
 import HTMListItem from 'three-mesh-ui/examples/hyperthreemesh/elements/HTMListItem';
 import HTMList from 'three-mesh-ui/examples/hyperthreemesh/elements/HTMList';
 import HTMImage from 'three-mesh-ui/examples/hyperthreemesh/elements/HTMImage';
+import { UpdateManager } from 'three-mesh-ui';
 
 
 /**

@@ -12,6 +12,7 @@
     ".": {
       "import": "./build/three-mesh-ui.module.js"
     },
+    "./src/*" : "./src/*",
     "./examples/*": "./examples/*"
   },
   "scripts": {

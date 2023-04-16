@@ -3,7 +3,6 @@ import HTMInlineElement from 'three-mesh-ui/examples/hyperthreemesh/core/element
 import ListStyleProperty from 'three-mesh-ui/examples/hyperthreemesh/core/properties/ListStyleProperty';
 import ListStylePropertyInlineBlock from 'three-mesh-ui/examples/hyperthreemesh/core/properties/ListStylePropertyInlineBlock';
 import HTMInlineBlockElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMInlineBlockElement';
-import InlineElement from 'three-mesh-ui/src/elements/basic/InlineElement';
 
 export default class HTMListItem extends HTMTextElement{
 

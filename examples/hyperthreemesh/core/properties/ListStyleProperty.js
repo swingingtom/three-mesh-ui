@@ -1,4 +1,5 @@
-import SubStyleProperty from 'three-mesh-ui/src/core/properties/style-properties/SubStyleProperty';
+import { SubStyleProperty } from 'three-mesh-ui';
+
 
 export default class ListStyleProperty extends SubStyleProperty {
 

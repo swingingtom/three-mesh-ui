@@ -1,6 +1,5 @@
 import HTMBlockElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMBlockElement';
 import ListStyleProperty from 'three-mesh-ui/examples/hyperthreemesh/core/properties/ListStyleProperty';
-import ChildrenBox from 'three-mesh-ui/src/core/properties/hierarchy/ChildrenBox';
 import ChildrenList from 'three-mesh-ui/examples/hyperthreemesh/core/properties/hierarchy/ChildrenList';
 
 export default class HTMList extends HTMBlockElement{

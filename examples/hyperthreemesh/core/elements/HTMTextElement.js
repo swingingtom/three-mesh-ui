@@ -1,7 +1,6 @@
 import HTMBoxElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMBoxElement';
-import TextElement from '../../../../src/elements/basic/TextElement';
 import HTMInlineElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMInlineElement';
-
+import { Text } from 'three-mesh-ui';
 /**
  * @extends {MeshUIBaseElement}
  */
@@ -14,9 +13,9 @@ export default class HTMTextElement extends HTMBoxElement {
 	 */
 	constructor( values= {}, properties = {}) {
 
-		TextElement.definePropertiesValues( properties, values );
+		Text.definePropertiesValues( properties, values );
 		super( properties, values );
-		TextElement.init( this );
+		Text.init( this );
 
 	}
 

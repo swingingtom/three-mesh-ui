@@ -1,5 +1,5 @@
 import HTMBoxElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMBoxElement';
-import BlockElement from '../../../../src/elements/basic/BlockElement';
+import { Block } from 'three-mesh-ui';
 
 /**
  * @extends {MeshUIBaseElement}
@@ -13,9 +13,9 @@ export default class HTMBlockElement extends HTMBoxElement {
 	 */
 	constructor( values= {}, properties={}) {
 
-		BlockElement.definePropertiesValues( properties, values );
+		Block.definePropertiesValues( properties, values );
 		super( properties, values );
-		BlockElement.init( this );
+		Block.init( this );
 
 	}
 

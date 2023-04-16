@@ -18,6 +18,11 @@ import BaseProperty from './core/properties/BaseProperty';
 import * as MaterialTransformers from './utils/mediator/transformers/MaterialTransformers';
 import Behavior from './utils/Behavior';
 import FontVariant from './font/FontVariant';
+import BoxElement from './elements/basic/BoxElement';
+import StylePropertyWrapper from './elements/html/properties/StylePropertyWrapper';
+import StyleComputedPropertyWrapper from './elements/html/properties/StyleComputedPropertyWrapper';
+import ChildrenBox from './core/properties/hierarchy/ChildrenBox';
+import SubStyleProperty from './core/properties/style-properties/SubStyleProperty';
 
 
 
@@ -25,6 +30,7 @@ import FontVariant from './font/FontVariant';
 const update = () => UpdateManager.update();
 
 const ThreeMeshUI = {
+	Box: BoxElement,
 	Block: BlockElement,
 	Text : TextElement,
 	Inline: InlineElement,
@@ -37,13 +43,19 @@ const ThreeMeshUI = {
 	ShaderChunkUI,
 	Behavior,
 	FontVariant,
-	DefaultValues
+	DefaultValues,
+	StylePropertyWrapper,
+	StyleComputedPropertyWrapper,
+	ChildrenBox,
+	SubStyleProperty,
+	UpdateManager
 };
 
 
 if ( typeof global !== 'undefined' ) global.ThreeMeshUI = ThreeMeshUI;
 
 export { BlockElement as Block };
+export { BoxElement as Box };
 export { TextElement as Text };
 export { InlineElement as Inline };
 export { InlineBlockElement as InlineBlock };
@@ -61,7 +73,11 @@ export { BaseProperty }
 export { MaterialTransformers }
 export { Behavior }
 export { FontVariant }
-
+export { StylePropertyWrapper}
+export { StyleComputedPropertyWrapper }
+export { ChildrenBox }
+export { SubStyleProperty }
+export { UpdateManager }
 export default ThreeMeshUI;
 
 console.warn("ThreeMeshUI v7.1.x - Three "+window.__THREE__)

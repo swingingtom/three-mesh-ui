@@ -2,7 +2,7 @@
 //JSDoc related imports
 /* eslint-disable no-unused-vars */
 import HTMListItem from 'three-mesh-ui/examples/hyperthreemesh/elements/HTMListItem';
-import ChildrenBox from 'three-mesh-ui/src/core/properties/hierarchy/ChildrenBox';
+import { ChildrenBox } from 'three-mesh-ui';
 /* eslint-enable no-unused-vars */
 
 export default class ChildrenList extends ChildrenBox {

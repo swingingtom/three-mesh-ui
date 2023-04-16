@@ -1,5 +1,5 @@
 import HTMBaseElement from 'three-mesh-ui/examples/hyperthreemesh/core/elements/HTMBaseElement';
-import InlineElement from '../../../../src/elements/basic/InlineElement';
+import { Inline } from 'three-mesh-ui';
 
 /**
  * @extends {MeshUIBaseElement}
@@ -13,9 +13,9 @@ export default class HTMInlineElement extends HTMBaseElement {
 	constructor( values = {}) {
 
 		const properties = {};
-		InlineElement.definePropertiesValues( properties, values );
+		Inline.definePropertiesValues( properties, values );
 		super( properties, values );
-		InlineElement.init( this );
+		Inline.init( this );
 
 	}
 

@@ -1,10 +1,8 @@
-import { MeshUIBaseElement } from 'three-mesh-ui';
+import { MeshUIBaseElement, StyleComputedPropertyWrapper, StylePropertyWrapper } from 'three-mesh-ui';
 import TokenList from 'three-mesh-ui/examples/hyperthreemesh/core/utils/TokenList';
 import NamedMap from 'three-mesh-ui/examples/hyperthreemesh/core/utils/NamedMap';
 import CSSQuerySegment from 'three-mesh-ui/examples/hyperthreemesh/core/utils/css/CSSQuerySegment';
 import * as HyperThreeMesh from 'three-mesh-ui/examples/hyperthreemesh/HyperThreeMesh';
-import StylePropertyWrapper from '../../../../src/elements/html/properties/StylePropertyWrapper';
-import StyleComputedPropertyWrapper from '../../../../src/elements/html/properties/StyleComputedPropertyWrapper';
 
 /**
  * @extends {MeshUIBaseElement}

@@ -1,6 +1,5 @@
 import { MeshNormalMaterial } from 'three';
-import * as ThreeMeshUI from 'three-mesh-ui';
-import { ShaderChunkUI } from 'three-mesh-ui';
+import { MSDFFontMaterialUtils, ShaderChunkUI } from 'three-mesh-ui';
 
 /**
  * Example of enabling MeshNormalMaterial to render ThreeMeshUI MSDF Texts
@@ -17,25 +16,25 @@ export default class MSDFNormalMaterial extends MeshNormalMaterial{
 	 */
 	static get mediation() {
 
-		return ThreeMeshUI.MSDFFontMaterialUtils.mediation;
+		return MSDFFontMaterialUtils.mediation;
 
 	}
 
 	constructor( options = {} ) {
 
-		ThreeMeshUI.MSDFFontMaterialUtils.ensureMaterialOptions( options );
+		MSDFFontMaterialUtils.ensureMaterialOptions( options );
 
 		super( options );
 
-		ThreeMeshUI.MSDFFontMaterialUtils.ensureDefines( this );
+		MSDFFontMaterialUtils.ensureDefines( this );
 
-		ThreeMeshUI.MSDFFontMaterialUtils.ensureUserData( this, options );
+		MSDFFontMaterialUtils.ensureUserData( this, options );
 
 		this.onBeforeCompile = shader => {
 
-			ThreeMeshUI.MSDFFontMaterialUtils.bindUniformsWithUserData( shader, this );
+			MSDFFontMaterialUtils.bindUniformsWithUserData( shader, this );
 
-			ThreeMeshUI.MSDFFontMaterialUtils.injectVertexShaderChunks( shader );
+			MSDFFontMaterialUtils.injectVertexShaderChunks( shader );
 
 
 			// Manually add fragments chunks
