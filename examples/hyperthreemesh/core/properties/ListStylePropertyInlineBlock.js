@@ -13,9 +13,28 @@ export default class ListStylePropertyInlineBlock extends ListStyleProperty {
 
 	}
 
+	update( element, out ) {
+
+		console.log("update --- listStyle INLINEBLOCK" )
+		super.update( element, out );
+
+		console.log(" --- updated --- listStyle INLINEBLOCK", this._value )
+
+		this._needsProcess = true;
+	}
+
+
 	_computeFromInherited( element ) {
 
+		if( !this._allowsInherit ) {
+
+			this._inheritedInput = this.getInheritedInput( element );
+
+		}
+
 		super._computeFromInherited( element );
+
+		console.log( '    -- - - - ', this._value)
 
 		switch ( this._value ){
 
@@ -37,8 +56,11 @@ export default class ListStylePropertyInlineBlock extends ListStyleProperty {
 				break;
 
 			case 'decimal':
+
+				console.log(' --- decimal')
 				element.visible = false;
 				element._textCounterPart.visible = true;
+				element._textCounterPart.textContent = element._listIndex+".";
 				break;
 
 			case 'lower-roman':

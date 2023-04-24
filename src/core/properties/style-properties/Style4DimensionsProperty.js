@@ -12,7 +12,6 @@ export default class Style4DimensionsProperty extends StyleVector4Property {
 
 	computeOutputValue( element ) { /* eslint-enable no-unused-vars */
 
-		console.log( this._value, this._input)
 		this._vector4ValueSetterFinal( this._value, this._input, element );
 
 	}

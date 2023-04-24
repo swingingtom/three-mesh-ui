@@ -8,6 +8,13 @@ export default class HTMListItem extends HTMTextElement{
 
 	constructor( values = {} ) {
 
+
+		let textContent = "";
+		if( values.textContent ){
+			textContent = values.textContent;
+			delete values.textContent;
+		}
+
 		super(values);
 
 		this.appendProperty( "listStyle", new ListStyleProperty() );
@@ -17,21 +24,22 @@ export default class HTMListItem extends HTMTextElement{
 			width:'50%',
 			height:'50%',
 			margin: '0.5em',
-			tagName:"::",
+			tagName:"-list-style-block",
 		});
 
 		this._listStyleElementText = new HTMInlineElement({
-			tagName: "::",
+			tagName:"-list-style-text",
 			margin: '0.5em',
 			textContent : ""
 		});
 
 		this._listStyleElementBlock._textCounterPart = this._listStyleElementText;
-
 		this._listStyleElementBlock.appendProperty( "listStyle", new ListStylePropertyInlineBlock() );
 
 		this.add( this._listStyleElementBlock );
 		this.add( this._listStyleElementText );
+
+		if( textContent !== "")	this.textContent = textContent;
 
 	}
 
@@ -41,10 +49,13 @@ export default class HTMListItem extends HTMTextElement{
 
 	set textContent ( value ) {
 
+		console.error( "Setting text content", value );
+
 		for ( let i = this.children.length - 1 ; i >= 0; i-- ) {
 			const child = this.children[ i ];
 			if( child.isUI && child !== this._listStyleElementBlock && child !== this._listStyleElementText ) {
 
+				console.log( "HtmlLIstItem remove", child)
 				this.remove( child );
 				child.clear();
 
@@ -60,15 +71,22 @@ export default class HTMListItem extends HTMTextElement{
 
 	}
 
+	remove( object ) {
+
+		console.error("remove")
+
+		return super.remove( object );
+	}
+
 	get textContent ( ) {
 		return super.textContent;
 	}
 
-	set listStyle( value ){
+	set listStyleType( value ){
 		this._listStyle.inline = value;
 	}
 
-	get listStyle(){
+	get listStyleType(){
 		return this._listStyle.inline;
 	}
 

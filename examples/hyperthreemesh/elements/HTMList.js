@@ -25,14 +25,21 @@ export default class HTMList extends HTMBlockElement{
 
 		this.appendProperty( "listStyle", new ListStyleProperty() )
 
-		this.listStyle = listStyle;
+		this.listStyleType = listStyle;
+
 	}
 
-	set listStyle( value ){
+	set listStyleType( value ){
+
+		console.log("Set list style "+ value);
+
 		this._listStyle.inline = value;
+
+
+		console.log( this._listStyle._input);
 	}
 
-	get listStyle(){
+	get listStyleType(){
 		return this._listStyle.inline;
 	}
 

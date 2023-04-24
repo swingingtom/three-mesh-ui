@@ -16,20 +16,8 @@ export default class FontSizeProperty extends SubStyleProperty {
 	 */
 	update( element, out ) {
 
-		console.log("fontSize update")
-		// /if( !this._allowsInherit ) {
-
-			this._inheritedInput = this.getInheritedInput( element );
-			console.log( 'inherit?', this._inheritedInput )
-			this._value = _parseValue( this._inheritedInput, element );
-
-		// }else{
-		//
-		// 	console.log( this._input )
-		// 	this._value = _parseValue( this._input, element )
-		// }
-
-		console.log( "    = ", this._value )
+		this._inheritedInput = this.getInheritedInput( element );
+		this._value = _parseValue( this._inheritedInput, element );
 
 		this.computeOutputValue( element );
 
@@ -63,8 +51,6 @@ function _parseValue( v, element ){
 	if( v.endsWith('em') ) {
 
 		element._fontSize._fontRelative = true;
-
-		console.log("VVVVVV", v);
 
 		return parseFloat( v.replace(/[^0-9.]+/,"") ) * element._parent._value._fontSize.getInheritedInput(element._parent._value);
 

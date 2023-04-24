@@ -738,13 +738,9 @@ export default class MeshUIBaseElement extends Object3D {
 
 					default:
 
-						console.log(prop)
-
 						if( this[ prop ] !== undefined ) {
 
-							console.log(`--		${prop} has setter`)
-
-							this[ prop ] = value
+							this[ prop ] = value;
 						}else if( this[`_${prop}`] !== undefined ) {
 							this[`_${prop}`].value = value;
 						} else {

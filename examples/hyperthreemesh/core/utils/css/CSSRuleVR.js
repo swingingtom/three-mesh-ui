@@ -44,13 +44,8 @@ export default class CSSRuleVR {
 
 			if( value.match(/rem|px|em/g) ) {
 
-				if( styleProperty.startsWith('font')){
-					console.error( styleProperty, value)
-				}
 
 				if( value.match(/[\d\s]em/g) && styleProperty.startsWith('font') ){
-					// allow
-					console.error( "allowed", value, styleProperty)
 
 				}else{
 					value = parseFloat( value.replace( /rem|px|em/g, '' ) );

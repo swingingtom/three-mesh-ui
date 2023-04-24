@@ -76,6 +76,13 @@ sup{
 	vertical-align: super;
 }
 
+ol{
+	list-style: decimal;
+	background-color: purple;
+	width: 2rem;
+	height: auto;
+}
+
 ol li{
 	color: gold;
 	font-style: italic;
@@ -169,29 +176,35 @@ function init() {
 function makeTextPanel() {
 
 	const htmlElement = document.createElement("div");
+// 	htmlElement.innerHTML = `
+// 	<header class="bob" data-s="s">
+// 	<h1>three-mesh-ui<sup> v7.1.x</sup><sub>v7.1.x</sub><small>small</small></h1>
+// 	<p>Should look <small>similar</small> than <em>window.document</em> but with <strong>Three-mesh-ui</strong></p>
+// 	<ul>
+// 	<li>Bounlour les nounous.</li>
+// 	<li>Comment allez vous?</li>
+// </ul>
+// <ol>
+// 	<li>Bounlour les nounous.</li>
+// 	<li>Comment allez vous?</li>
+// 	<li>Bounlour les nounous.</li>
+// 	<li>Comment allez vous?</li>
+// 	<li>Bounlour les nounous.</li>
+// 	<li>Comment allez vous?</li>
+// 	<li>Bounlour les nounous.</li>
+// 	<li>Comment allez vous?</li>
+// </ol>
+// 	</header>
+// 	<section class="sec" data-r="row" _target="blank">
+// 	<img src="https://preview.redd.it/hjeayslbw1ta1.jpg?width=640&crop=smart&auto=webp&v=enabled&s=b68ae364a1668641a650a59ba5c333969180e80d">
+//
+// </section>
+// 	`
+
 	htmlElement.innerHTML = `
-	<header class="bob" data-s="s">
-	<h1>three-mesh-ui<sup> v7.1.x</sup><sub>v7.1.x</sub><small>small</small></h1>
-	<p>Should look <small>similar</small> than <em>window.document</em> but with <strong>Three-mesh-ui</strong></p>
-	<ul>
-	<li>Bounlour les nounous.</li>
-	<li>Comment allez vous?</li>
-</ul>
 <ol>
 	<li>Bounlour les nounous.</li>
-	<li>Comment allez vous?</li>
-	<li>Bounlour les nounous.</li>
-	<li>Comment allez vous?</li>
-	<li>Bounlour les nounous.</li>
-	<li>Comment allez vous?</li>
-	<li>Bounlour les nounous.</li>
-	<li>Comment allez vous?</li>
 </ol>
-	</header>
-	<section class="sec" data-r="row" _target="blank">
-	<img src="https://preview.redd.it/hjeayslbw1ta1.jpg?width=640&crop=smart&auto=webp&v=enabled&s=b68ae364a1668641a650a59ba5c333969180e80d">
-
-</section>
 	`
 
   container = HyperThreeMesh.copy( htmlElement );
