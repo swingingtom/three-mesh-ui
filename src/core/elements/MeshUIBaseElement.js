@@ -1466,6 +1466,22 @@ export default class MeshUIBaseElement extends Object3D {
 	}
 
 	/**
+	 * Retrieve a property
+	 * @param propertyName
+	 * @return {BaseProperty|null}
+	 */
+	getProperty( propertyName ){
+
+		if( this[`_${propertyName}`] ){
+
+			return this[`_${propertyName}`];
+
+		}
+
+		return null;
+	}
+
+	/**
 	 *
 	 * @param {string} name
 	 * @param {BaseProperty} instance
@@ -1532,9 +1548,10 @@ export default class MeshUIBaseElement extends Object3D {
  * @property [options.backgroundImage] {Texture|string}
  *
  *
+ * @property [options.borderColor] {Color|number|string}
+ * @property [options.borderOpacity] {number}
  * @property [options.borderRadius] {Vector4|Array.<number>|number|string}
  * @property [options.borderWidth] {Vector4|Array.<number>|number|string}
- * @property [options.borderColor] {Color|number|string}
  *
  * @property [options.boxSizing] {"content-box"|"border-box"}
  * @property [options.width] {number|string|"100%"|"auto"}
