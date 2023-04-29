@@ -300,11 +300,17 @@ function _inlineCollapseSingle( line ) {
 
 	}
 
-	return firstInline.offsetX;
+	return firstInline.offsetX - firstInline._marginLeft - firstInline._paddingLeft;
 
 }
 
-function _inlineCollapseMultiple( line ) {
+/**
+ *
+ * @param line
+ * @return {number}
+ * @private
+ */
+function _inlineCollapseMultiple( line) {
 
 	if ( !line[ 0 ] ) return 0;
 
@@ -350,7 +356,8 @@ function _inlineCollapseMultiple( line ) {
 
 	_collapseRightInlines( inlinesToCollapse, collapsingTarget );
 
-	return line[ 0 ].offsetX;
+	const firstInline = line[0];
+	return firstInline.offsetX - firstInline._marginLeft - firstInline._paddingLeft;
 
 }
 
@@ -362,8 +369,10 @@ function _inlineCollapseMultiple( line ) {
  */
 function _inlineCollapseNothing( line ) {
 
-	if ( !line[ 0 ] ) return 0;
-	return line[ 0 ].offsetX;
+	const firstInline = line[ 0 ];
+	if ( !firstInline ) return 0;
+
+	return firstInline.offsetX - firstInline._marginLeft - firstInline._paddingLeft;
 
 }
 

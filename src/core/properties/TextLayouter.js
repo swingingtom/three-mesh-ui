@@ -222,7 +222,8 @@ export default class TextLayouter extends BaseProperty {
 				const lastInline = line[ line.length - 1 ];
 
 				// Right + Left ( left is negative )
-				line.width = ( lastInline.offsetX + lastInline.cumulativeWidth + lastInline.paddingRight + lastInline.marginRight ) + line[ 0 ].offsetX;
+				// line.width = ( lastInline.offsetX + lastInline.cumulativeWidth + lastInline.paddingRight + lastInline.marginRight ) + line[ 0 ].offsetX;
+				line.width = ( lastInline.offsetX + lastInline.cumulativeWidth ) + line[ 0 ].offsetX;
 
 				width = Math.max( width, line.width);
 			}

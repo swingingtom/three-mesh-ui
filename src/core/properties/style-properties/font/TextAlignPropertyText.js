@@ -145,8 +145,12 @@ function _computeLineOffset ( element, line, lastLine ) {
 
 		case 'justify-right':
 		case 'right':
-			return -line.width + ( element._bounds._innerWidth / 2 ) ;
 
+			if( line.length ){
+				return -line.width + ( element._bounds._innerWidth / 2 ) + line[0]._paddingLeft - line[line.length-1]._paddingRight ;
+			}
+
+			return -line.width + ( element._bounds._innerWidth / 2 );
 
 		case 'center':
 			return -line.width / 2;
