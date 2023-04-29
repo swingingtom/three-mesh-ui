@@ -72,15 +72,17 @@ export default class BoundsBox extends BaseProperty {
 		const width = element._width;
 		const padding = element._padding._value;
 		const borderWidth = element._borderWidth._value;
-		const margin = element._margin._value;
 
+		// check for changes. As reference size, it must look on innerWidth(boxSizing)
+		const margin = element._margin._value;
 		const factor = width._auto ? 1 : width._value;
-		// const newOffsetWidth = (value * factor) - (margin.y + margin.w);
 		const newOffsetWidth = (value * factor) - (margin.y + margin.w);
-		if ( numberEquals( newOffsetWidth, this._offsetWidth ) ) return;
+		const newInnerWidth = newOffsetWidth - ( padding.y + padding.w + borderWidth.y + borderWidth.w );
+		// prevent cascade updates/process/render if no changes detected
+		if ( numberEquals( newInnerWidth, this._innerWidth ) ) return;
 
 		this._offsetWidth = newOffsetWidth;
-		this._innerWidth = this._offsetWidth - ( padding.y + padding.w + borderWidth.y + borderWidth.w );
+		this._innerWidth = newInnerWidth;
 
 		this._centerX = _computeCenterX( element );
 
@@ -100,15 +102,17 @@ export default class BoundsBox extends BaseProperty {
 		const height = element._height;
 		const padding = element._padding._value;
 		const borderWidth = element._borderWidth._value;
+
+		// check for changes. As reference size, it must look on innerHeight(boxSizing)
 		const margin = element._margin._value;
-
 		const factor = height._auto ? 1 : height._value;
-
 		const newOffsetHeight = (value * factor) - ( margin.x + margin.z );
-		if ( numberEquals( newOffsetHeight, this._offsetHeight ) ) return;
+		const newInnerHeight = newOffsetHeight - ( padding.x + padding.z + borderWidth.x + borderWidth.z );
+		// prevent cascade updates/process/render if no changes detected
+		if ( numberEquals( newInnerHeight, this._innerHeight ) ) return;
 
 		this._offsetHeight = newOffsetHeight;
-		this._innerHeight = this._offsetHeight - ( padding.x + padding.z + borderWidth.x + borderWidth.z );
+		this._innerHeight = newInnerHeight;
 		this._centerY = _computeCenterY( element );
 
 		this._propagateHeight( element );

@@ -16,9 +16,14 @@ export default class PaddingProperty extends StyleVector4Property {
 		element._layouter._needsProcess = true;
 		element._renderer._needsRender = true;
 
-		if( element._parent._value ){
-			element._parent._value._layouter._needsProcess = true;
+		const p = element._parent._value;
+		if( p ) {
+
+			p._bounds._needsUpdate = true;
+			p._flexDirection._needsUpdate = true;
+
 		}
+
 	}
 
 }
