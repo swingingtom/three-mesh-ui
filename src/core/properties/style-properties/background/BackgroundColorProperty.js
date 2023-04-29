@@ -7,7 +7,7 @@ export default class BackgroundColorProperty extends StyleColorProperty {
 
 		super( 'backgroundColor', defaultValue, false );
 
-		this._input = new Color(defaultValue);
+		this._input = defaultValue;
 
 	}
 
