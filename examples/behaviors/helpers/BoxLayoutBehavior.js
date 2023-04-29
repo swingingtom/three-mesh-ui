@@ -7,10 +7,11 @@ export default class BoxLayoutBehavior extends Behavior{
 	/**
 	 *
 	 * @param {MeshUIBaseElement} subject
+	 * @param {boolean|string|Texture} texture
 	 * @param {Function|null}onTextureLoadedCallback
 	 *
 	 */
-	constructor( subject, onTextureLoadedCallback = null ) {
+	constructor( subject, texture = false, onTextureLoadedCallback = null ) {
 
 		super( subject );
 
@@ -20,29 +21,40 @@ export default class BoxLayoutBehavior extends Behavior{
 		const uvB = new BufferAttribute( new Float32Array( geometry.getAttribute('uv').array ), 2);
 		geometry.setAttribute('uvB', uvB ).name = 'uvB';
 
+		const materialOptions = {opacity:1, transparent:true}
+
+		if( texture ){
+			if( texture instanceof Texture ){
+				materialOptions.map = texture;
+			}else{
+				materialOptions.map = new Texture();
+
+				new TextureLoader().load( "https://threejs.org/examples/textures/uv_grid_opengl.jpg", (texture) => {
+
+					// Set texture
+					this._texture = texture;
+					this._texture.matrixAutoUpdate = true;
+					this._texture.wrapS = this._texture.wrapT = RepeatWrapping;
+					// Apply texture
+					this._overlay.material.map = this._texture;
+
+					this.act();
+
+					if( onTextureLoadedCallback ) {
+						onTextureLoadedCallback( texture );
+					}
+
+				});
+
+			}
+		}
+
 		/**
 		 *
 		 * @type {Mesh<PlaneGeometry, BoxLayoutMaterial>}
 		 * @private
 		 */
-		this._overlay = new Mesh(
-			geometry,
-			new BoxLayoutMaterial({map:new Texture(),opacity:1, transparent:true}) );
-
-		new TextureLoader().load( "https://threejs.org/examples/textures/uv_grid_opengl.jpg", (texture) => {
-
-			this._texture = texture;
-			this._texture.matrixAutoUpdate = true;
-			this._texture.wrapS = this._texture.wrapT = RepeatWrapping;
-			this._overlay.material.map = this._texture;
-
-			this.act();
-
-			if( onTextureLoadedCallback ) {
-				onTextureLoadedCallback( texture );
-			}
-
-		});
+		this._overlay = new Mesh( geometry, new BoxLayoutMaterial(materialOptions) );
 
 		this._overlay.position.z = 0.0001;
 
@@ -134,6 +146,9 @@ export default class BoxLayoutBehavior extends Behavior{
 class BoxLayoutMaterial extends MeshBasicMaterial{
 
 	constructor(options = {}) {
+
+		options.color = 0xA0C6E8;
+
 		super(options);
 
 		this.userData.padding = { value: new Vector4(0,0,0,0) };
@@ -202,6 +217,8 @@ if( vUvB.x < padding.w || vUvB.x > padding.y || vUvB.y > padding.x || vUvB.y < p
 	// biggerColorComponent = max( biggerColorComponent, diffuseColor.z );
 	// diffuseColor.xyz = vec3( biggerColorComponent );
 
+	//A0C6E8
+	diffuseColor.rgb = vec3(0.627,0.776,0.909);
 	diffuseColor.a = 1.;
 }
 

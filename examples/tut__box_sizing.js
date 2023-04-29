@@ -240,7 +240,7 @@ function boxSizingUI() {
 
 	const gui = exampleGUI();
 
-	const boxlayout = new BoxLayoutBehavior( rootBlock, exampleRender );
+	const boxlayout = new BoxLayoutBehavior( rootBlock, true, exampleRender );
 	boxlayout.attach();
 
 	const params = {
