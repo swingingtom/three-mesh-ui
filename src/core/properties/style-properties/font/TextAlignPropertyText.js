@@ -50,7 +50,7 @@ function _process( element ) {
 		const border = element._borderWidth._value;
 
 		// compute the alignment offset of the line
-		const offsetX = _computeLineOffset( element, line, i === lines.length - 1 , padding);
+		const offsetX = _computeLineOffset( element, line, i === lines.length - 1);
 
 
 
@@ -134,18 +134,18 @@ function _process( element ) {
 
 }
 
-function _computeLineOffset ( element, line, lastLine, padding ) {
+function _computeLineOffset ( element, line, lastLine ) {
 
 	switch ( element._textAlign._value ) {
 
 		case 'justify-left':
 		case 'justify':
 		case 'left':
-			return - element._bounds._innerWidth / 2 + padding.w;
+			return - element._bounds._innerWidth / 2;
 
 		case 'justify-right':
 		case 'right':
-			return -line.width + ( element._bounds._innerWidth / 2 ) - padding.y;
+			return -line.width + ( element._bounds._innerWidth / 2 ) ;
 
 
 		case 'center':
@@ -160,7 +160,7 @@ function _computeLineOffset ( element, line, lastLine, padding ) {
 			}
 
 			// left alignment
-			return - element._bounds._innerWidth / 2 + padding.w;
+			return - element._bounds._innerWidth / 2;
 
 		default:
 			console.warn( `textAlign: '${element._textAlign._value}' is not valid` );
