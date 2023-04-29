@@ -770,8 +770,11 @@ export default class MeshUIBaseElement extends Object3D {
 	 */
 	_rebuildChildrenLists() {
 
-		//console.log( this.name, 'child added' );
+		// prepare a next update on children, usually layouter will also update
 		this._children._needsUpdate = true;
+
+		// but also direct process children, in order to allow selecting them asap
+		this._children._compute(this);
 
 	}
 
@@ -823,6 +826,7 @@ export default class MeshUIBaseElement extends Object3D {
 
 		}
 
+		// Adding UI children has a direct extra cost, we should use add( child1, child2, child3, ... )
 		if( addedUIChildren ) this._rebuildChildrenLists();
 
 		return this;
