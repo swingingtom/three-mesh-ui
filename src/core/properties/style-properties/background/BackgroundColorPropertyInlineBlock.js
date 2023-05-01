@@ -20,12 +20,14 @@ export default class BackgroundColorPropertyInlineBlock extends StyleColorProper
 
 		element._backgroundMesh.visible = !(this._input === 'none' || this._input === 'transparent');
 
+
 		if( this._input === 'inherit' ) {
 
 			this._value.set(this.getInheritedInput( element ));
 
 		} else {
 
+			console.log( this._input )
 			this._value.set( this._input );
 
 		}

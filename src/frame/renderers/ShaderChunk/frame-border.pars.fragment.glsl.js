@@ -30,6 +30,27 @@ float getEllipticFactor( vec2 uv, vec2 center, float radiusX, float radiusY )
 
 }
 
+#ifdef MULTIPLE_FRAMES
+
+varying vec2 vUnitScale;
+
+vec2 applyMeshScale( vec2 scaleableValue )
+{
+	return scaleableValue * vUnitScale;
+}
+
+vec4 applyMeshScale( vec4 scaleableValue )
+{
+	vec4 result = scaleableValue;
+	result.x *= vUnitScale.y;
+	result.z *= vUnitScale.y;
+	result.y *= vUnitScale.x;
+	result.w *= vUnitScale.x;
+	return result;
+}
+
+#endif
+
 `;
 
 export default program;

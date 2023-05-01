@@ -8,9 +8,7 @@ export default class OffsetProperty extends InheritableProperty {
 
 	}
 
-
 	/* eslint-disable no-unused-vars */ update( element, out ) { /* eslint-enable no-unused-vars */
-
 		super.update( element, out);
 
 		// only process if element has ui parent

@@ -34,7 +34,6 @@ export default class FrameMaterial extends ShaderMaterial {
 				cornerBR: { value : new Vector2(1,0) },
 				cornerBL: { value : new Vector2(0,0) },
 				borderWidth: { value: new Vector4(0,0,0,0) },
-
 				frameSize: { value: new Vector3( 1, 1, 1 ) },
 				textureSize: { value: new Vector2( 1, 1 ) }
 			},

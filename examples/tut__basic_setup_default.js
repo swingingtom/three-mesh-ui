@@ -23,7 +23,7 @@ ThreeMeshUI.DefaultValues.set({
 	borderColor: 0xffffff,
 	borderOpacity: 1,
 	borderWidth: 0.02,
-	borderRadius: 0.05,
+	borderRadius: 0.0025,
 	color: 0xff0000
 });
 
@@ -115,6 +115,7 @@ function step2BuildThreeMeshUIElements() {
 
 		// A Block can also define "text" properties that will propagate to any of its Text children
 		fontSize: 0.055,
+		padding: 0.015,
 
 		fontFamily: './assets/fonts/msdf/roboto/regular.json',
 		fontTexture: './assets/fonts/msdf/roboto/regular.png',
@@ -136,42 +137,45 @@ function step2BuildThreeMeshUIElements() {
 	rootBlock.rotation.x = -0.55;
 
 
-	rootBlock.add(
+	rootBlock.set({textContent: 'Hello world'});
+	rootBlock.textContent = "Hello bingo;"
 
-
-		new ThreeMeshUI.Inline( {
-			// three-mesh-ui Text should defined their content to display
-			textContent: 'This library supports line-break-friendly-characters,',
-
-			// if a Text is going to use the exact same Text properties as defined in its parent
-			// there is no need to set those properties again
-			// fontSize: 0.055,
-			// fontFamily: './assets/fonts/msdf/roboto/regular.json',
-			// fontTexture: './assets/fonts/msdf/roboto/regular.png',
-
-		} ),
-
-		new ThreeMeshUI.Inline( {
-			textContent: ' As well as multi-font-size lines with consistent vertical',
-
-			// If a Text must have different Text properties as defined in its parent
-			// We just have to define it on a specific Text
-			fontSize: 0.08,
-			fontFamily: './assets/fonts/msdf/roboto/italic.json',
-			fontTexture: './assets/fonts/msdf/roboto/italic.png',
-
-			color: 0xffffff
-		} ),
-
-		new ThreeMeshUI.Inline( {
-			color: 'inherit',
-			textContent: ' spacing!',
-			fontSize: 0.08,
-			fontFamily: './assets/fonts/msdf/roboto/bold-italic.json',
-			fontTexture: './assets/fonts/msdf/roboto/bold-italic.png',
-		} )
-
-	);
+	// rootBlock.add(
+	//
+	//
+	// 	new ThreeMeshUI.Inline( {
+	// 		// three-mesh-ui Text should defined their content to display
+	// 		textContent: 'This library supports line-break-friendly-characters,',
+	//
+	// 		// if a Text is going to use the exact same Text properties as defined in its parent
+	// 		// there is no need to set those properties again
+	// 		// fontSize: 0.055,
+	// 		// fontFamily: './assets/fonts/msdf/roboto/regular.json',
+	// 		// fontTexture: './assets/fonts/msdf/roboto/regular.png',
+	//
+	// 	} ),
+	//
+	// 	new ThreeMeshUI.Inline( {
+	// 		textContent: ' As well as multi-font-size lines with consistent vertical',
+	//
+	// 		// If a Text must have different Text properties as defined in its parent
+	// 		// We just have to define it on a specific Text
+	// 		fontSize: 0.08,
+	// 		fontFamily: './assets/fonts/msdf/roboto/italic.json',
+	// 		fontTexture: './assets/fonts/msdf/roboto/italic.png',
+	//
+	// 		color: 0xffffff
+	// 	} ),
+	//
+	// 	new ThreeMeshUI.Inline( {
+	// 		color: 'inherit',
+	// 		textContent: ' spacing!',
+	// 		fontSize: 0.08,
+	// 		fontFamily: './assets/fonts/msdf/roboto/bold-italic.json',
+	// 		fontTexture: './assets/fonts/msdf/roboto/bold-italic.png',
+	// 	} )
+	//
+	// );
 
 
 	setInterval( ()=>{

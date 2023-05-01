@@ -14,6 +14,8 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 import * as HyperThreeMesh from 'three-mesh-ui/examples/hyperthreemesh/HyperThreeMesh';
 import MSDFNormalMaterial from 'three-mesh-ui/examples/materials/msdf/MSDFNormalMaterial';
 import ROBOTO_ADJUSTMENT from 'three-mesh-ui/examples/assets/fonts/msdf/roboto/adjustment';
+import BoxLayoutBehavior from 'three-mesh-ui/examples/behaviors/helpers/BoxLayoutBehavior';
+import { Vector4 } from 'three';
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -28,6 +30,7 @@ vrStyleSheet.textContent = `
 	font-family: Roboto;
 	font-style: normal;
 	color: #636363;
+	padding: 0.1rem;
 }
 
 h1{
@@ -43,6 +46,11 @@ h1{
 	border-bottom-width: 0;
 	box-sizing: border-box;
 	text-align: left;
+}
+
+h1 .title{
+	margin: 0.25rem;
+	color: green;
 }
 
 p {
@@ -63,17 +71,31 @@ em{
 }
 
 small{
-	font-size: 0.8em;
+	font-size: 0.5em;
+	margin: 0.1rem;
 }
 
 sub{
-	font-size: 0.5em;
+	font-size: 0.4em;
 	vertical-align: sub;
 }
 
 sup{
-	font-size: 0.5em;
+	font-size: 0.4em;
 	vertical-align: super;
+}
+
+ul{
+	padding-left: 0.1rem;
+}
+
+ol{
+	padding-left: 0.1rem;
+}
+
+
+li{
+	margin-left: 0.1rem;
 }
 
 ol{
@@ -91,6 +113,10 @@ ol li{
 ul li{
 	color: white;
 	border-bottom: 0.005rem solid grey;
+}
+
+img{
+	border-radius : 0.1rem;
 }
 
 `;
@@ -178,7 +204,7 @@ function makeTextPanel() {
 	const htmlElement = document.createElement("div");
 // 	htmlElement.innerHTML = `
 // 	<header class="bob" data-s="s">
-// 	<h1>three-mesh-ui<sup> v7.1.x</sup><sub>v7.1.x</sub><small>small</small></h1>
+// 	<h1><span class="title">three-mesh-ui</span><sup> v7.1.x</sup><sub>v7.1.x</sub><small>small</small></h1>
 // 	<p>Should look <small>similar</small> than <em>window.document</em> but with <strong>Three-mesh-ui</strong></p>
 // 	<ul>
 // 	<li>Bounlour les nounous.</li>
@@ -196,18 +222,23 @@ function makeTextPanel() {
 // </ol>
 // 	</header>
 // 	<section class="sec" data-r="row" _target="blank">
-// 	<img src="https://preview.redd.it/hjeayslbw1ta1.jpg?width=640&crop=smart&auto=webp&v=enabled&s=b68ae364a1668641a650a59ba5c333969180e80d">
+// 	<img src="/assets/spiny_bush_viper.jpg">
 //
 // </section>
-// 	`
-
+// `
 	htmlElement.innerHTML = `
-<ol>
-	<li>Bounlour les nounous.</li>
-</ol>
-	`
+	<p>Should look <small>similar</small> than <em>window.document</em> but with <strong>Three-mesh-ui</strong></p>
+`
 
   container = HyperThreeMesh.copy( htmlElement );
+
+	// container.traverse( (o3d) => {
+	// 	if( o3d.isBox ){
+	// 		new BoxLayoutBehavior(o3d).attach()
+	// 	}
+	// })
+
+	// new BoxLayoutBehavior(container).attach();
 
   container.position.set(0, 1, -1.8);
 

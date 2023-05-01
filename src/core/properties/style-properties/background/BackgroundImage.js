@@ -40,6 +40,7 @@ export default class BackgroundImage extends SubStyleProperty {
 
 	output( out ) {
 
+		if( this._value === 'unset' ) console.warn('Unset');
 		out[this._id] = this._value;
 
 		out['tSize'] = this._textureSize;

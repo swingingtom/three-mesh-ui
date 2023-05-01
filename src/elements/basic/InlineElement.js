@@ -23,6 +23,8 @@ import TextAlignPropertyInline from '../../core/properties/style-properties/font
 /* eslint-disable no-unused-vars */
 import { Object3D } from 'three';
 import VerticalAlignPropertyInline from '../../core/properties/style-properties/font/VerticalAlignPropertyInline';
+import BoundsInlines from '../../core/properties/BoundsInline';
+import TextDecorationPropertyInline from '../../core/properties/style-properties/font/TextDecorationPropertyInline';
 /* eslint-enable no-unused-vars */
 
 export default class InlineElement extends MeshUIBaseElement {
@@ -65,7 +67,7 @@ export default class InlineElement extends MeshUIBaseElement {
 
 				validChildren.push( argument );
 
-				argument.position.z = 0.005;
+				// argument.position.z = 0.005;
 
 			} else {
 
@@ -117,6 +119,7 @@ export default class InlineElement extends MeshUIBaseElement {
 		if( !properties.inlines ) properties.inlines = InlinesProperty;
 		if( !properties.layouter ) properties.layouter = InlineLayouter;
 		if( !properties.renderer ) properties.renderer = RendererPropertyInline;
+		if( !properties.bounds ) properties.bounds = BoundsInlines;
 
 
 		if( !properties.fontFamily ) properties.fontFamily = FontFamilyPropertyInline;
@@ -130,6 +133,7 @@ export default class InlineElement extends MeshUIBaseElement {
 		if( !properties.whiteSpace ) properties.whiteSpace = WhiteSpacePropertyInline;
 		if( !properties.segments ) properties.segments = SegmentsPropertyInline;
 		if( !properties.textAlign ) properties.textAlign = TextAlignPropertyInline;
+		if( !properties.textDecoration ) properties.textDecoration = TextDecorationPropertyInline;
 		if( !properties.verticalAlign ) properties.verticalAlign = VerticalAlignPropertyInline;
 
 		if( !properties.fontKerning ) properties.fontKerning = FontKerningPropertyInline;
@@ -154,6 +158,13 @@ export default class InlineElement extends MeshUIBaseElement {
 				}
 			}
 		);
+
+		/**
+		 *
+		 * @type {boolean}
+		 * @internal
+		 */
+		element._backgroundNone = true;
 
 	}
 }

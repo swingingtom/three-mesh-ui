@@ -55,6 +55,8 @@ import BaseProperty from './../properties/BaseProperty';
 import FontFamily from '../../font/FontFamily';
 import { DefaultValues } from '../../three-mesh-ui';
 import VerticalAlignProperty from '../properties/style-properties/font/VerticalAlignProperty';
+import FrameMaterial from '../../frame/materials/FrameMaterial';
+import TextDecorationProperty from '../properties/style-properties/font/TextDecorationProperty';
 /* eslint-enable no-unused-vars */
 
 export default class MeshUIBaseElement extends Object3D {
@@ -104,6 +106,7 @@ export default class MeshUIBaseElement extends Object3D {
 		 * @internal
 		 */
 		this._backgroundMaterial = null;
+		// this._backgroundMaterial = new FrameMaterial();
 
 		/**
 		 *
@@ -143,6 +146,7 @@ export default class MeshUIBaseElement extends Object3D {
 		 * @internal
 		 */
 		this._fontMaterial = new InheritableMaterialProperty('fontMaterial');
+		this._fontDecorationMaterial = null;
 
 		/**
 		 *
@@ -297,6 +301,8 @@ export default class MeshUIBaseElement extends Object3D {
 
 		this._textAlign = properties.textAlign ? new properties.textAlign() : new TextAlignProperty();
 
+		this._textDecoration = properties.textDecoration ? new properties.textDecoration( defaults.textDecoration ) : new TextDecorationProperty( defaults.textDecoration )
+
 		this._verticalAlign = properties.verticalAlign ? new properties.verticalAlign() : new VerticalAlignProperty();
 
 		this._autoSize = properties.autoSize ? new properties.autoSize() : new EmptyProperty("autoSize");
@@ -407,6 +413,7 @@ export default class MeshUIBaseElement extends Object3D {
 			this._inlineJustificator,
 			this._textAlign,
 
+			this._textDecoration,
 
 			// !! this._renderer renderer MUST NOT BE in components !!
 
@@ -655,6 +662,7 @@ export default class MeshUIBaseElement extends Object3D {
 					case 'boxSizing':
 					case 'position':
 					case 'verticalAlign':
+					case 'textDecoration':
 						if( this[`_${prop}`] ){
 							this[`_${prop}`].inline = value;
 						}
@@ -1060,7 +1068,6 @@ export default class MeshUIBaseElement extends Object3D {
 	 *
 	 * @returns {Material|ShaderMaterial}
 	 */
-	// get fontMaterial() { return this._fontMaterial__; }
 	get fontMaterial() { return this._fontMaterial.value; }
 
 	/**
@@ -1070,6 +1077,7 @@ export default class MeshUIBaseElement extends Object3D {
 	set fontMaterial( material ) {
 
 		this._fontMaterial.value = material;
+		this._fontDecorationMaterial = null;
 
 	}
 
@@ -1564,6 +1572,7 @@ export default class MeshUIBaseElement extends Object3D {
  * @property [options.margin] {Vector4|Array.<number>|number|string}
  *
  * @property [options.textAlign] {"left"|"right"|"center"|"justify"|"justify-left"|"justify-right"}
+ * @property [options.textDecoration] {"none"|"underline"|"overline"|"line-through"|"inherit"}
  * @property [options.visible] {boolean}
  * @property [options.letterSpacing] {number}
  *

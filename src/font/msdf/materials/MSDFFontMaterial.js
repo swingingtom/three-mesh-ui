@@ -5,6 +5,7 @@ import { vertexShader, fragmentShader } from '../renderers/ShaderLib/msdf-fontma
 // JSDoc related import
 /* eslint-disable no-unused-vars */
 import { Material, Texture, Color } from 'three';
+import { decorationFragmentShader, decorationVertexShader } from '../renderers/ShaderLib/msdf-decorationmaterial.glsl';
 /* eslint-enable no-unused-vars */
 
 export const ALPHA_TEST = 0.02;
@@ -97,9 +98,6 @@ export default class MSDFFontMaterial extends ShaderMaterial {
 
 	}
 
-
-
-
 	/**
 	 * The color will be the diffuse uniform
 	 * @returns {Vector2}
@@ -166,4 +164,29 @@ export default class MSDFFontMaterial extends ShaderMaterial {
 		this.uniforms.alphaTest.value = v;
 	}
 
+	cloneAsDecorationMaterial(){
+		return new MSDFDecorationMaterial(this.uniforms);
+	}
+
+}
+
+class MSDFDecorationMaterial extends ShaderMaterial {
+	constructor( uniforms ) {
+		super( {
+
+			uniforms,
+			transparent: true,
+			clipping: true,
+			vertexShader:decorationVertexShader,
+			fragmentShader:decorationFragmentShader,
+			extensions: {
+				derivatives: true
+			},
+		} );
+
+		// webgl preprocessor AlphaTest set by default
+		this.defines[ 'USE_ALPHATEST' ] = '';
+		this.needsUpdate = true;
+
+	}
 }

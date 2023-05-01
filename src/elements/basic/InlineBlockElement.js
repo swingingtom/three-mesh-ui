@@ -95,7 +95,7 @@ export default class InlineBlockElement extends MeshUIBaseElement {
 
 				validChildren.push( argument );
 
-				argument.position.z = 0.005;
+				// argument.position.z = 0.005;
 
 			} else {
 

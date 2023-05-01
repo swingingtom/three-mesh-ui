@@ -16,7 +16,7 @@ export default class SubStyleProperty extends BaseProperty{
 	 */
 	constructor( propertyId, defaultValue, primitive = true) {
 
-		super( propertyId, 'unset', primitive );
+		super( propertyId, defaultValue, primitive );
 
 		/**
 		 * @type {any}

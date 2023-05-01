@@ -26,5 +26,4 @@ float tap(vec2 offsetUV) {
 	return alpha;
 }
 `;
-
 export default program;

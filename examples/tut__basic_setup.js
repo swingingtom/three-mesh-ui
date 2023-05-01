@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
 
 import ThreeMeshUI from 'three-mesh-ui';
+import { Texture, TextureLoader } from 'three';
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -36,6 +37,7 @@ function step1BuildThreeJSElements() {
 
 	camera = new THREE.PerspectiveCamera( 60, WIDTH / HEIGHT, 0.1, 100 );
 
+
 	renderer = new THREE.WebGLRenderer( {
 		antialias: true
 	} );
@@ -47,8 +49,14 @@ function step1BuildThreeJSElements() {
 
 	controls = new OrbitControls( camera, renderer.domElement );
 	camera.position.set( 0, 1.6, 0 );
+
 	controls.target = new THREE.Vector3( 0, 1, -1.8 );
 	controls.update();
+
+
+	camera.zoom = 5;
+	camera.updateProjectionMatrix();
+
 
 	// ROOM
 
@@ -83,7 +91,6 @@ function step2BuildThreeMeshUIElements() {
 		// A Block must define its "box-sizing" properties
 		width: 1.2,
 		height: 'auto', // the text will define the output height
-		padding: 0.05,
 		boxSizing: 'border-box',
 
 		// A Block can define its "layout" properties
@@ -91,9 +98,12 @@ function step2BuildThreeMeshUIElements() {
 		textAlign: 'left',
 
 		borderRadius: 0.015,
+		padding: 0.0,
 
 		backgroundColor : 0x000000,
 		backgroundOpacity : 0.5,
+
+		lineHeight: 1.5,
 
 		// A Block can also define "text" properties that will propagate to any of its Text children
 		fontSize: 0.055,
@@ -118,20 +128,38 @@ function step2BuildThreeMeshUIElements() {
 	rootBlock.rotation.x = -0.55;
 
 
+	const span = new ThreeMeshUI.Inline( {
+		// three-mesh-ui Text should defined their content to display
+		textContent: 'This library supports line-friendly-characters',
+		// textContent: 'physics is the new standard',
+		// padding: '0 0.1 0 0.5'
+		padding: '0.05',
+		backgroundColor: 0xff9900,
+		borderRadius: 0.015,
+		borderBottomWidth : 5,
+		borderColor : 0xff9900,
+		color: 0x99ff00,
+		// borderRadius: 0.01
+		// if a Text is going to use the exact same Text properties as defined in its parent
+		// there is no need to set those properties again
+		// fontSize: 0.055,
+		// fontFamily: './assets/fonts/msdf/roboto/regular.json',
+		// fontTexture: './assets/fonts/msdf/roboto/regular.png',
+
+	} );
+
+	const spacing = new ThreeMeshUI.Inline( {
+			textContent: ' spacing!',
+			fontSize: 0.08,
+			color: 0xff0099,
+			fontFamily: './assets/fonts/msdf/roboto/bold-italic.json',
+			fontTexture: './assets/fonts/msdf/roboto/bold-italic.png',
+		} );
+
+
 	rootBlock.add(
 
-
-		new ThreeMeshUI.Inline( {
-			// three-mesh-ui Text should defined their content to display
-			textContent: 'This library supports line-break-friendly-characters,',
-
-			// if a Text is going to use the exact same Text properties as defined in its parent
-			// there is no need to set those properties again
-			// fontSize: 0.055,
-			// fontFamily: './assets/fonts/msdf/roboto/regular.json',
-			// fontTexture: './assets/fonts/msdf/roboto/regular.png',
-
-		} ),
+		span,
 
 		new ThreeMeshUI.Inline( {
 			textContent: ' As well as multi-font-size lines with consistent vertical',
@@ -139,23 +167,30 @@ function step2BuildThreeMeshUIElements() {
 			// If a Text must have different Text properties as defined in its parent
 			// We just have to define it on a specific Text
 			fontSize: 0.08,
+			color: 0x0099ff,
 			fontFamily: './assets/fonts/msdf/roboto/italic.json',
 			fontTexture: './assets/fonts/msdf/roboto/italic.png',
 		} ),
 
-		new ThreeMeshUI.Inline( {
-			textContent: ' spacing!',
-			fontSize: 0.08,
-			fontFamily: './assets/fonts/msdf/roboto/bold-italic.json',
-			fontTexture: './assets/fonts/msdf/roboto/bold-italic.png',
-		} )
-
+		spacing
 	);
 
 
+	const decos = ["underline","overline","none", "line-through"];
 	setInterval( ()=>{
-		rootBlock.textContent = "'./assets/fonts/msdf/roboto/bold-italic.json'",
-			rootBlock.set({textContent:"'./assets/fonts/msdf/roboto/bold-italic.json'", color:0xff9900})
+		// rootBlock.textContent = "'./assets/fonts/msdf/roboto/bold-italic.json'",
+		// 	rootBlock.set({textContent:"'./assets/fonts/msdf/roboto/bold-italic.json'", color:0xff9900})
+
+
+		// rootBlock.set({color:Math.random()*0xffffff})
+		// rootBlock.set({borderRadius: Math.random()*0.15})
+
+		// console.log( span._borderRadius._cornerTL );
+
+		const deco = decos[ Math.floor(Math.random()*decos.length)];
+
+		span.set({backgroundColor:Math.random()*0xffffff, textDecoration: deco, fontSize: Math.random()*0.1});
+
 	},2500)
 
 }

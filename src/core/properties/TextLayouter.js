@@ -153,7 +153,7 @@ export default class TextLayouter extends BaseProperty {
 		let width = 0, height =0, lineOffsetY = 0;
 
 		// calculates lines
-		lines.forEach( ( line, i ) => {
+		lines.forEach( ( line, lineIndex ) => {
 
 			// starts by processing whitespace, it will return a collapsed left offset
 			const whiteSpaceOffset = inlineCollapser( line );
@@ -169,6 +169,10 @@ export default class TextLayouter extends BaseProperty {
 
 				inline.offsetX -= whiteSpaceOffset;
 
+				// set line index
+				inline.lineIndex = lineIndex;
+				inline.line = line;
+
 			});
 
 			line.lineHeight = lineHeight;
@@ -176,10 +180,10 @@ export default class TextLayouter extends BaseProperty {
 
 			// const baseLineDelta = lineHeight - lineBase;
 
-			if( i === 0 ){
+			if( lineIndex === 0 ){
 				lineOffsetY = -(lineHeight*INTERLINE - lineHeight) * 0.5;
 			} else {
-				lineOffsetY -= lines[i-1].lineHeight*INTERLINE;
+				lineOffsetY -= lines[lineIndex-1].lineHeight*INTERLINE;
 			}
 
 			line.y = lineOffsetY;
@@ -190,19 +194,18 @@ export default class TextLayouter extends BaseProperty {
 
 				inline.offsetY = lineOffsetY - inline.anchor;
 
-				// VERTICAL ALIGN
+				// // VERTICAL ALIGN @TODO: Move it in property logic
 				if( inline.lineHeight < line.lineHeight ){
-
-					if ( inline.verticalAlign === 'super' ) {
-						inline.offsetY += inline.lineBase / 5;
-					}else if( inline.verticalAlign === 'sub'){
-						inline.offsetY -= line.lineBase * 1.2 - inline.lineBase;
-					}else{
-						// Baseline
+				//
+				// 	if ( inline.verticalAlign === 'super' ) {
+				// 		inline.offsetY += inline.lineBase / 5;
+				// 	}else if( inline.verticalAlign === 'sub'){
+				// 		inline.offsetY -= line.lineBase * 1.2 - inline.lineBase;
+				// 	}else{
+				// 		// Baseline
 							inline.offsetY -= line.lineBase- inline.lineBase;
-					}
-
-
+				// 	}
+				//
 				}
 
 			});

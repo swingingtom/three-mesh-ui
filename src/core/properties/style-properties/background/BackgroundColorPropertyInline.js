@@ -12,7 +12,9 @@ export default class BackgroundColorPropertyInline extends StyleColorProperty {
 
 		this._allowsInherit = false;
 
-		this._input = 0x000000;
+
+		console.error( defaultValue )
+		this._input = defaultValue;
 
 
 	}
@@ -25,17 +27,37 @@ export default class BackgroundColorPropertyInline extends StyleColorProperty {
 	computeOutputValue( element ) { /* eslint-enable no-unused-vars */
 
 		// @TODO : Changes multiple mesh visibility
-		// element._backgroundMesh.visible = !(this._input === 'none' || this._input === 'transparent');
+
+		const visibility = !(this._input === 'none' || this._input === 'transparent');
+		if( element._backgroundMesh ){
+
+			if( !visibility ) {
+
+				element._backgroundMesh.visible = false;
+				element._backgroundNone = true;
+
+			}
+
+		} else if( visibility ){
+
+			element._backgroundNone = false;
+
+		}
+
 
 		if( this._input === 'inherit' ) {
 
+			console.error("inh")
 			this._value.set(this.getInheritedInput( element ));
 
-		} else {
+		} else if( visibility ) {
 
+			 console.error("non");
 			this._value.set( this._input );
 
 		}
+
+
 
 	}
 

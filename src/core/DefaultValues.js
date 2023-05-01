@@ -5,7 +5,7 @@ const _values = {
 	fontKerning: 'normal',
 	fontStyle: 'normal',
 	fontWeight : 'normal',
-	offset: 0.005,
+	offset: 0.01,
 	lineHeight: 1.2,
 	lineBreak: '- ,.:?!\n',// added '\n' to also acts as friendly breaks when white-space:normal
 	whiteSpace: 'pre-line',
@@ -14,6 +14,7 @@ const _values = {
 	alignItems : 'start',
 	backgroundImage: null,
 	textAlign : 'left',
+	textDecoration: 'none',
 	boxSizing: 'content-box',
 	position: 'static',
 	color: 0xffffff,
@@ -49,7 +50,8 @@ const _blocks = {
 const _inlines = {
 	fontStyle: 'inherit',
 	fontWeight: 'inherit',
-	color: 'inherit'
+	color: 'inherit',
+	textDecoration: 'inherit',
 }
 
 const _registry = {

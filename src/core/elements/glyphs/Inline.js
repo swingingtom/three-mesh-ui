@@ -1,3 +1,5 @@
+import Line from './Line';
+
 /**
  * This is the abstract/base class / interface of any inline
  * Inline can be positioned according to text rules
@@ -23,6 +25,8 @@ export default class Inline {
 
 		/** @protected */ this._marginLeft = 0;
 		/** @protected */ this._marginRight = 0;
+
+		/** @internal */ this._lineIndex = -1;
 
 	}
 
@@ -259,4 +263,20 @@ export default class Inline {
 	 * @returns {number}
 	 */
 	get fontFactor() { return this._fontFactor }
+
+	set lineIndex( v ){
+		this._lineIndex = v;
+	}
+
+	get lineIndex() { return this._lineIndex; }
+
+	set line( v ){
+		this._line = v;
+	}
+
+	/**
+	 *
+	 * @return {./Line}
+	 */
+	get line() { return this._line; }
 }

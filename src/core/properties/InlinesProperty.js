@@ -19,29 +19,6 @@ export default class InlinesProperty extends BaseProperty{
 		 */
 		this._value = null;
 
-		// value
-
-		// 3. Inlines
-		// this._textContentInlines = this._textContentGlyphs.map( ( glyphBox ) => glyphBox.asInlineGlyph() );
-
-		// 4. kerning
-		// this._buildContentKernings();
-
-
-		// 5.? Apply margin and padding on first and last inlines
-		// if( this._textContentInlines.length ) {
-		//
-		// 	// First gets left side
-		// 	this._textContentInlines[0].paddingLeft = this._padding.w;
-		// 	this._textContentInlines[0].marginLeft = this._margin.w;
-		//
-		// 	// Last gets right side
-		// 	const lastIndex = this._textContentInlines.length - 1;
-		// 	this._textContentInlines[lastIndex].paddingRight = this._padding.y;
-		// 	this._textContentInlines[lastIndex].marginRight = this._margin.y;
-		//
-		// }
-
 	}
 
 	process( element ) {
