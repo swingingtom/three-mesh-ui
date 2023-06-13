@@ -23,6 +23,7 @@ import StylePropertyWrapper from './elements/html/properties/StylePropertyWrappe
 import StyleComputedPropertyWrapper from './elements/html/properties/StyleComputedPropertyWrapper';
 import ChildrenBox from './core/properties/hierarchy/ChildrenBox';
 import SubStyleProperty from './core/properties/style-properties/SubStyleProperty';
+import TextContentProperty from './core/properties/TextContentProperty';
 
 
 
@@ -48,7 +49,9 @@ const ThreeMeshUI = {
 	StyleComputedPropertyWrapper,
 	ChildrenBox,
 	SubStyleProperty,
-	UpdateManager
+	UpdateManager,
+	InheritableProperty,
+	TextContentProperty,
 };
 
 
@@ -78,6 +81,8 @@ export { StyleComputedPropertyWrapper }
 export { ChildrenBox }
 export { SubStyleProperty }
 export { UpdateManager }
+export { TextContentProperty }
+
 export default ThreeMeshUI;
 
 console.warn("ThreeMeshUI v7.1.x - Three "+window.__THREE__)

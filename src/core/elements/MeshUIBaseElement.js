@@ -31,7 +31,7 @@ import OrderProperty from '../properties/style-properties/flex/OrderProperty';
 import PositionProperty from '../properties/style-properties/PositionProperty';
 import WidthProperty from '../properties/style-properties/bounds/WidthProperty';
 import HeightProperty from '../properties/style-properties/bounds/HeightProperty';
-import TextContentEmpty from '../properties/TextContentEmpty';
+import TextContentDefault from '../properties/TextContentDefault';
 import FontStyleProperty from '../properties/style-properties/font/FontStyleProperty';
 import FontWeightProperty from '../properties/style-properties/font/FontWeightProperty';
 import FontFamilyProperty from '../properties/style-properties/font/FontFamilyProperty';
@@ -57,6 +57,8 @@ import { DefaultValues } from '../../three-mesh-ui';
 import VerticalAlignProperty from '../properties/style-properties/font/VerticalAlignProperty';
 import FrameMaterial from '../../frame/materials/FrameMaterial';
 import TextDecorationProperty from '../properties/style-properties/font/TextDecorationProperty';
+import { renderOrderTransformer } from '../../utils/mediator/transformers/MeshTransformers';
+import BooleanProperty from '../properties/BooleanProperty';
 /* eslint-enable no-unused-vars */
 
 export default class MeshUIBaseElement extends Object3D {
@@ -130,8 +132,11 @@ export default class MeshUIBaseElement extends Object3D {
 		this._backgroundMeshMediation = {
 			backgroundCastShadow: { m: 'castShadow' },
 			backgroundReceiveShadow: { m: 'receiveShadow' },
-			renderOrder: {m: 'renderOrder' }
+			renderOrder: {m: 'renderOrder', t: renderOrderTransformer }
 		};
+
+
+		this._fog = new InheritableBooleanProperty("fog");
 
 		/**
 		 *
@@ -275,10 +280,10 @@ export default class MeshUIBaseElement extends Object3D {
 
 		/**
 		 *
-		 * @type {TextContentEmpty|TextContentText|TextContentInline}
+		 * @type {TextContentDefault|TextContentText|TextContentInline}
 		 * @internal
 		 */
-		this._textContent = properties.textContent ? new properties.textContent() : new TextContentEmpty();
+		this._textContent = properties.textContent ? new properties.textContent() : new TextContentDefault();
 
 		/**
 		 *
@@ -329,6 +334,8 @@ export default class MeshUIBaseElement extends Object3D {
 
 			this._autoSize,
 
+
+			this._fog,
 
 			this._fontFamily,
 			this._fontStyle,
@@ -619,7 +626,9 @@ export default class MeshUIBaseElement extends Object3D {
 				// properties
 
 				// As textContent property might alter the hierarchy, do not wait until update
-				// 	case 'textContent' :
+				case 'textContent' :
+					this.textContent = value;
+					break;
 
 					case 'fontSmooth':
 					case 'renderOrder':
@@ -747,12 +756,11 @@ export default class MeshUIBaseElement extends Object3D {
 					default:
 
 						if( this[ prop ] !== undefined ) {
-
 							this[ prop ] = value;
 						}else if( this[`_${prop}`] !== undefined ) {
 							this[`_${prop}`].value = value;
 						} else {
-							// error
+							this[ prop ] = value
 						}
 				}
 
@@ -1369,6 +1377,30 @@ export default class MeshUIBaseElement extends Object3D {
 	 */
 	unbindFontMeshProperties () { }
 
+
+	/**
+	 *
+	 * @param {boolean} value
+	 */
+	set fog( value ) {
+
+		this._fog.value = value;
+		console.log( this._fog.value )
+
+	}
+
+	/**
+	 *
+	 * @return {boolean}
+	 */
+	get fog() {
+
+		if ( this._fog ) return this._fog.value;
+
+		return false;
+	}
+
+
 	/**
 	 *
 	 * @param {boolean} value
@@ -1550,7 +1582,7 @@ export default class MeshUIBaseElement extends Object3D {
  * @property [options.segments] {number}
  * @property [options.fontFamily] {FontFamily|string}
  * @property [options.fontStyle] {"normal"|"italic"}
- * @property [options.fontWeight] {"light"|"normal"|"bold"|"bolder"|100|200|300|400|500|600|700|800|900}
+ * @property [options.fontWeight] {"light"|"normal"|"bold"|"bolder"|100|200|300|400|500|600|700|800|900|"100"|"200"|"300"|"400"|"500"|"600"|"700"|"800"|"900"}
  *
  * @property [options.color]{Color|number|string} The font color
  *
@@ -1583,4 +1615,8 @@ export default class MeshUIBaseElement extends Object3D {
  * @property [options.verticalAlign] {"baseline","super","sub","inherit"}
  *
  *
+ */
+
+/**
+ * @typedef {"light"|"normal"|"bold"|"bolder"|100|200|300|400|500|600|700|800|900|"100"|"200"|"300"|"400"|"500"|"600"|"700"|"800"|"900"} FontWeightFormat
  */

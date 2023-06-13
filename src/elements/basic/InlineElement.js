@@ -1,5 +1,5 @@
 import MeshUIBaseElement from '../../core/elements/MeshUIBaseElement';
-import TextContentInline from '../../core/properties/TextContentInline';
+import TextContentProperty from '../../core/properties/TextContentProperty';
 import InlinesProperty from '../../core/properties/InlinesProperty';
 import GlyphsProperty from '../../core/properties/GlyphsProperty';
 import ColorProperty from '../../core/properties/style-properties/font/ColorProperty';
@@ -32,10 +32,10 @@ export default class InlineElement extends MeshUIBaseElement {
 	/**
 	 *
 	 * @param {import('./../../core/elements/MeshUIBaseElement').Options} [values={}]
+	 * @param {object} [properties={}]
 	 */
-	constructor( values = { }) {
+	constructor( values = { }, properties = {}) {
 
-		const properties = {};
 		InlineElement.definePropertiesValues( properties, values );
 
 		super( properties, values );
@@ -71,7 +71,7 @@ export default class InlineElement extends MeshUIBaseElement {
 
 			} else {
 
-				console.warn( 'Block element can only contain Box elements.', argument );
+				console.warn( 'Inline element can only contain inline elements.', argument );
 
 			}
 
@@ -114,7 +114,7 @@ export default class InlineElement extends MeshUIBaseElement {
 	static definePropertiesValues( properties, values ) {  /* eslint-enable no-unused-vars */
 
 		if( !properties.children ) properties.children = ChildrenInline;
-		if( !properties.textContent ) properties.textContent = TextContentInline;
+		if( !properties.textContent ) properties.textContent = TextContentProperty;
 		if( !properties.glyphs ) properties.glyphs = GlyphsProperty;
 		if( !properties.inlines ) properties.inlines = InlinesProperty;
 		if( !properties.layouter ) properties.layouter = InlineLayouter;
@@ -141,6 +141,7 @@ export default class InlineElement extends MeshUIBaseElement {
 		// if( !properties.inlines ) properties.inlines = InlinesProperty;
 
 		if( !values.uiType ) values.uiType = 'inline';
+
 
 	}
 

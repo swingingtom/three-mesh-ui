@@ -1,8 +1,9 @@
 import BaseProperty from '../BaseProperty';
 import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
-import { BufferAttribute, DoubleSide, Mesh, MeshBasicMaterial, PlaneGeometry, Vector3 } from 'three';
+import { AlwaysDepth, BufferAttribute, DepthModes, DoubleSide, GreaterEqualDepth, GreaterEqualStencilFunc, LessDepth, LessEqualDepth, Mesh, MeshBasicMaterial, PlaneGeometry, Vector3 } from 'three';
 import FrameMaterial from '../../../frame/materials/FrameMaterial';
 import { UV, WORLD_UNITS } from '../../../utils/Units';
+import { NeverDepth } from 'three/src/constants';
 
 export default class RendererPropertyInline extends BaseProperty {
 
@@ -129,54 +130,102 @@ export default class RendererPropertyInline extends BaseProperty {
 
 		if( element._textDecoration._value !== 'none') {
 
-			const decoline = element._textDecoration._value;
-			console.log( "text deco ", element._textDecoration._value)
-
 			const decos = [];
+			const decorations = element._textDecoration._value.split(" ");
+			for ( let i = 0; i < decorations.length; i++ ) {
+				const decoration = decorations[ i ];
 
-			for ( let i = 0; i < lines.length - 1; i += 2 ) {
+				for ( let j = 0; j < lines.length - 1; j += 2 ) {
 
 
-				const firstInlineOfLine = inlines[ lines[ i ] ];
-				const lastInlineOfLine = inlines[ lines[ i + 1 ] ];
+					const firstInlineOfLine = inlines[ lines[ j ] ];
+					const lastInlineOfLine = inlines[ lines[ j + 1 ] ];
 
-				const line = firstInlineOfLine.line;
+					let decoHeight = FONTSIZE / 12;
 
-				let right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
-				let left = firstInlineOfLine._offsetX;
+					let to = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
+					let from = firstInlineOfLine._offsetX;
 
-				let width = right - left;
-				// let height = FONTSIZE / 18; //18
-				let decoHeight = FONTSIZE / 18; //18
+					let posY;
+					if ( decoration === 'underline' ){
 
-				const posX = left;
+						posY = lastInlineOfLine.line.y - LINE_HEIGHT + ( DELTA / 2 ) - decoHeight/2;
 
-				let posY;
-				if ( decoline === 'underline' ){
+						// check all for under
+						for ( let k = lines[j]; k <= lines[j+1]; k++ ){
 
-					posY = lastInlineOfLine.line.y - LINE_HEIGHT + ( DELTA / 2 ) - decoHeight/2;
+							const inl = inlines[k];
 
-				} else if( decoline === 'overline' ) {
+							if( inl.offsetY - inl.height <= posY ){
 
-					posY = lastInlineOfLine.line.y - (DELTA/2) - decoHeight;
+								if( inlines[k] === firstInlineOfLine ) {
+									from = inlines[k].offsetX + inlines[k].underlineFrom;
+									continue;
+								}
 
-				} else if( decoline === 'line-through' ) {
+								to = inlines[k].offsetX + inlines[k].underlineTo;
+								decos.push( _buildDecorationSegment(from,to,decoHeight, posY))
+								from = inlines[k].offsetX + inlines[k].underlineFrom;
 
-					posY = firstInlineOfLine.line.y - LINE_HEIGHT/2 - decoHeight/2;
+								continue;
+							}
+
+							if( inlines[k] === lastInlineOfLine ){
+								to = inlines[k].offsetX + inlines[k].underlineFrom;
+								decos.push( _buildDecorationSegment(from,to,decoHeight, posY))
+							}
+						}
+
+
+					} else if( decoration === 'overline' ) {
+
+						posY = lastInlineOfLine.line.y;
+
+						decos.push( _buildDecorationSegment(from,to,decoHeight, posY) )
+
+					} else if( decoration === 'line-through' ) {
+
+						posY = firstInlineOfLine.line.y - LINE_HEIGHT/2 - decoHeight/2;
+						decos.push( _buildDecorationSegment(from,to,decoHeight, posY) )
+
+					}
+
+
+
+
+
+// 					const line = firstInlineOfLine.line;
+// // Check for differences
+// 					if ( LINE_HEIGHT < line.lineHeight ) {
+// 						posY -= ( line.lineHeight - LINE_HEIGHT ) * 0.75;
+// 					}
+
+
+					// let right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
+					// let left = firstInlineOfLine._offsetX;
+					//
+					// let width = right - left;
+					//
+					//
+					// const posX = left;
+					//
+					//
+					//
+					//
+					//
+					// let bgGeo = new PlaneGeometry( width, decoHeight );
+					// bgGeo.translate( posX + width / 2, posY, 0 );
+					//
+					// decos.push( bgGeo );
 
 				}
-
-				// Check for differences
-				if ( LINE_HEIGHT < line.lineHeight ) {
-					posY -= ( line.lineHeight - LINE_HEIGHT ) * 0.75;
-				}
-
-				let bgGeo = new PlaneGeometry( width, decoHeight );
-				bgGeo.translate( posX + width / 2, posY, 0 );
-
-				decos.push( bgGeo );
 
 			}
+
+
+
+
+
 
 			if ( decos.length ) {
 
@@ -191,8 +240,9 @@ export default class RendererPropertyInline extends BaseProperty {
 				}
 
 				const mesh = new Mesh( mergedVg, element._fontDecorationMaterial );
-				mesh.position.z = -element._offset._notInheritedValue / 4;
-				mesh.renderOrder = Infinity;
+				// const mesh = new Mesh( mergedVg, new MeshBasicMaterial({color:0x000000}) );
+				// mesh.position.z = +element._offset._notInheritedValue / 4;
+				// mesh.renderOrder = 15000;
 
 				if ( element._decoMesh ) {
 					element.remove( element._decoMesh );
@@ -208,4 +258,24 @@ export default class RendererPropertyInline extends BaseProperty {
 
 	}
 
+}
+
+
+function _buildDecorationSegment(from, to, height, y ){
+	// let right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
+	// let left = firstInlineOfLine._offsetX;
+
+	let width = to - from;
+
+
+	const posX = from;
+
+
+
+
+
+	let bgGeo = new PlaneGeometry( width, height );
+	bgGeo.translate( posX + width / 2, y, 0 );
+
+	return bgGeo;
 }

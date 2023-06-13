@@ -27,12 +27,19 @@ const AVAILABLE_VALUES = ['none', 'inherit', 'underline', 'overline', 'line-thro
  */
 const _isValid = function ( value ) {
 
-	if( AVAILABLE_VALUES.indexOf( value ) === -1 ) {
 
-		console.warn( `(.style) text-decoration value '${value}' is not valid. Aborted` );
-		return false;
+	const decorations = value.split(' ');
+	for ( let i = 0; i < decorations.length; i++ ) {
 
+		const requestedDecoration = decorations[ i ];
+		if( AVAILABLE_VALUES.indexOf( requestedDecoration ) === -1 ) {
+
+			console.warn( `(.style) text-decoration value '${requestedDecoration}' is not valid. Aborted` );
+			return false;
+
+		}
 	}
+
 
 	return true;
 

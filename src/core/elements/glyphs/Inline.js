@@ -258,6 +258,7 @@ export default class Inline {
 
 	}
 
+
 	/**
 	 *
 	 * @returns {number}
@@ -279,4 +280,12 @@ export default class Inline {
 	 * @return {./Line}
 	 */
 	get line() { return this._line; }
+
+	get underlineFrom(){
+		return this.cumulativeWidth;
+	}
+
+	get underlineTo(){
+		return 0;
+	}
 }

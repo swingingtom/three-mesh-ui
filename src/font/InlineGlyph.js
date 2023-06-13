@@ -84,6 +84,15 @@ export default class InlineGlyph extends Inline {
 
 	}
 
+	get underlineFrom(){
+		return this.cumulativeWidth * this._typographic._underlineFrom;
+	}
+
+	get underlineTo(){
+		return this.cumulativeWidth * this._typographic._underlineTo;
+	}
+
+
 	/**
 	 * @override
 	 * @returns {number}

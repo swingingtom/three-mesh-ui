@@ -1,11 +1,12 @@
 /** List the default values of the lib components */
 const _values = {
+	fog: false,
 	fontFamily: null,
 	fontSize: 0.05,
-	fontKerning: 'normal',
+	fontKerning: 'auto',
 	fontStyle: 'normal',
 	fontWeight : 'normal',
-	offset: 0.01,
+	offset: 0.005,
 	lineHeight: 1.2,
 	lineBreak: '- ,.:?!\n',// added '\n' to also acts as friendly breaks when white-space:normal
 	whiteSpace: 'pre-line',

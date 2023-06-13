@@ -23,6 +23,8 @@ export default class TypographicGlyph {
 		/** @protected */ this._xoffset = 0;
 		/** @protected */ this._yoffset = 0;
 
+		/** @protected */ this._underlineFrom = 1;
+		/** @protected */ this._underlineTo = 0
 		/**
 		 *
 		 * @type {TypographicFont}
@@ -134,5 +136,17 @@ export default class TypographicGlyph {
 		throw new Error("Abstract... Need to be implemented")
 
 	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get underlineFrom() { return this._underlineFrom; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get underlineTo() { return this._underlineTo; }
 
 }
