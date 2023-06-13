@@ -12,5 +12,6 @@ export default {
 	b:{yoffset:2},
 	d:{yoffset:2},
 	Q:{underlineTo:0.4, underlineFrom: 1.2},
-	",":{underlineTo:-0.25,underlineFrom:1.25}
+	",":{underlineTo:-0.25,underlineFrom:1.25},
+	";":{underlineTo:-0.25,underlineFrom:1.25}
 }

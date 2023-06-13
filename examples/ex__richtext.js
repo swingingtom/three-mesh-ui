@@ -10,7 +10,7 @@ function example() {
 	// A rootBlock element
 	rootBlock = new ThreeMeshUI.Block( {
 		// box sizing properties
-		width: 1.25,
+		width: 1.30,
 		height: 0.32,
 		padding: 0.05,
 
@@ -35,7 +35,7 @@ function example() {
 	text = new ThreeMeshUI.Text( {
 		textDecoration: 'underline overline line-through',
 		color: "red",
-		textContent: 'Use the gui to add rich javascript text',
+		textContent: 'Use the gui to add rich text',
 	} , {textContent:RichTextContentProperty});
 
 	rootBlock.add( text )
@@ -160,7 +160,7 @@ function additionalUI(){
 		textDecoration: "overline underline"
 	}).add(
 		new Inline({
-			textContent: ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZA slice definition '
+			textContent: ' abcdef:ghijklm;nopqrs,tuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZA slice definition '
 		}),
 		new Inline({
 			textContent: 'MUST ',

@@ -1,5 +1,5 @@
 import { FontLibrary } from 'three-mesh-ui';
-import ROBOTO_ADJUSTMENT from 'three-mesh-ui/examples/assets/fonts/msdf/roboto/adjustment';
+import COURIER_ADJUSTMENT from 'three-mesh-ui/examples/assets/fonts/msdf/courier_prime/adjustment';
 
 export const COURIER_FAMILY = "Courier Prime";
 
@@ -43,7 +43,7 @@ export const exampleFontPreloadCourier = function ( callback ) {
 	).then( () => {
 
 		// Adjusting font variants to correct some glitchs
-		// adjustCourierAndVariants();
+		adjustCourierAndVariants();
 
 		callback();
 
@@ -66,10 +66,10 @@ export const registerCourierAndVariants = function() {
 
 export const adjustCourierAndVariants = function () {
 
-	// const FF = FontLibrary.getFontFamily(COURIER_FAMILY);
-	// FF.getVariant('700','normal').adjustTypographicGlyphs( ROBOTO_ADJUSTMENT );
-	// FF.getVariant('700','italic').adjustTypographicGlyphs( ROBOTO_ADJUSTMENT );
-	// FF.getVariant('400','italic').adjustTypographicGlyphs( ROBOTO_ADJUSTMENT );
-	// FF.getVariant('400','normal').adjustTypographicGlyphs( ROBOTO_ADJUSTMENT );
+	const FF = FontLibrary.getFontFamily(COURIER_FAMILY);
+	FF.getVariant('700','normal').adjustTypographicGlyphs( COURIER_ADJUSTMENT );
+	FF.getVariant('700','italic').adjustTypographicGlyphs( COURIER_ADJUSTMENT );
+	FF.getVariant('400','italic').adjustTypographicGlyphs( COURIER_ADJUSTMENT );
+	FF.getVariant('400','normal').adjustTypographicGlyphs( COURIER_ADJUSTMENT );
 
 }
