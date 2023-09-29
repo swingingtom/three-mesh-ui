@@ -12,7 +12,7 @@
     ".": {
       "import": "./build/three-mesh-ui.module.js"
     },
-    "./src/*" : "./src/*",
+    "./src/*": "./src/*",
     "./examples/*": "./examples/*"
   },
   "scripts": {
@@ -75,6 +75,6 @@
     "webpack-dev-server": "^4.7.4"
   },
   "peerDependencies": {
-    "three": ">= 0.132.1 < 0.149.0"
+    "three": "^0.154.0"
   }
 }

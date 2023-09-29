@@ -115,8 +115,8 @@ function makeTextPanel() {
 
 	// create an orphan block
 	boundingContainer = new ThreeMeshUI.Block({
-		width: 0.75,
-		height: 0.2,
+		width: 1.5,
+		height: 0.8,
 		backgroundColor: 0xff0000,
 		backgroundOpacity: 0.25
 	});
@@ -214,7 +214,10 @@ function buildEffectContainer( title, subtitle, bindedTo) {
 
 
 	const defaultText = new ThreeMeshUI.Text({
+		width: 'auto',
 		textContent:"map",
+
+		fontWeight: 'bold',
 		color: new THREE.Color(0xffffff)
 	});
 	defaultText.fontMaterial = new ExampleBoundsUVMaterial({map:snakeTexture});
@@ -225,6 +228,8 @@ function buildEffectContainer( title, subtitle, bindedTo) {
 
 	const alphaText = new ThreeMeshUI.Text({
 		textContent:"alpha",
+		width: 'auto',
+		fontWeight: 'bold',
 		color: new THREE.Color(0xFFFFFF)
 	});
 	alphaText.fontMaterial = new ExampleBoundsUVMaterial({alphaMap:smokeTexture});
@@ -234,6 +239,9 @@ function buildEffectContainer( title, subtitle, bindedTo) {
 
 	const bothText = new ThreeMeshUI.Text({
 		textContent: "Both",
+		width: 'auto',
+
+		fontWeight: 'bold',
 		color: new THREE.Color(0xffffff)
 	});
 	bothText.fontMaterial = new ExampleBoundsUVMaterial({
@@ -277,11 +285,11 @@ function onWindowResize() {
 let speed = 0.0025;
 function loop() {
 
-	// if( smokeTexture && smokeTexture.isLoaded ) {
-	//
-	// 	smokeTexture.offset.y += Math.abs(speed)/2;
-	//
-	// }
+	if( smokeTexture && smokeTexture.isLoaded ) {
+
+		smokeTexture.offset.y -= Math.abs(speed);
+
+	}
 
 	let height = boundingContainer.get('height');
 

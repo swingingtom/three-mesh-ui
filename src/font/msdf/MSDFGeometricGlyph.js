@@ -47,6 +47,16 @@ export default class MSDFGeometricGlyph extends PlaneGeometry {
 
 		}
 
+
+		// AlphaGlyph Attribute - Defines if the geometry is glyph or decoration
+		const length = this.getAttribute('uv').array.length;
+		const vertexAlphaDecoration = [];
+		for ( let i = 0; i < length; i+=2 ) vertexAlphaDecoration[i/2] = 0;
+
+		// alpha for decoration
+		this.setAttribute('alphaDecorationFactor', new BufferAttribute(new Float32Array(vertexAlphaDecoration), 1));
+
+
 		this.name = "GlyphGeometry";
 		// Demo alter geometry
 		// const maxOffset = inline.fontSize / 10;

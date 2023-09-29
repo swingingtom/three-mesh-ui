@@ -11,6 +11,9 @@ import InlineGlyph from './../InlineGlyph';
 import FontLibrary from '../FontLibrary';
 /* eslint-enable no-unused-vars */
 
+const xHeightChars = 'xnmoeaosrcuvwz';
+const capHeightChars = 'EFIHMNTLVWZABCD';
+
 /**
  * @extends {FontVariant}
  */
@@ -96,7 +99,16 @@ export default class MSDFFontVariant extends FontVariant {
 	 */
 	_buildData( json ) {
 
+		/**
+		 *
+		 * @type {MSDFTypographicFont}
+		 * @private
+		 */
 		this._font = new MSDFTypographicFont( json );
+
+		this._size = json.info.size;
+		this._lineHeight = json.common.lineHeight;
+		this._lineBase = json.common.base;
 
 		/**
 		 *
@@ -106,13 +118,51 @@ export default class MSDFFontVariant extends FontVariant {
 		this._kernings = this._buildKerningPairs( json );
 		this._chars = this._buildCharacters( json );
 
+		// find x-height -----------------------------------------------------------
+		let foundXHeight = false;
+		for ( let i = 0; i < xHeightChars.length; i++ ) {
+			const xHeightChar = xHeightChars[ i ];
+
+			if( this._chars[xHeightChar] ) {
+				this._font._xHeight = this._chars[xHeightChar].height - this._font._distanceRange/2;
+				foundXHeight = true;
+				break;
+			}
+		}
+
+		if( !foundXHeight ) {
+			// auto compute x-height
+			const lineHeightDemi = this._lineHeight / 2;
+			const xHeightUp = ( this._lineHeight - this._lineBase ); // x height
+			const xHeightDown = this._lineBase - lineHeightDemi;
+
+			this._font._xHeight = xHeightDown + xHeightUp;
+		}
+
+		// ----------------------------------------------------------- find x-height
+
+		// find cap-height -----------------------------------------------------------
+		let foundCapHeight = false;
+		for ( let i = 0; i < capHeightChars.length; i++ ) {
+			const capHeightChar = capHeightChars[ i ];
+
+			if( this._chars[capHeightChar] ) {
+				this._font._capHeight = this._chars[capHeightChar].height - this._font._distanceRange/2;
+				foundCapHeight = true;
+				break;
+			}
+		}
+
+		if( !foundCapHeight ) {
+			// auto compute cap-height
+			this._font._capHeight = this._font._xHeight + (this._lineHeight-this._lineBase);
+		}
+
+
+
 		this._chars[ " " ] = this._buildCharacterWhite( json );
 		this._chars[ "\n" ] = this._buildCharacterWhite( json, '\n' , 0.001, 1);
 		this._chars[ "\t" ] = this._buildCharacterWhite( json, '\t' , 4, 1);
-
-		this._size = json.info.size;
-		this._lineHeight = json.common.lineHeight;
-		this._lineBase = json.common.base;
 
 		this._distanceRange = json.distanceField.distanceRange;
 

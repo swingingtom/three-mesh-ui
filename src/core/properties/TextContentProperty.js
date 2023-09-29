@@ -18,8 +18,6 @@ export default class TextContentProperty extends TextContentDefault{
 
 			this._value = value;
 
-			console.log( this._value );
-
 			this._needsUpdate = true;
 
 		}

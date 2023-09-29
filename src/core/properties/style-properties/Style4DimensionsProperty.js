@@ -1,5 +1,4 @@
 import { Vector4 } from 'three';
-import SubStyleProperty from './SubStyleProperty';
 import StyleVector4Property from './StyleVector4Property';
 
 export default class Style4DimensionsProperty extends StyleVector4Property {

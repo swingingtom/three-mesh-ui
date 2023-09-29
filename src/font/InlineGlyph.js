@@ -105,5 +105,18 @@ export default class InlineGlyph extends Inline {
 	 */
 	get lineBase() { return this._typographic.font.lineBase * this._fontFactor; }
 
+	/**
+	 *
+	 * @return {number}
+	 */
+	get xHeight(){ return this._typographic.font.xHeight * this._fontFactor; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get capHeight() { return this._typographic.font.capHeight * this._fontFactor; }
+
+
 
 }

@@ -41,9 +41,13 @@ export default class MSDFDepthMaterial extends MeshDepthMaterial {
 		// in order to work properly
 		MSDFFontMaterialUtils.ensureUserData( this, options );
 
+
+
 		// three-mesh-ui custom font material can be achieve
 		// by modifying the shader before its compilation
 		this.onBeforeCompile = shader => {
+
+			shader.fragmentShader = 'float opacity=1.;\n'+shader.fragmentShader;
 
 			MSDFFontMaterialUtils.bindUniformsWithUserData( shader, this );
 			MSDFFontMaterialUtils.injectShaderChunks( shader );

@@ -32,8 +32,6 @@ export default class BoundsInlines extends BaseProperty {
 
 	update( element, out ) {
 
-		console.log("Bounds inline updated")
-
 		super.update( element, out );
 	}
 

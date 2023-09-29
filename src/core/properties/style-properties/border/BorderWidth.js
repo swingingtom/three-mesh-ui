@@ -86,9 +86,7 @@ export default class BorderWidth extends StyleVector4Property{
 		// @TODO: Units process could be strategies
 		if( this._units === Units.PERCENT ){
 
-			console.log( "Percent" );
 			// this._valueUV.divideScalar( 100 );
-			console.log( this._valueUV );
 
 		}
 

@@ -15,10 +15,7 @@ export default class ListStylePropertyInlineBlock extends ListStyleProperty {
 
 	update( element, out ) {
 
-		console.log("update --- listStyle INLINEBLOCK" )
 		super.update( element, out );
-
-		console.log(" --- updated --- listStyle INLINEBLOCK", this._value )
 
 		this._needsProcess = true;
 	}
@@ -33,8 +30,6 @@ export default class ListStylePropertyInlineBlock extends ListStyleProperty {
 		}
 
 		super._computeFromInherited( element );
-
-		console.log( '    -- - - - ', this._value)
 
 		switch ( this._value ){
 
@@ -56,8 +51,6 @@ export default class ListStylePropertyInlineBlock extends ListStyleProperty {
 				break;
 
 			case 'decimal':
-
-				console.log(' --- decimal')
 				element.visible = false;
 				element._textCounterPart.visible = true;
 				element._textCounterPart.textContent = element._listIndex+".";
@@ -85,7 +78,7 @@ export default class ListStylePropertyInlineBlock extends ListStyleProperty {
 }
 
 function _romanNumber(num) {
-	var roman = {
+	const roman = {
 		M: 1000,
 		CM: 900,
 		D: 500,
@@ -100,10 +93,13 @@ function _romanNumber(num) {
 		IV: 4,
 		I: 1
 	};
-	var str = '';
+	let str = '';
 
-	for (var i of Object.keys(roman)) {
-		var q = Math.floor(num / roman[i]);
+	/* eslint-disable prefer-const */
+	for (let i of Object.keys(roman)) {
+		/* eslint-enable prefer-const */
+
+		const q = Math.floor(num / roman[i]);
 		num -= q * roman[i];
 		str += i.repeat(q);
 	}

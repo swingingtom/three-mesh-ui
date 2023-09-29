@@ -1,9 +1,7 @@
 import BaseProperty from '../BaseProperty';
-import { mergeBufferGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
-import { AlwaysDepth, BufferAttribute, DepthModes, DoubleSide, GreaterEqualDepth, GreaterEqualStencilFunc, LessDepth, LessEqualDepth, Mesh, MeshBasicMaterial, PlaneGeometry, Vector3 } from 'three';
+import { BufferAttribute, Mesh, PlaneGeometry, Vector3 } from 'three';
 import FrameMaterial from '../../../frame/materials/FrameMaterial';
-import { UV, WORLD_UNITS } from '../../../utils/Units';
-import { NeverDepth } from 'three/src/constants';
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils';
 
 export default class RendererPropertyInline extends BaseProperty {
 
@@ -16,6 +14,8 @@ export default class RendererPropertyInline extends BaseProperty {
 
 	render( element ) {
 
+		console.log("Render " , element._textContent._value )
+
 		if ( !element._inlines._value || !element._inlines._value.length ) return;
 
 		const charactersAsGeometries = element._inlines._value.map(
@@ -25,7 +25,7 @@ export default class RendererPropertyInline extends BaseProperty {
 			}
 		);
 
-		const mergedGeom = mergeBufferGeometries( charactersAsGeometries );
+		const mergedGeom = mergeGeometries( charactersAsGeometries );
 
 		const fontMesh = new Mesh( mergedGeom, element.fontMaterial );
 		element.setFontMesh( fontMesh );
@@ -82,11 +82,11 @@ export default class RendererPropertyInline extends BaseProperty {
 
 				const line = firstInlineOfLine.line;
 
-				let right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth + lastInlineOfLine._paddingRight;
-				let left = firstInlineOfLine._offsetX - firstInlineOfLine._paddingLeft;
+				const right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth + lastInlineOfLine._paddingRight;
+				const left = firstInlineOfLine._offsetX - firstInlineOfLine._paddingLeft;
 
-				let width = right - left;
-				let height = LINE_HEIGHT;
+				const width = right - left;
+				const height = LINE_HEIGHT;
 
 				const posX = left;
 				let posY = lastInlineOfLine.line.y;
@@ -101,7 +101,7 @@ export default class RendererPropertyInline extends BaseProperty {
 				const uvB = new BufferAttribute( new Float32Array( uvA ), 2);
 				bgGeo.setAttribute('uvB', uvB ).name = 'uvB';
 
-				var unitScales = uvA.map( (u,i) => i%2 ? height : width );
+				const unitScales = uvA.map( (u,i) => i%2 ? height : width );
 				bgGeo.setAttribute('unitScale', new BufferAttribute( new Float32Array( unitScales ), 2) );
 
 				bgGeo._scale = new Vector3(width,height,1);
@@ -111,7 +111,7 @@ export default class RendererPropertyInline extends BaseProperty {
 
 			if ( bgs.length ) {
 
-				const mergedVg = mergeBufferGeometries( bgs );
+				const mergedVg = mergeGeometries( bgs );
 
 				element.backgroundMaterial = new FrameMaterial();
 				element.backgroundMaterial.defines.MULTIPLE_FRAMES = 1;
@@ -141,7 +141,7 @@ export default class RendererPropertyInline extends BaseProperty {
 					const firstInlineOfLine = inlines[ lines[ j ] ];
 					const lastInlineOfLine = inlines[ lines[ j + 1 ] ];
 
-					let decoHeight = FONTSIZE / 12;
+					const decoHeight = FONTSIZE / 10;
 
 					let to = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
 					let from = firstInlineOfLine._offsetX;
@@ -179,70 +179,33 @@ export default class RendererPropertyInline extends BaseProperty {
 
 					} else if( decoration === 'overline' ) {
 
-						posY = lastInlineOfLine.line.y;
+						posY = lastInlineOfLine.line.y - decoHeight/2;
 
 						decos.push( _buildDecorationSegment(from,to,decoHeight, posY) )
 
 					} else if( decoration === 'line-through' ) {
 
-						posY = firstInlineOfLine.line.y - LINE_HEIGHT/2 - decoHeight/2;
+						// posY = firstInlineOfLine.line.y - LINE_HEIGHT/2 - decoHeight/2;
+						posY = firstInlineOfLine.line.y - LINE_HEIGHT/2  - ( DELTA / 2 );
+
+
+
 						decos.push( _buildDecorationSegment(from,to,decoHeight, posY) )
 
 					}
 
-
-
-
-
-// 					const line = firstInlineOfLine.line;
-// // Check for differences
-// 					if ( LINE_HEIGHT < line.lineHeight ) {
-// 						posY -= ( line.lineHeight - LINE_HEIGHT ) * 0.75;
-// 					}
-
-
-					// let right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
-					// let left = firstInlineOfLine._offsetX;
-					//
-					// let width = right - left;
-					//
-					//
-					// const posX = left;
-					//
-					//
-					//
-					//
-					//
-					// let bgGeo = new PlaneGeometry( width, decoHeight );
-					// bgGeo.translate( posX + width / 2, posY, 0 );
-					//
-					// decos.push( bgGeo );
 
 				}
 
 			}
 
 
-
-
-
-
 			if ( decos.length ) {
 
-				const mergedVg = mergeBufferGeometries( decos );
+				const mergedVg = mergeGeometries( decos );
+				const mesh = new Mesh( mergedVg, element.fontMaterial );
 
-				if ( !element._fontDecorationMaterial ) {
-					if ( element._fontMaterial._notInheritedValue.cloneAsDecorationMaterial ) {
-						element._fontDecorationMaterial = element._fontMaterial._notInheritedValue.cloneAsDecorationMaterial();
-					} else {
-						element._fontDecorationMaterial = element._fontMaterial._notInheritedValue;
-					}
-				}
-
-				const mesh = new Mesh( mergedVg, element._fontDecorationMaterial );
-				// const mesh = new Mesh( mergedVg, new MeshBasicMaterial({color:0x000000}) );
-				// mesh.position.z = +element._offset._notInheritedValue / 4;
-				// mesh.renderOrder = 15000;
+				mesh.position.z = +element._offset._notInheritedValue / 4;
 
 				if ( element._decoMesh ) {
 					element.remove( element._decoMesh );
@@ -255,26 +218,25 @@ export default class RendererPropertyInline extends BaseProperty {
 
 		}
 
-
 	}
 
 }
 
 
 function _buildDecorationSegment(from, to, height, y ){
-	// let right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
-	// let left = firstInlineOfLine._offsetX;
 
-	let width = to - from;
-
+	const width = to - from;
 
 	const posX = from;
 
+	const bgGeo = new PlaneGeometry( width, height );
 
+	// AlphaGlyph Attribute - Defines if the geometry is glyph or decoration
+	const length = bgGeo.getAttribute('uv').array.length;
+	const vertexAlphaGlyph = [];
+	for ( let i = 0; i < length; i+=2 ) vertexAlphaGlyph[i/2] = 1.0;
 
-
-
-	let bgGeo = new PlaneGeometry( width, height );
+	bgGeo.setAttribute('alphaDecorationFactor', new BufferAttribute(new Float32Array(vertexAlphaGlyph), 1));
 	bgGeo.translate( posX + width / 2, y, 0 );
 
 	return bgGeo;

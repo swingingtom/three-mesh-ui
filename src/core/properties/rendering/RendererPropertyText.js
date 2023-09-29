@@ -1,4 +1,5 @@
 import RendererPropertyBox from './RendererPropertyBox';
+import Frame from '../../../frame/Frame';
 
 export default class RendererPropertyText extends RendererPropertyBox{
 
@@ -13,11 +14,16 @@ export default class RendererPropertyText extends RendererPropertyBox{
 
 	render( element ) {
 
-		super.render( element );
+		if( !element._backgroundMesh ) {
+
+			element.setBackgroundMesh( new Frame(element) );
+
+		}
 
 		for ( const inlineElement of element._children._inlines ) {
 
 			inlineElement._renderer.render( inlineElement );
+			inlineElement._renderer._needsRender = false;
 
 		}
 

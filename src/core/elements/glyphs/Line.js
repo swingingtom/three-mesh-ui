@@ -40,6 +40,18 @@ export default class Line extends Array {
 		 */
 		this.y = 0;
 
+		/**
+		 *
+		 * @type {number}
+		 */
+		this.xHeight = 0;
+
+		/**
+		 *
+		 * @type {number}
+		 */
+		this.capHeight = 0;
+
 	}
 
 }

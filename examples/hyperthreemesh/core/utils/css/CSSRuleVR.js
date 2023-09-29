@@ -44,12 +44,13 @@ export default class CSSRuleVR {
 
 			if( value.match(/rem|px|em/g) ) {
 
-
+				/* eslint-disable no-empty */
 				if( value.match(/[\d\s]em/g) && styleProperty.startsWith('font') ){
 
 				}else{
 					value = parseFloat( value.replace( /rem|px|em/g, '' ) );
 				}
+				/* eslint-enable no-empty */
 
 			}
 

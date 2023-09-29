@@ -29,13 +29,13 @@ export default class BoundsUVBehavior extends Behavior {
 
 	attach() {
 
-		this._subject.addAfterUpdate( this._actor );
+		if( this._subject.addAfterUpdate )	this._subject.addAfterUpdate( this._actor );
 
 	}
 
 	detach() {
 
-		this._subject.removeAfterUpdate( this._actor );
+		if( this._subject.removeAfterUpdate )	this._subject.removeAfterUpdate( this._actor );
 
 	}
 
@@ -44,26 +44,42 @@ export default class BoundsUVBehavior extends Behavior {
 	 */
 	act() {
 
-		if ( this._subject._backgroundMesh ) {
 
-			const referenceMesh = this._subject._backgroundMesh;
+		let geometryW,geometryH;
+		// console.log("Nounds UV");
+		//
+		// console.log( this._subject._bounds._offsetWidth, this._subject._bounds._offsetHeight );
 
-			// be sure that box is computed before acquiring it
-			// @NOTES : `text.children[0]` can currently work because `mergedGeometries`
-			referenceMesh.geometry.computeBoundingBox();
+		// if ( this._subject._backgroundMesh ) {
 
-			// this will return a THREE.Box3
-			const bBox = referenceMesh.geometry.boundingBox;
+			// const referenceMesh = this._subject._backgroundMesh;
 
-			// compute the current bounding box with the world matrix
-			bBox.applyMatrix4( referenceMesh.matrixWorld );
+			// console.log( referenceMesh );
 
-			// Using the subject THREE.Box3, we can compute
-			// the width and the height of the whole geometry
-			//    optionally the depth, but we don't need it for that sample
-			const geometryW = bBox.max.x - bBox.min.x;
-			const geometryH = bBox.max.y - bBox.min.y;
-			// const depth = bBox.max.z - bBox.min.z;
+			if( this._subject._bounds ){
+				geometryW =  this._subject._bounds._offsetWidth;
+				geometryH =  this._subject._bounds._offsetHeight;
+			}
+			else
+			{
+				// be sure that box is computed before acquiring it
+				// @NOTES : `text.children[0]` can currently work because `mergedGeometries`
+				this._subject.geometry.computeBoundingBox();
+
+				// this will return a THREE.Box3
+				const bBox = this._subject.geometry.boundingBox;
+
+				// compute the current bounding box with the world matrix
+				bBox.applyMatrix4( this._subject.matrixWorld );
+
+				// Using the subject THREE.Box3, we can compute
+				// the width and the height of the whole geometry
+				//    optionally the depth, but we don't need it for that sample
+				geometryW = bBox.max.x - bBox.min.x;
+				geometryH = bBox.max.y - bBox.min.y;
+				// const depth = bBox.max.z - bBox.min.z;
+			}
+
 
 			// Apply those uv for each targets
 			for ( let i = 0; i < this._targets.length; i++ ) {
@@ -79,7 +95,10 @@ export default class BoundsUVBehavior extends Behavior {
 				for ( let j = 0; j < subTargets.length; j++ ) {
 					const subTarget = subTargets[ j ];
 
-					if ( subTarget.type !== 'Mesh' ) continue;
+					if ( subTarget.type !== 'Mesh' ) {
+						console.log( "subtarget aborted");
+						continue;
+					}
 
 					const positionAttribute = subTarget.geometry.getAttribute( 'position' );
 					const uvAttribute = subTarget.geometry.getAttribute( this._uvSet );
@@ -101,7 +120,7 @@ export default class BoundsUVBehavior extends Behavior {
 
 			}
 
-		}
+		// }
 
 	}
 

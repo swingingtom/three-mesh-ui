@@ -126,7 +126,8 @@ function makeUI() {
 		textContent,
 	} );
 
-	new TypographicLayoutBehavior( textBlock, 0x9e9e9e, 0x000000 ).attach();
+	// new TypographicLayoutBehavior( textBlock, 0x9e9e9e, 0x000000 ).attach();
+	new TypographicLayoutBehavior( textBlock ).attach();
 
 	textBlock.add( text );
 

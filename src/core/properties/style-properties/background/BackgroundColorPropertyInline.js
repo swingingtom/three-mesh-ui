@@ -12,8 +12,6 @@ export default class BackgroundColorPropertyInline extends StyleColorProperty {
 
 		this._allowsInherit = false;
 
-
-		console.error( defaultValue )
 		this._input = defaultValue;
 
 
@@ -28,35 +26,32 @@ export default class BackgroundColorPropertyInline extends StyleColorProperty {
 
 		// @TODO : Changes multiple mesh visibility
 
-		const visibility = !(this._input === 'none' || this._input === 'transparent');
-		if( element._backgroundMesh ){
+		const visibility = !( this._input === 'none' || this._input === 'transparent' );
+		if ( element._backgroundMesh ) {
 
-			if( !visibility ) {
+			if ( !visibility ) {
 
 				element._backgroundMesh.visible = false;
 				element._backgroundNone = true;
 
 			}
 
-		} else if( visibility ){
+		} else if ( visibility ) {
 
 			element._backgroundNone = false;
 
 		}
 
 
-		if( this._input === 'inherit' ) {
+		if ( this._input === 'inherit' ) {
 
-			console.error("inh")
-			this._value.set(this.getInheritedInput( element ));
+			this._value.set( this.getInheritedInput( element ) );
 
-		} else if( visibility ) {
+		} else if ( visibility ) {
 
-			 console.error("non");
 			this._value.set( this._input );
 
 		}
-
 
 
 	}

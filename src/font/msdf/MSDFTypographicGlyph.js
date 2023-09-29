@@ -42,6 +42,15 @@ export default class MSDFTypographicGlyph extends TypographicGlyph {
 		}
 	}
 
+	/**
+	 *
+	 * @returns {MSDFTypographicFont}
+	 */
+	get font() {
+
+		return this._font;
+
+	}
 
 	/**
 	 *

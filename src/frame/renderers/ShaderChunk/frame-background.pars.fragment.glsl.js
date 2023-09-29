@@ -13,7 +13,7 @@ vec4 sampleTexture() {
 	// default stretch
 	#if BACKGROUND_MAPPING != 0
 
-	float textureRatio = textureSize.x / textureSize.y;
+	float textureRatio = uTextureSize.x / uTextureSize.y;
 	float panelRatio = frameSize.x / frameSize.y;
 	float ratio = panelRatio / textureRatio;
 	float ratio2 = textureRatio / panelRatio;

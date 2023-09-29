@@ -9,7 +9,7 @@ export const exampleThreePointLight = function ( scene ) {
 	pointLightContainer.rotation.z = 0.45;
 	pointLightContainer.position.set(0,1.5,0);
 
-	pointLight = new PointLight(0xffFF99,3);
+	pointLight = new PointLight(0xffffff,1);
 	pointLight.position.set(1.45,0,0);
 	pointLightContainer.add(pointLight)
 

@@ -1,6 +1,6 @@
 import Stats from 'three/examples/jsm/libs/stats.module';
 import * as ThreeMeshUI from 'three-mesh-ui';
-import { Color, Scene, Vector3, WebGLRenderer } from 'three';
+import { Color, LinearSRGBColorSpace, Scene, Vector3, WebGLRenderer } from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -18,18 +18,23 @@ export const exampleThreeSetup = function ( camera ) {
 	const WIDTH = window.innerWidth;
 	const HEIGHT = window.innerHeight;
 
-	scene = new Scene();
-	scene.background = new Color( 0x505050 );
+
 
 	renderer = new WebGLRenderer({
 		antialias: true
 	});
+
+	// renderer.outputColorSpace = SRGBColorSpace;
+	renderer.outputColorSpace = LinearSRGBColorSpace;
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( WIDTH, HEIGHT );
 	renderer.xr.enabled = true;
 
 	document.body.appendChild(VRButton.createButton(renderer));
 	document.body.appendChild( renderer.domElement );
+
+	scene = new Scene();
+	scene.background = new Color( 0x505050 ).convertLinearToSRGB()
 
 	stats = new Stats();
 	document.body.appendChild( stats.dom );

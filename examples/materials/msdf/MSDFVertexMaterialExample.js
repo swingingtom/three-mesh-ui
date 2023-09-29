@@ -70,10 +70,10 @@ export default class MSDFVertexMaterialExample extends MeshStandardMaterial{
 				'#include <project_vertex>',
 				ThreeMeshUI.ShaderChunkUI.msdfOffsetglyphVertexGlsl + `
 // add a custom vertex shader chunks to modify vertex position
-if( uv.y >= progress )
-{
-		transformed.z +=  (progress-uv.y) * offset;
-}
+//if( uv.y >= progress )
+//{
+		transformed.y += max( 0., 0.12 - (progress-uv.y)) * offset*4.;
+//}
 #include <project_vertex>
 `
 			)

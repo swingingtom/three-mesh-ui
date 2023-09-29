@@ -23,7 +23,19 @@ export default class MSDFTypographicFont extends TypographicFont{
 
 		this._charset = json.chars.map( char => char.char ).join("");
 
+		this._distanceRange = json.distanceField.distanceRange;
+
+		// currently set by MSDFFontVariant
+		// this._xHeight = ...;
+		this._capHeight = (this._lineHeight/2) - (this._lineHeight-this._lineBase);
+
 	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get distanceRange() { return this._distanceRange; }
 
 	/**
 	 *

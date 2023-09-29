@@ -4,7 +4,7 @@ import { Behavior } from 'three-mesh-ui';
 /**
  * Sample of Behavior that relies on AfterUpdate calls
  */
-export default class TypographicLayoutBehavior extends Behavior{
+export default class TypographicLayoutBehavior extends Behavior {
 
 
 	constructor( subject, backgroundColor = 0x9e9e9e, lineColor = 0xff0099 ) {
@@ -13,6 +13,8 @@ export default class TypographicLayoutBehavior extends Behavior{
 
 		this.lineMat = new MeshBasicMaterial( { color: backgroundColor, opacity: 1 } );
 		this.baseMat = new MeshBasicMaterial( { color: lineColor, opacity: 1 } );
+		this.capMat = new MeshBasicMaterial( { color: 0xffffff-lineColor, opacity: 1 } );
+		// this.baseMat = new MeshBasicMaterial( { color: 0xff9900, opacity: 1 } );
 		this.medianMat = new MeshBasicMaterial( { color: lineColor } );
 
 		this.lines = [];
@@ -30,11 +32,11 @@ export default class TypographicLayoutBehavior extends Behavior{
 	attach() {
 
 		// register an afterUpdate call on the subject. After update call will run this._action binded function.
-		this._subject.addAfterUpdate( this._actor )
+		this._subject.addAfterUpdate( this._actor );
 
 		// optionally, this as soon as attached, this behavior won't wait the first afterUpdate call
 		// and chose manually act one first time.
-		if( this._subject.lines )	this.act();
+		if ( this._subject.lines ) this.act();
 
 	}
 
@@ -47,13 +49,12 @@ export default class TypographicLayoutBehavior extends Behavior{
 		this._subject.removeAfterUpdate( this._actor );
 
 
-
 	}
 
 	/**
 	 * When this behavior acts, what should happen?
 	 */
-	act () {
+	act() {
 
 		// remove all lines previously added
 		for ( let i = 0; i < this.lines.length; i++ ) {
@@ -62,7 +63,6 @@ export default class TypographicLayoutBehavior extends Behavior{
 		}
 
 		this.lines = [];
-
 
 
 		// retrieve all lines sent by InlineManager for the textBlock
@@ -75,15 +75,13 @@ export default class TypographicLayoutBehavior extends Behavior{
 			const lineHeight = line.lineHeight;
 			const lineBase = line.lineBase;
 
-			const deltaLine = lineHeight - lineBase;
-
 			// TextBackground
 			const lineGeo = new PlaneGeometry( line.width, lineHeight );
 			const lineMesh = new Mesh( lineGeo, this.lineMat );
 			lineMesh.name = 'DevLineMesh';
 
-			lineMesh.position.x = line.x + line.width/2;
-			lineMesh.position.y = line.y - line.lineHeight/2;
+			lineMesh.position.x = line.x + line.width / 2;
+			lineMesh.position.y = line.y - line.lineHeight / 2;
 
 			this.lines.push( lineMesh );
 			this._subject.add( lineMesh );
@@ -91,23 +89,29 @@ export default class TypographicLayoutBehavior extends Behavior{
 			// baseline
 			const baselineMesh = new Mesh( new PlaneGeometry( line.width, 0.002 ), this.baseMat );
 			baselineMesh.position.x = lineMesh.position.x;
-			// baselineMesh.position.y = line.y -  // Baseline
-			baselineMesh.position.y = lineMesh.position.y - lineBase/2 + 0.002;
+			baselineMesh.position.y = line.y - lineBase + 0.002;
 
 			this.lines.push( baselineMesh );
 			this._subject.add( baselineMesh );
 
 
 			// Median
-			const medianMesh = new Mesh( new PlaneGeometry( line.width, 0.002 ),this.medianMat );
+			const medianMesh = new Mesh( new PlaneGeometry( line.width, 0.002 ), this.medianMat );
 
 			medianMesh.position.x = lineMesh.position.x;
-			medianMesh.position.y =  lineMesh.position.y + deltaLine/2 - 0.002; // Baseline
+			medianMesh.position.y = baselineMesh.position.y + line.xHeight - 0.002; // Cap HEIGHT
 
 			this.lines.push( medianMesh );
 			this._subject.add( medianMesh );
 
-			baselineMesh.position.z = medianMesh.position.z = this._subject.children[0].position.z + 0.006;
+			const capMesh = new Mesh( new PlaneGeometry( line.width, 0.002), this.capMat );
+			capMesh.position.x = lineMesh.position.x;
+			capMesh.position.y = baselineMesh.position.y + line.capHeight - 0.002;
+
+			this.lines.push( capMesh );
+			this._subject.add( capMesh )
+
+			capMesh.position.z = baselineMesh.position.z = medianMesh.position.z = this._subject.children[ 0 ].position.z + 0.006;
 
 
 		}
@@ -115,7 +119,7 @@ export default class TypographicLayoutBehavior extends Behavior{
 
 	}
 
-	_clear(){
+	_clear() {
 
 	}
 

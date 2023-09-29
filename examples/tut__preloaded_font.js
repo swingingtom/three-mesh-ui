@@ -186,6 +186,7 @@ function step2BuildThreeMeshUIElements() {
 	const text1 = new ThreeMeshUI.Text( {
 			textContent: 'Managing fonts in three-mesh-ui',
 			fontWeight: 'bold',
+			textDecoration: 'underline overline',
 			fontSize: 0.08
 		} );
 
@@ -230,11 +231,11 @@ function step2BuildThreeMeshUIElements() {
 
 	ThreeMeshUI.update()
 
-	setInterval( ()=>{
-		text1.set({ fontWeight: Math.random()>0.5 ? 'bold' : 'normal', color:Math.random()*0xffffff});
-		last.set({ fontStyle: Math.random()>0.5 ? 'italic' : 'normal'});
-		ThreeMeshUI.update()
-	}, 500)
+	// setInterval( ()=>{
+	// 	text1.set({ fontWeight: Math.random()>0.5 ? 'bold' : 'normal', color:Math.random()*0xffffff});
+	// 	last.set({ fontStyle: Math.random()>0.5 ? 'italic' : 'normal'});
+	// 	ThreeMeshUI.update()
+	// }, 500)
 
 }
 

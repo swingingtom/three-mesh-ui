@@ -168,29 +168,8 @@ export default class MSDFFontMaterial extends ShaderMaterial {
 		this.uniforms.alphaTest.value = v;
 	}
 
-	cloneAsDecorationMaterial(){
-		return new MSDFDecorationMaterial(this.uniforms);
-	}
+	// cloneAsDecorationMaterial(){
+	// 	return new MSDFDecorationMaterial(this.uniforms);
+	// }
 
-}
-
-class MSDFDecorationMaterial extends ShaderMaterial {
-	constructor( uniforms ) {
-		super( {
-
-			uniforms,
-			transparent: true,
-			clipping: true,
-			vertexShader:decorationVertexShader,
-			fragmentShader:decorationFragmentShader,
-			extensions: {
-				derivatives: true
-			},
-		} );
-
-		// webgl preprocessor AlphaTest set by default
-		this.defines[ 'USE_ALPHATEST' ] = '';
-		this.needsUpdate = true;
-
-	}
 }

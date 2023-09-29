@@ -4,12 +4,9 @@
 import * as THREE from 'three';
 import ThreeMeshUI from 'three-mesh-ui';
 
-import MSDFStandardMaterial from 'three-mesh-ui/examples/materials/msdf/MSDFStandardMaterial';
-
 
 const color = new THREE.Color(0xffffff);
 // this will be updated on each frame
-let vertexMaterial;
 
 
 function example() {
@@ -17,7 +14,7 @@ function example() {
 	// Make some fog
 	scene.fog = new THREE.Fog( 0x000000, 0.5, 10 );
 
-	var t = new TextureLoader().load("/assets/spiny_bush_viper.jpg", (t)=>{t.needsUpdate=true;})
+	const t = new TextureLoader().load("/assets/spiny_bush_viper.jpg", (t)=>{t.needsUpdate=true;})
 
 	// make a Block to hold many Texts
 	const container = new ThreeMeshUI.Block({
@@ -103,9 +100,7 @@ function example() {
  * Not really related to the example itself : Creating three renderer, scene, lights, etc...
  **********************************************************************************************************************/
 
-import { exampleAddResizer, exampleAddUpdate, exampleThreeSetup } from 'three-mesh-ui/examples/_setup/ThreeSetup';
-import { exampleThreePointLight, rollPointLightUpdate } from 'three-mesh-ui/examples/_setup/ThreePointLight';
-import { exampleThreeCube, rollCubeUpdate } from 'three-mesh-ui/examples/_setup/ThreeCube';
+import { exampleAddResizer, exampleThreeSetup } from 'three-mesh-ui/examples/_setup/ThreeSetup';
 import { exampleFontPreloadRoboto } from 'three-mesh-ui/examples/_setup/RobotoFont';
 import { exampleRoomVR } from 'three-mesh-ui/examples/_setup/RoomVR';
 import { exampleCameraPerspective, exampleCameraPerspectiveResize } from 'three-mesh-ui/examples/_setup/CameraPerspective';
@@ -119,9 +114,9 @@ const { camera } = exampleCameraPerspective();
 exampleAddResizer( exampleCameraPerspectiveResize );
 
 
-const { scene, renderer, controls, stats } = exampleThreeSetup( camera );
+const { scene } = exampleThreeSetup( camera );
 
-const { roomVR } = exampleRoomVR( scene );
+exampleRoomVR( scene );
 
 // building pointLight
 // const {pointLightContainer, pointLight, pointLightHelper} = exampleThreePointLight(scene);

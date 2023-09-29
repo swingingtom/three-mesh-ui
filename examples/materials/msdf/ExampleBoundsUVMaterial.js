@@ -55,7 +55,7 @@ export default class ExampleBoundsUVMaterial extends MeshBasicMaterial{
 
 				// still display a bit the outer of glyph
 				if( diffuseColor.a <= 0.02 ) {
-					diffuseColor.a = 0.25;
+					// diffuseColor.a = 0.45;
 				}
 				#include <alphamap_fragment>
 `

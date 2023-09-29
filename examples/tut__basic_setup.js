@@ -6,7 +6,6 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.js';
 
 import ThreeMeshUI from 'three-mesh-ui';
-import { Texture, TextureLoader } from 'three';
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;

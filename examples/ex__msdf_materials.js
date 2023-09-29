@@ -10,25 +10,39 @@ import MSDFLambertMaterial from 'three-mesh-ui/examples/materials/msdf/MSDFLambe
 import MSDFVertexMaterialExample from 'three-mesh-ui/examples/materials/msdf/MSDFVertexMaterialExample';
 
 
-const color = new THREE.Color(0xff9900);
+// const color = new THREE.Color(0xff9900);
 // this will be updated on each frame
 let vertexMaterial;
 
+DefaultValues.set({color:0xffffff})
 
 function example() {
 
 	// make a Block to hold many Texts
 	const container = new ThreeMeshUI.Block({
 		width: 3.2,
-		height: 0.2,
+		height: 2.5,
 		justifyContent: 'center',
 		alignItems: 'center',
-		color: color,
+		// color: 0x000000,
 		fontFamily: RobotoFontFamily,
 		fontWeight: "bold",
 		fontSize: 0.25,
-		lineHeight: 0.9
+		lineHeight: 0.9,
+		color: 0xff9900,
+		// backgroundColor: 0xffffff,
 	});
+
+	// container.backgroundMaterial = new FramePhysicalMaterial( {
+	// 	color: 0xffffff,
+	// 	transmission: 1,
+	// 	opacity: 1,
+	// 	roughness: 0,
+	// 	ior: 2,
+	// 	thickness: 0.1,
+	// 	specularIntensity: 1,
+	// 	envMapIntensity: 1
+	// });
 
 	container.position.set( 0, 1.25, -0.8 );
 	container.rotation.x = -0.55;
@@ -41,6 +55,21 @@ function example() {
 	const defaultText = new ThreeMeshUI.Text({textContent:"FontMaterial(default)"});
 
 	// StandardMaterial from three-mesh-ui/examples/materials/mdsf/
+	const basicText = new ThreeMeshUI.Text({textContent:"MSDFBasicMaterial",textDecoration:"underline", color: "red", fontOpacity:0.5});
+	basicText.fontMaterial = new MSDFBasicMaterial({ /* material options */ alphaTest:0, transparent: false, alphaHash:true, alphaToCoverage:true });
+	basicText.fontMaterial.transparent = true;
+	basicText.fontMaterial.alphaTest = 0;
+	basicText.fontMaterial.needsUpdate = true;
+
+
+	setInterval( ()=>{
+		basicText.set({color:Math.random()*0xffffff})
+	}, 1500);
+
+
+	console.log( basicText.fontMaterial.transparent );
+
+	// StandardMaterial from three-mesh-ui/examples/materials/mdsf/
 	const standardText = new ThreeMeshUI.Text({textContent:"MSDFStandardMaterial"});
 	standardText.fontMaterial = new MSDFStandardMaterial({ /* material options */ });
 
@@ -50,7 +79,7 @@ function example() {
 
 
 	// PhysicalMaterial from three-mesh-ui/examples/materials/mdsf/
-	const physicalText = new ThreeMeshUI.Text({textContent:"MSDFPhysicalMaterial",color: new THREE.Color(0xffffff)});
+	const physicalText = new ThreeMeshUI.Text({textContent:"MSDFPhysicalMaterial"});
 	physicalText.fontMaterial = new MSDFPhysicalMaterial({
 		color: 0xffffff,
 		transmission: 1,
@@ -69,7 +98,7 @@ function example() {
 	// VertexShader example from three-mesh-ui/examples/materials/mdsf/
 	// Note that segments are increased to 12 instead of 1(default) - Smoothing triangles deformations
 	const vertexText = new ThreeMeshUI.Text({textContent:"VertexShaderExample", segments:12});
-	vertexText.fontMaterial = new MSDFVertexMaterialExample();
+	vertexText.fontMaterial = new MSDFVertexMaterialExample({ /*wireframe:true*/ });
 	// set the vertexMaterial in this case, to access it during render update
 	vertexMaterial = vertexText.fontMaterial;
 
@@ -90,7 +119,7 @@ function example() {
 
 
 	// place all created texts in the container
-	container.add( defaultText, standardText, lambertText, physicalText, wireText, vertexText , mixedText );
+	container.add( defaultText, basicText, standardText, lambertText, physicalText, wireText, vertexText , mixedText );
 
 
 	// providing some addition update function for this example.
@@ -107,6 +136,7 @@ function vertexShaderUpdate() {
 	// In MSDFVertexMaterialExample, their is an accessible uniform that provide deformations
 	// so update it on each frame
 	vertexMaterial.userData.progress.value += 1 / 60 * vertexSpeed;
+	// vertexMaterial.userData.progress.value = 0.5;
 
 	// and ping-pong it in a range of [0,1]
 	if( vertexMaterial.userData.progress.value >= 1 ){
@@ -166,6 +196,8 @@ import { exampleThreeCube, rollCubeUpdate } from 'three-mesh-ui/examples/_setup/
 import { exampleFontPreloadRoboto } from 'three-mesh-ui/examples/_setup/RobotoFont';
 import { exampleRoomVR } from 'three-mesh-ui/examples/_setup/RoomVR';
 import { exampleCameraPerspective, exampleCameraPerspectiveResize } from 'three-mesh-ui/examples/_setup/CameraPerspective';
+import { DefaultValues } from '../src/three-mesh-ui';
+import MSDFBasicMaterial from './materials/msdf/MSDFBasicMaterial';
 
 /* eslint-disable no-unused-vars */
 

@@ -34,6 +34,7 @@ export default class MSDFFontMaterialUtils {
 	static ensureDefines( threeMaterial ) {
 		if ( !threeMaterial.defines ) {
 			threeMaterial.defines = {};
+			threeMaterial.defines['USE_UV'] = true;
 		}
 	}
 

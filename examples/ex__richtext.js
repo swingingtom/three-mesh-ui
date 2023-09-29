@@ -2,7 +2,7 @@
 // xfg:category learn
 // xfg:type explore
 
-import { Block } from 'three-mesh-ui';
+import ThreeMeshUI from 'three-mesh-ui';
 let rootBlock, text;
 
 function example() {
@@ -30,11 +30,15 @@ function example() {
 	rootBlock.rotation.x = -0.55;
 	scene.add( rootBlock );
 
+	const c = new Color(0xff9900);
 
 	// Lets build a first text that would be in bold, and use a MSDFNormalMaterial
 	text = new ThreeMeshUI.Text( {
 		textDecoration: 'underline overline line-through',
-		color: "red",
+		// color: c,
+		// color: c.setHex(0xff9900, SRGBColorSpace),
+		// color: c.setHex(0xff9900,LinearSRGBColorSpace),
+		color: c.setHex(0xff9900),
 		textContent: 'Use the gui to add rich text',
 	} , {textContent:RichTextContentProperty});
 
@@ -92,8 +96,8 @@ import { exampleFontPreloadRoboto } from 'three-mesh-ui/examples/_setup/RobotoFo
 import { exampleFontPreloadCourier } from 'three-mesh-ui/examples/_setup/CourierFont';
 
 import exampleGUI from 'three-mesh-ui/examples/_setup/gui/exampleGUI';
-import { DefaultValues, Inline, Text } from 'three-mesh-ui';
-import { LinearFilter, TextureLoader } from 'three';
+import { DefaultValues, Inline } from 'three-mesh-ui';
+import { Color, LinearSRGBColorSpace } from 'three';
 import { exampleCameraPerspective, exampleCameraPerspectiveResize } from './_setup/CameraPerspective';
 import { exampleRoomVR } from './_setup/RoomVR';
 import RichTextContentProperty from './properties/text/RichTextContentProperty';
@@ -107,6 +111,8 @@ camera.position.set(0, 1.6, 0);
 // controls.target = new THREE.Vector3(0, 1, -1.8);
 
 const { scene, renderer } = exampleThreeSetup( camera );
+renderer.outputColorSpace = LinearSRGBColorSpace;
+// renderer.colorSpace = LinearSRGBColorSpace;
 exampleNoRenderLoop();
 exampleAddResizer( exampleRender );
 
@@ -122,7 +128,7 @@ exampleFontPreloadCourier( () => {
 let infoBlock, border;
 function additionalUI(){
 
-	infoBlock = new Block({
+	infoBlock = new ThreeMeshUI.Block({
 		name: 'info-block',
 		width: 'auto',
 		padding: 0.05,
@@ -144,7 +150,7 @@ function additionalUI(){
 
 	scene.add( infoBlock );
 
-	border = new Block({
+	border = new ThreeMeshUI.Block({
 		name: 'border-container',
 		height: 'auto',
 		flexDirection: 'column',
@@ -152,8 +158,8 @@ function additionalUI(){
 		fontOpacity: 1
 	})
 
-	const borderTitle = new Text({name:'border-title', textContent: `Slice`, fontWeight: '700', fontSize: 0.08, lineHeight:1.5, width: 'auto',margin:0.05});
-	const borderContent = new Text({
+	const borderTitle = new ThreeMeshUI.Text({name:'border-title', textContent: `Slice`, fontWeight: '700', fontSize: 0.08, lineHeight:1.5, width: 'auto',margin:0.05});
+	const borderContent = new ThreeMeshUI.Text({
 		name: 'border-content',
 		textAlign: "left",
 		lineHeight: 0.8,

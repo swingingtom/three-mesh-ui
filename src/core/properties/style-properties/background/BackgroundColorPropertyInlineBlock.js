@@ -27,7 +27,6 @@ export default class BackgroundColorPropertyInlineBlock extends StyleColorProper
 
 		} else {
 
-			console.log( this._input )
 			this._value.set( this._input );
 
 		}

@@ -46,6 +46,9 @@ export default class FrameMaterialUtils {
 	static ensureDefines( threeMaterial ) {
 		if ( !threeMaterial.defines ) {
 			threeMaterial.defines = {};
+
+			// this is also why three-materials should be used instead of shadermaterials
+			threeMaterial.defines['USE_UV'] = true;
 		}
 	}
 
@@ -67,7 +70,7 @@ export default class FrameMaterialUtils {
 		threeMaterial.userData.borderWidth = { value: new Vector4(0,0,0,0) };
 		threeMaterial.userData.borderOpacity = { value: null };
 		threeMaterial.userData.frameSize = { value: new Vector3( 1, 1, 1 ) };
-		threeMaterial.userData.textureSize = { value: new Vector2( 1, 1 ) };
+		threeMaterial.userData.uTextureSize = { value: new Vector2( 1, 1 ) };
 
 	}
 	/* eslint-enable no-unused-vars */
@@ -90,7 +93,7 @@ export default class FrameMaterialUtils {
 		shader.uniforms.borderWidth = threeMaterial.userData.borderWidth;
 		shader.uniforms.borderOpacity = threeMaterial.userData.borderOpacity;
 		shader.uniforms.frameSize = threeMaterial.userData.frameSize;
-		shader.uniforms.textureSize = threeMaterial.userData.textureSize;
+		shader.uniforms.uTextureSize = threeMaterial.userData.uTextureSize;
 	}
 
 	/**
@@ -169,25 +172,6 @@ const _backgroundSizeTransformer = function( target, property, value ) {
 
 }
 
-// /**
-//  *
-//  * @type {Object.<{m:string, t?:(fontMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
-//  */
-// const _mediationDefinitions = {
-// 	alphaTest: { m: 'alphaTest', t: alphaTestTransformer },
-// 	backgroundTexture: { m: 'map' },
-// 	backgroundColor: { m: 'color' },
-// 	backgroundOpacity: { m:'opacity' },
-// 	backgroundSize: { m: 'u_backgroundMapping', t: _backgroundSizeTransformer },
-// 	_borderWidthComponent: { m: 'borderWidth', t: _linkComponentOutput },
-// 	borderColor: { m: 'borderColor', t: uniformOrUserDataTransformer },
-// 	_borderRadiusComponent: { m: 'computedCorners', t: _linkCornersOutput },
-// 	borderOpacity: { m: 'borderOpacity', t: uniformOrUserDataTransformer },
-// 	size: { m: 'frameSize', t: uniformOrUserDataTransformer },
-// 	tSize: { m: 'textureSize', t: uniformOrUserDataTransformer }
-// }
-
-
 /**
  * 7xx
  * @type {Object.<{m:string, t?:(fontMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
@@ -196,7 +180,6 @@ const _mediationDefinitions = {
 	clippingPlanes : {m: 'clippingPlanes'},
 	backgroundAlphaTest: { m: 'alphaTest', t: alphaTestTransformer },
 	backgroundSide: { m: 'side' },
-	// backgroundTexture: { m: 'map' },
 	backgroundImage: { m: 'map'},
 	backgroundColor: { m: 'color' },
 	backgroundOpacity: { m:'opacity' },
@@ -210,5 +193,5 @@ const _mediationDefinitions = {
 	borderOpacity: { m: 'borderOpacity', t: uniformOrUserDataTransformer },
 	fog: {m : "fog"},
 	size: { m: 'frameSize', t: uniformOrUserDataTransformer },
-	tSize: { m: 'textureSize', t: uniformOrUserDataTransformer }
+	tSize: { m: 'uTextureSize', t: uniformOrUserDataTransformer }
 }

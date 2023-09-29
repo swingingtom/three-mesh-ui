@@ -38,7 +38,9 @@ export default class FontSizeProperty extends SubStyleProperty {
 
 	}
 
+	/* eslint-disable no-unused-vars */
 	computeOutputValue( element ) {}
+	/* eslint-enable no-unused-vars */
 
 }
 

@@ -1,4 +1,3 @@
-import SubStyleProperty from '../SubStyleProperty';
 import FontSizeProperty from './FontSizeProperty';
 
 export default class FontSizePropertyInline extends FontSizeProperty {

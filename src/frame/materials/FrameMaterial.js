@@ -35,7 +35,7 @@ export default class FrameMaterial extends ShaderMaterial {
 				cornerBL: { value : new Vector2(0,0) },
 				borderWidth: { value: new Vector4(0,0,0,0) },
 				frameSize: { value: new Vector3( 1, 1, 1 ) },
-				textureSize: { value: new Vector2( 1, 1 ) },
+				uTextureSize: { value: new Vector2( 1, 1 ) },
 
 				...UniformsLib.fog,
 			},

@@ -150,8 +150,8 @@ function step2BuildThreeMeshUIElements() {
 
 	);
 
-	new BoxLayoutBehavior( rootBlock ).attach();
-	new BoxAnchorsBehavior( rootBlock ).attach();
+	// new BoxLayoutBehavior( rootBlock ).attach();
+	// new BoxAnchorsBehavior( rootBlock ).attach();
 
 	const rootBlock2 = new ThreeMeshUI.Block( {
 
@@ -225,8 +225,8 @@ function step2BuildThreeMeshUIElements() {
 
 	);
 
-	new BoxLayoutBehavior( rootBlock2 ).attach();
-	new BoxAnchorsBehavior( rootBlock2 ).attach();
+	// new BoxLayoutBehavior( rootBlock2 ).attach();
+	// new BoxAnchorsBehavior( rootBlock2 ).attach();
 
 	rootBlock2.addAfterUpdate( () => {
 

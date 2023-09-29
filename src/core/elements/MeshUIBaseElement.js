@@ -81,7 +81,7 @@ export default class MeshUIBaseElement extends Object3D {
 			}
 		);
 
-		let uiType = values.uiType || 'default';
+		const uiType = values.uiType || 'default';
 		if( values.uiType ){
 			delete values.uiType;
 		}
@@ -151,7 +151,6 @@ export default class MeshUIBaseElement extends Object3D {
 		 * @internal
 		 */
 		this._fontMaterial = new InheritableMaterialProperty('fontMaterial');
-		this._fontDecorationMaterial = null;
 
 		/**
 		 *

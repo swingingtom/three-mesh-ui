@@ -80,7 +80,7 @@ export default class TextLayouter extends BaseProperty {
 			const inlineWrapper = inlineElement._whiteSpace._inlineWrapper;
 
 			// @TODO : absolute inlines in Texts
-			var remember = lastInlineOffset;
+			const remember = lastInlineOffset;
 			if( POSITION === 'absolute' ){
 					lastInlineOffset = 0;
 			}
@@ -161,11 +161,15 @@ export default class TextLayouter extends BaseProperty {
 			//
 			let lineHeight = 0;
 			let lineBase = 0;
+			let xHeight = 0;
+			let capHeight = 0;
 
 			line.forEach( ( inline ) => {
 
 				lineHeight = Math.max( lineHeight, inline.lineHeight );
 				lineBase = Math.max( lineBase, inline.lineBase );
+				xHeight = Math.max( xHeight, inline.xHeight );
+				capHeight = Math.max( capHeight, inline.capHeight );
 
 				inline.offsetX -= whiteSpaceOffset;
 
@@ -177,6 +181,8 @@ export default class TextLayouter extends BaseProperty {
 
 			line.lineHeight = lineHeight;
 			line.lineBase = lineBase;
+			line.xHeight = xHeight;
+			line.capHeight = capHeight;
 
 			// const baseLineDelta = lineHeight - lineBase;
 

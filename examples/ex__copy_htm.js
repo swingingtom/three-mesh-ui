@@ -8,14 +8,10 @@ import { BoxLineGeometry } from 'three/examples/jsm/geometries/BoxLineGeometry.j
 
 import ThreeMeshUI, { FontLibrary } from 'three-mesh-ui';
 
-import FontJSON from 'three-mesh-ui/examples/assets/fonts/msdf/roboto/regular.json';
-import FontImage from 'three-mesh-ui/examples/assets/fonts/msdf/roboto/regular.png';
 import Stats from 'three/examples/jsm/libs/stats.module';
 import * as HyperThreeMesh from 'three-mesh-ui/examples/hyperthreemesh/HyperThreeMesh';
 import MSDFNormalMaterial from 'three-mesh-ui/examples/materials/msdf/MSDFNormalMaterial';
 import ROBOTO_ADJUSTMENT from 'three-mesh-ui/examples/assets/fonts/msdf/roboto/adjustment';
-import BoxLayoutBehavior from 'three-mesh-ui/examples/behaviors/helpers/BoxLayoutBehavior';
-import { Vector4 } from 'three';
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -227,7 +223,7 @@ function makeTextPanel() {
 // </section>
 // `
 	htmlElement.innerHTML = `
-	<p>Should look <small>similar</small> than <em>window.document</em> but with <strong>Three-mesh-ui</strong></p>
+	<p>Should look <sup>similar</sup> than <em>window.document</em> but with <strong>Three-mesh-ui</strong></p>
 `
 
   container = HyperThreeMesh.copy( htmlElement );

@@ -4,6 +4,9 @@
  */
 const program = /* glsl */`
 varying vec2 vUvG;
+
+varying float vAlphaDecorationFactor;
+
 uniform sampler2D glyphMap;
 uniform vec2 unitRange;
 // functions from the original msdf repo:

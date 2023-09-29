@@ -1,4 +1,5 @@
 import { Behavior } from 'three-mesh-ui';
+import { Color } from 'three';
 
 export default class SimpleStateBehavior extends Behavior{
 
@@ -11,25 +12,9 @@ export default class SimpleStateBehavior extends Behavior{
 		/* eslint-disable camelcase */
 		subject._simpleState__activeStates = [];
 		subject._simpleState__normalStyles = {};
-		subject._simpleState__states = states;
+		// subject._simpleState__states = states;
+		subject._simpleState__states = {};
 		subject._simpleState__statesProperties = {};
-		/* eslint-enable camelcase */
-		for ( const statesKey in states ) {
-			for ( const styleProperty in states[ statesKey ] ) {
-
-				if( !subject._simpleState__statesProperties[styleProperty] ){
-					subject._simpleState__statesProperties[styleProperty] = [];
-				}
-				subject._simpleState__statesProperties[styleProperty].push(statesKey);
-			}
-		}
-
-		for ( const component of subject._components ) {
-			if( subject._simpleState__statesProperties[component.id] ) {
-
-				subject._simpleState__normalStyles[component.id] = component.inline ? component.inline : component._value;
-			}
-		}
 
 		subject.__overridedSet = subject.set;
 		subject.set = this.storeSet.bind(subject);
@@ -40,6 +25,15 @@ export default class SimpleStateBehavior extends Behavior{
 		subject.activatePseudoState = this.activatePseudoState.bind(subject);
 		subject.deactivatePseudoState = this.deactivatePseudoState.bind(subject);
 		subject.togglePseudoState = this.togglePseudoState.bind(subject);
+
+
+		/* eslint-enable camelcase */
+		for ( const statesKey in states ) {
+
+			subject.setupState( statesKey, states[statesKey])
+
+		}
+
 
 	}
 	act() {
@@ -72,8 +66,21 @@ export default class SimpleStateBehavior extends Behavior{
 
 
 		for ( const component of this._components ) {
+
+			// Be sure to use processed values
+			if( component._needsUpdate ) component.update( this, {});
+
 			if( newOptions.indexOf(component.id) > -1 ) {
+
 				this._simpleState__normalStyles[component.id] = component.inline ? component.inline : component._value;
+
+				// as colors as instance that can change values
+				if( this._simpleState__normalStyles[component.id] instanceof Color ){
+
+					// store the value itself;
+					this._simpleState__normalStyles[component.id] = new Color( this._simpleState__normalStyles[component.id] );
+
+				}
 			}
 		}
 
@@ -84,9 +91,13 @@ export default class SimpleStateBehavior extends Behavior{
 		let stateValues = {...this._simpleState__normalStyles};
 
 		for ( const state in this._simpleState__states ) {
+
 			if( this._simpleState__activeStates.indexOf(state) > -1 ){
+
 				stateValues = {...stateValues, ...this._simpleState__states[state]}
+
 			}
+
 		}
 
 		this.set( stateValues, false);
@@ -100,11 +111,15 @@ export default class SimpleStateBehavior extends Behavior{
 	storeSet( options, store = true){
 
 		if( store ) {
+
 			for ( const optionsKey in options ) {
+
 				if( this._simpleState__statesProperties[optionsKey] ) {
 					this._simpleState__normalStyles[ optionsKey ] = options[ optionsKey ];
 				}
+
 			}
+
 		}
 
 		this.__overridedSet(options);
@@ -112,27 +127,39 @@ export default class SimpleStateBehavior extends Behavior{
 
 	activatePseudoState ( state ) {
 
-		if( this._simpleState__activeStates.indexOf(state) === -1) {
+		if( this._simpleState__activeStates.indexOf(state) === -1)
+		{
+
 			this._simpleState__activeStates.push( state );
 			this.renderStates();
+
 		}
 	}
 
 	deactivatePseudoState ( state ) {
 		const index = this._simpleState__activeStates.indexOf(state);
-		if( index > -1 ){
+		if( index > -1 ) {
+
 			this._simpleState__activeStates.splice( index,1);
 			this.renderStates();
+
 		}
 	}
 
 	togglePseudoState ( state ) {
 
 		const index = this._simpleState__activeStates.indexOf(state);
-		if( index > -1 ){
+		if( index > -1 )
+		{
+
 			this._simpleState__activeStates.splice( index,1);
-		}else{
+
+		}
+		else
+		{
+
 			this._simpleState__activeStates.push(state);
+
 		}
 
 		this.renderStates();
@@ -141,13 +168,19 @@ export default class SimpleStateBehavior extends Behavior{
 
 	setState( states ){
 		/* eslint-disable camelcase */
-		if( Array.isArray(states) ){
-			this._simpleState__activeStates = states;
-		}else{
-			this._simpleState__activeStates = [ states ];
-		}
-		/* eslint-enable camelcase */
+		if( Array.isArray(states) )
+		{
 
+			this._simpleState__activeStates = states;
+
+		} else {
+
+			this._simpleState__activeStates = [ states ];
+
+		}
+
+		/* eslint-enable camelcase */
 		this.renderStates();
+
 	}
 }

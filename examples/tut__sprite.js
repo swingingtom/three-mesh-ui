@@ -7,10 +7,12 @@ let rootBlock;
 
 function example() {
 
+
 	const texture = new TextureLoader().load("./assets/spiny_bush_viper_sprite.jpg", ()=>{
 		exampleRender();
 	});
 	texture.minFilter = LinearFilter;
+	texture.colorSpace = SRGBColorSpace;
 
 	// If we are going to display ThreeMeshUI Text elements
 	rootBlock = new Block( {
@@ -99,7 +101,7 @@ import { exampleFontPreloadRoboto } from 'three-mesh-ui/examples/_setup/RobotoFo
 
 import exampleGUI from 'three-mesh-ui/examples/_setup/gui/exampleGUI';
 import { DefaultValues, Inline, Text } from 'three-mesh-ui';
-import { LinearFilter, TextureLoader } from 'three';
+import { LinearFilter, SRGBColorSpace, TextureLoader } from 'three';
 import { exampleCameraPerspective, exampleCameraPerspectiveResize } from './_setup/CameraPerspective';
 import { exampleRoomVR } from './_setup/RoomVR';
 /* eslint-disable no-unused-vars */

@@ -39,7 +39,8 @@ const program = /* glsl */`
 
 #endif
 
-	diffuseColor.a *= alpha;
+	diffuseColor.a *= max( alpha , (opacity * vAlphaDecorationFactor * 2.) );
+
 `;
 
 export default program;

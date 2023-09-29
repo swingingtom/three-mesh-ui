@@ -21,7 +21,7 @@ function example(){
 		textAlign: 'center',
 		alignItems: 'start',
 		fontSize: 0.18,
-		textContent : 'abcdefghijklmnopqrstuvwxyz'
+		textContent : 'ABCDEFgh-\ngghi\njklmo'
 	} );
 
 	text.position.z = -2;
@@ -91,6 +91,7 @@ function example(){
  * Not really related to the example itself : Creating three renderer, scene, lights, etc...
  **********************************************************************************************************************/
 /* eslint-disable no-unused-vars */
+import RYE_ADJUSTMENT from 'three-mesh-ui/examples/assets/fonts/msdf/rye/adjustment';
 
 // building three setup
 const { camera } = exampleCameraOrthographic();
@@ -115,6 +116,8 @@ FontLibrary.prepare(
 
 	fontFamily = FontLibrary.getFontFamily('imported');
 	fontVariant = fontFamily.getVariant('normal', 'normal');
+
+	fontVariant.adjustTypographicGlyphs( RYE_ADJUSTMENT );
 
 
 	// preload fonts and run example() after
@@ -172,7 +175,7 @@ function additionalUI(){
 
 }
 
-let charDesc, alterations, letterController,yoffsetController;
+let charDesc, alterations, letterController, yoffsetController, underlineToController, underlineFromController;
 const p = {};
 
 
@@ -200,9 +203,16 @@ function baselineGUI() {
 	p.zoom = camera.zoom;
 	p.letter = 'a';
 	p.yoffset = charDesc.yoffset;
+	p.underlineTo = charDesc.underlineTo;
+	p.underlineFrom = charDesc.underlineFrom;
 	p.lineHeight = text._lineHeight._value;
 	p.textAlign = text._textAlign._value;
 	p.textContent = text._textContent._value;
+	p.underline = text._textDecoration._value.indexOf('underline') !== -1;
+	p.overline = text._textDecoration._value.indexOf('overline') !== -1;
+	p.lineThrough = text._textDecoration._value.indexOf('line-through') !== -1;
+
+
 	p.export = () => {
 		console.log( `{MSDFVariant}.adjustTypographicGlyphs ( ${JSON.stringify(alterations, null, 2 )} );` );
 		navigator.clipboard.writeText( `{MSDFVariant}.adjustTypographicGlyphs ( ${JSON.stringify(alterations, null, 2 )} );` );
@@ -224,6 +234,45 @@ function baselineGUI() {
 
 	gui.add( p, 'textAlign', ['left','center','right']).onChange( v => {
 		text.set({textAlign:v});
+		exampleRender();
+	})
+
+	gui.add( p, 'underline').onChange( v => {
+
+		const decorations = [];
+		if( p.underline ) decorations.push( 'underline' );
+		if( p.overline ) decorations.push( 'overline' );
+		if( p.lineThrough ) decorations.push( 'line-through' );
+
+		if( decorations.length === 0 ) decorations.push( 'none' );
+
+		text.set({textDecoration: decorations.join(" ")})
+		exampleRender();
+	})
+
+	gui.add( p, 'overline').onChange( v => {
+
+		const decorations = [];
+		if( p.underline ) decorations.push( 'underline' );
+		if( p.overline ) decorations.push( 'overline' );
+		if( p.lineThrough ) decorations.push( 'line-through' );
+
+		if( decorations.length === 0 ) decorations.push( 'none' );
+
+		text.set({textDecoration: decorations.join(" ")})
+		exampleRender();
+	})
+
+	gui.add( p, 'lineThrough').onChange( v => {
+
+		const decorations = [];
+		if( p.underline ) decorations.push( 'underline' );
+		if( p.overline ) decorations.push( 'overline' );
+		if( p.lineThrough ) decorations.push( 'line-through' );
+
+		if( decorations.length === 0 ) decorations.push( 'none' );
+
+		text.set({textDecoration: decorations.join(" ")})
 		exampleRender();
 	})
 
@@ -299,7 +348,31 @@ function baselineGUI() {
 
 		charDesc._yoffset = v;
 
-		text._renderer._needsRender = true;
+		text._textContent._needsUpdate = true;
+
+		exampleRender();
+
+	} );
+
+	underlineToController = folder.add( p, 'underlineTo', -2, 2, 0.01 ).onChange( v => {
+
+		alterations[ p.letter ] = {underlineTo:v};
+
+		charDesc._underlineTo = v;
+
+		text._textContent._needsUpdate = true;
+
+		exampleRender();
+
+	} );
+
+	underlineFromController = folder.add( p, 'underlineFrom', -2, 2, 0.01 ).onChange( v => {
+
+		alterations[ p.letter ] = {underlineFrom:v};
+
+		charDesc._underlineFrom = v;
+
+		text._textContent._needsUpdate = true;
 
 		exampleRender();
 
@@ -317,6 +390,8 @@ function _resetOffset(){
 
 	charDesc = fontVariant.getTypographicGlyph( p.letter );
 	p.yoffset = charDesc.yoffset;
+	p.underlineTo = charDesc.underlineTo;
+	p.underlineFrom = charDesc.underlineFrom;
 	yoffsetController.updateDisplay();
 
 }

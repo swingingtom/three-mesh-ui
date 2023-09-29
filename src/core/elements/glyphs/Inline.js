@@ -1,4 +1,6 @@
+/* eslint-disable no-unused-vars */
 import Line from './Line';
+/* eslint-enable no-unused-vars */
 
 /**
  * This is the abstract/base class / interface of any inline
@@ -241,6 +243,18 @@ export default class Inline {
 		this._paddingRight = value;
 
 	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get xHeight(){ return 0 }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get capHeight(){ return 0 }
 
 	/**
 	 *

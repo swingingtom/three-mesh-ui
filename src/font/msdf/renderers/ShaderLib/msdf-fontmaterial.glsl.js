@@ -45,6 +45,7 @@ void main() {
 
 
 	#include <clipping_planes_fragment>
+	#include <colorspace_fragment>
 	#include <fog_fragment>
 }
 `

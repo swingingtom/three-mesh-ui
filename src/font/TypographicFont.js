@@ -7,8 +7,11 @@ export default class TypographicFont {
 		/** @protected */ this._lineBase = 38;
 		/** @protected */ this._name = "-";
 		/** @protected */ this._charset = "";
+		/** @protected */ this._xHeight = 26;
+		/** @protected */ this._capHeight = 6;
 
 	}
+
 
 	/**
 	 *
@@ -16,6 +19,17 @@ export default class TypographicFont {
 	 */
 	get size() { return this._size; }
 
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get xHeight() { return this._xHeight; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get capHeight() { return this._capHeight; }
 	/**
 	 *
 	 * @returns {number}

@@ -1,4 +1,4 @@
-import StyleVector4Property from '../StyleVector4Property';
+// import StyleVector4Property from '../StyleVector4Property';
 import { Vector4 } from 'three';
 import Style4DimensionsProperty from '../Style4DimensionsProperty';
 
