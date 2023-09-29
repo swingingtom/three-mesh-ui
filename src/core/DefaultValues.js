@@ -27,7 +27,7 @@ const _values = {
 	borderRadius: 0,
 	borderWidth: 0,
 	borderColor: 'black',
-	borderOpacity: 1,
+	borderOpacity: 0,
 	backgroundSize: "cover",
 	backgroundColor: 'transparent',
 	backgroundOpacity: 0.5,

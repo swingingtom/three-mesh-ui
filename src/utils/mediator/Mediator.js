@@ -101,7 +101,17 @@ export default class Mediator{
 
 				// retrieve the mediation transformer to use for this property
 				const mediationTransformer = definition.t ? definition.t : directTransfer;
-				mediationTransformer( target, definition.m, options[subjectProperty] );
+
+				if( Array.isArray( target) ){
+					for (let i = 0; i < target.length; i++) {
+						const targetElement = target[i];
+						mediationTransformer( target, definition.m, options[subjectProperty] );
+					}
+				}else{
+					mediationTransformer( target, definition.m, options[subjectProperty] );
+				}
+
+
 
 				// Also transfert to second target is isset
 				if( secondTarget ) {

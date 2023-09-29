@@ -59,6 +59,9 @@ import FrameMaterial from '../../frame/materials/FrameMaterial';
 import TextDecorationProperty from '../properties/style-properties/font/TextDecorationProperty';
 import { renderOrderTransformer } from '../../utils/mediator/transformers/MeshTransformers';
 import BooleanProperty from '../properties/BooleanProperty';
+import InlineMergeProperty from "../properties/geometry/InlineMergeProperty";
+import MergePivotProperty from "../properties/geometry/MergePivotProperty";
+import MergePivotReferenceProperty from "../properties/geometry/MergePivotReferenceProperty";
 /* eslint-enable no-unused-vars */
 
 export default class MeshUIBaseElement extends Object3D {
@@ -311,6 +314,10 @@ export default class MeshUIBaseElement extends Object3D {
 
 		this._autoSize = properties.autoSize ? new properties.autoSize() : new EmptyProperty("autoSize");
 
+		this._inlineMerge = properties.inlineMerge ? new properties.inlineMerge() : new InlineMergeProperty();
+		this._mergePivot = properties.mergePivot ? new properties.mergePivot() : new MergePivotProperty();
+		this._pivotReference = properties.mergePivotReference ? new properties.mergePivotReference() : new MergePivotReferenceProperty();
+
 		this._renderer = properties.renderer ? new properties.renderer() : new EmptyProperty("renderer");
 
 		this._offset = new OffsetProperty();
@@ -429,6 +436,10 @@ export default class MeshUIBaseElement extends Object3D {
 			this._fontMaterial,
 			this._fontCustomDepthMaterial,
 			this._overflow,
+
+			this._mergePivot,
+			this._pivotReference,
+			this._inlineMerge,
 			this._renderer,
 
 		]
@@ -628,6 +639,12 @@ export default class MeshUIBaseElement extends Object3D {
 				case 'textContent' :
 					this.textContent = value;
 					break;
+
+					case 'inlineMerge':
+					case 'mergePivot':
+					case 'pivotReference':
+						this[`_${prop}`].value = value;
+						break;
 
 					case 'fontSmooth':
 					case 'renderOrder':
@@ -1335,12 +1352,17 @@ export default class MeshUIBaseElement extends Object3D {
 	 */
 	setFontMesh( mesh ) {
 
+		if( mesh.isObject3D ) mesh = [mesh];
+
 		if( this._fontMesh ) {
 
-			this.remove( this._fontMesh );
+			for (let i = 0; i < this._fontMesh.length; i++) {
+				const fontMesh = this._fontMesh[i];
+				this.remove( fontMesh );
 
-			if ( this._fontMesh.material ) this._fontMesh.material.dispose?.();
-			if ( this._fontMesh.geometry ) this._fontMesh.geometry.dispose?.();
+				if ( fontMesh.material ) fontMesh.material.dispose?.();
+				if ( fontMesh.geometry ) fontMesh.geometry.dispose?.();
+			}
 
 			this._fontMesh = null;
 			// deepDelete( this._fontMesh );
@@ -1353,14 +1375,17 @@ export default class MeshUIBaseElement extends Object3D {
 
 		if ( this._fontMesh ) {
 
-			this._fontMesh.raycast = () => {};
+			for (let i = 0; i < mesh.length; i++) {
+				const mesh1 = mesh[i];
+
+				mesh1.raycast = () => {};
+				this.add( mesh1 );
+			}
 
 			this.bindFontMeshProperties();
-
 			this._transferToFontMaterial();
 			this._transferToFontMesh();
 
-			this.add( this._fontMesh );
 
 		}
 

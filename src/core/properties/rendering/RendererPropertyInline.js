@@ -14,10 +14,11 @@ export default class RendererPropertyInline extends BaseProperty {
 
 	render( element ) {
 
-		console.log("Render " , element._textContent._value )
-
 		if ( !element._inlines._value || !element._inlines._value.length ) return;
 
+		console.log("nonon")
+
+		// convert all inlines (glyphs) to geometries
 		const charactersAsGeometries = element._inlines._value.map(
 			inline => {
 				return element._font._fontVariant.getGeometricGlyph( inline, element )
@@ -25,11 +26,11 @@ export default class RendererPropertyInline extends BaseProperty {
 			}
 		);
 
-		const mergedGeom = mergeGeometries( charactersAsGeometries );
 
-		const fontMesh = new Mesh( mergedGeom, element.fontMaterial );
+		const fontMesh = element._inlineMerge.apply( charactersAsGeometries, element);
 		element.setFontMesh( fontMesh );
 
+		// @TODO : this won't apply
 		element._fontMesh.renderOrder = Infinity;
 
 
@@ -65,6 +66,7 @@ export default class RendererPropertyInline extends BaseProperty {
 
 		}
 
+		// @TODO : Would be great to have a bit more informations here...
 		// be sure lines are even startInline and endInline
 		if( lines.length % 2 === 1 ) lines.push( inlines.length-1 );
 

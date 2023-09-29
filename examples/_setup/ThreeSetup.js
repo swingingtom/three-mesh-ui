@@ -1,6 +1,6 @@
 import Stats from 'three/examples/jsm/libs/stats.module';
 import * as ThreeMeshUI from 'three-mesh-ui';
-import { Color, LinearSRGBColorSpace, Scene, Vector3, WebGLRenderer } from 'three';
+import {Color, LinearSRGBColorSpace, Scene, SRGBColorSpace, Vector3, WebGLRenderer} from 'three';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
@@ -24,7 +24,6 @@ export const exampleThreeSetup = function ( camera ) {
 		antialias: true
 	});
 
-	// renderer.outputColorSpace = SRGBColorSpace;
 	renderer.outputColorSpace = LinearSRGBColorSpace;
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( WIDTH, HEIGHT );

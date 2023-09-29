@@ -25,6 +25,9 @@ import { Object3D } from 'three';
 import VerticalAlignPropertyInline from '../../core/properties/style-properties/font/VerticalAlignPropertyInline';
 import BoundsInlines from '../../core/properties/BoundsInline';
 import TextDecorationPropertyInline from '../../core/properties/style-properties/font/TextDecorationPropertyInline';
+import InlineMergePropertyInline from "../../core/properties/geometry/InlineMergePropertyInline";
+import MergePivotInline from "../../core/properties/geometry/MergePivotPropertyInline";
+import MergePivotReferenceProperty from "../../core/properties/geometry/MergePivotReferenceProperty";
 /* eslint-enable no-unused-vars */
 
 export default class InlineElement extends MeshUIBaseElement {
@@ -138,7 +141,12 @@ export default class InlineElement extends MeshUIBaseElement {
 
 		if( !properties.fontKerning ) properties.fontKerning = FontKerningPropertyInline;
 
+		if( !properties.inlineMerge ) properties.inlineMerge = InlineMergePropertyInline;
+		if( !properties.mergePivot ) properties.mergePivot = MergePivotInline;
+		if( !properties.mergePivotReference ) properties.mergePivotReference = MergePivotReferenceProperty;
+
 		// if( !properties.inlines ) properties.inlines = InlinesProperty;
+
 
 		if( !values.uiType ) values.uiType = 'inline';
 
