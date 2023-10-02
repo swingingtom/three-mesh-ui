@@ -20,7 +20,7 @@ export default class MSDFVertexMaterialExample extends MeshStandardMaterial{
 
 	}
 
-	constructor(options = {}) {
+	constructor(options = {}, shaderCustomizer = null ) {
 
 		// be sure transparent and alphaTest are set
 		ThreeMeshUI.MSDFFontMaterialUtils.ensureMaterialOptions( options );
@@ -80,6 +80,8 @@ export default class MSDFVertexMaterialExample extends MeshStandardMaterial{
 
 			// inject ThreeMeshUI shaderChunks to provide msdf rendering
 			ThreeMeshUI.MSDFFontMaterialUtils.injectFragmentShaderChunks( shader );
+
+			if( shaderCustomizer ) shaderCustomizer( shader );
 		}
 	}
 }

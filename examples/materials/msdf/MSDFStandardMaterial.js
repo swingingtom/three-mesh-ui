@@ -1,5 +1,6 @@
 import { MeshStandardMaterial } from 'three';
 import { MSDFFontMaterialUtils } from 'three-mesh-ui';
+import {emptyBeforeCompile} from "three-mesh-ui/src/font/msdf/utils/MSDFFontMaterialUtils";
 
 /**
  *
@@ -19,7 +20,7 @@ export default class MSDFStandardMaterial extends MeshStandardMaterial {
 
 	}
 
-	constructor( options = {} ) {
+	constructor( options = {}, onBeforeCompile = emptyBeforeCompile ) {
 
 		// be sure transparent and alphaTest are set
 		MSDFFontMaterialUtils.ensureMaterialOptions( options );
@@ -42,6 +43,7 @@ export default class MSDFStandardMaterial extends MeshStandardMaterial {
 			// inject ThreeMeshUI shaderChunks to provide msdf rendering
 			MSDFFontMaterialUtils.injectShaderChunks( shader );
 
+			onBeforeCompile( shader, this );
 		}
 
 	}

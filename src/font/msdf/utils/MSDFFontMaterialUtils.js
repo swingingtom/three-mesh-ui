@@ -247,6 +247,13 @@ const _RGSSTransformer = function( fontMaterial, materialProperty, value){
 
 }
 
+/**
+ *
+ * @param shader
+ * @param material
+ */
+export const emptyBeforeCompile = function( shader, material ){};
+
 
 /**
  *

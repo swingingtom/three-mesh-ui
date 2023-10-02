@@ -1,5 +1,6 @@
 import { MeshNormalMaterial } from 'three';
 import { MSDFFontMaterialUtils, ShaderChunkUI } from 'three-mesh-ui';
+import {emptyBeforeCompile} from "three-mesh-ui/src/font/msdf/utils/MSDFFontMaterialUtils";
 
 /**
  * Example of enabling MeshNormalMaterial to render ThreeMeshUI MSDF Texts
@@ -20,7 +21,7 @@ export default class MSDFNormalMaterial extends MeshNormalMaterial{
 
 	}
 
-	constructor( options = {} ) {
+	constructor( options = {}, onBeforeCompile = emptyBeforeCompile ) {
 
 		MSDFFontMaterialUtils.ensureMaterialOptions( options );
 
@@ -65,6 +66,8 @@ ${ShaderChunkUI.msdfAlphaglyphFragmentGlsl}`
 				`if( diffuseColor.a < alphaTest ) discard;
                 gl_FragColor = diffuseColor;`
 			)
+
+			onBeforeCompile( shader, this );
 
 		}
 

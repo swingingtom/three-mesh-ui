@@ -1,5 +1,6 @@
 import { MSDFFontMaterialUtils } from 'three-mesh-ui';
 import { MeshBasicMaterial } from 'three';
+import {emptyBeforeCompile} from "three-mesh-ui/src/font/msdf/utils/MSDFFontMaterialUtils";
 
 /**
  * Example of enabling MeshLambertMaterial to render ThreeMeshUI MSDF Texts
@@ -20,7 +21,8 @@ export default class MSDFBasicMaterial extends MeshBasicMaterial{
 	}
 
 
-	constructor( options = {} ) {
+
+	constructor( options = {} , onBeforeCompile = emptyBeforeCompile ) {
 
 		// be sure transparent and alphaTest are set
 		MSDFFontMaterialUtils.ensureMaterialOptions( options );
@@ -43,6 +45,7 @@ export default class MSDFBasicMaterial extends MeshBasicMaterial{
 			// inject ThreeMeshUI shaderChunks to provide msdf rendering
 			MSDFFontMaterialUtils.injectShaderChunks( shader );
 
+			onBeforeCompile( shader, this )
 		}
 
 	}
