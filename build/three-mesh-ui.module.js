@@ -36,7 +36,7 @@ var __webpack_exports__ = {};
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "w8": () => (/* reexport */ BaseProperty),
+  "w8": () => (/* reexport */ BaseProperty_BaseProperty),
   "cg": () => (/* reexport */ Behavior),
   "gO": () => (/* reexport */ BlockElement),
   "xu": () => (/* reexport */ BoxElement),
@@ -56,6 +56,7 @@ __webpack_require__.d(__webpack_exports__, {
   "Gp": () => (/* reexport */ StylePropertyWrapper),
   "hC": () => (/* reexport */ SubStyleProperty),
   "xv": () => (/* reexport */ TextElement),
+  "wE": () => (/* reexport */ TextContentProperty),
   "mx": () => (/* reexport */ TypographicFont),
   "gE": () => (/* reexport */ TypographicGlyph),
   "cT": () => (/* reexport */ UpdateManager),
@@ -85,9 +86,10 @@ __webpack_require__.d(MaterialTransformers_namespaceObject, {
 ;// CONCATENATED MODULE: ./src/core/DefaultValues.js
 /** List the default values of the lib components */
 const _values = {
+	fog: false,
 	fontFamily: null,
 	fontSize: 0.05,
-	fontKerning: 'normal',
+	fontKerning: 'auto',
 	fontStyle: 'normal',
 	fontWeight : 'normal',
 	offset: 0.005,
@@ -99,6 +101,7 @@ const _values = {
 	alignItems : 'start',
 	backgroundImage: null,
 	textAlign : 'left',
+	textDecoration: 'none',
 	boxSizing: 'content-box',
 	position: 'static',
 	color: 0xffffff,
@@ -110,10 +113,10 @@ const _values = {
 	borderRadius: 0,
 	borderWidth: 0,
 	borderColor: 'black',
-	borderOpacity: 1,
+	borderOpacity: 0,
 	backgroundSize: "cover",
-	backgroundColor: 0x000000,
-	backgroundOpacity: 0,
+	backgroundColor: 'transparent',
+	backgroundOpacity: 0.5,
 	overflow: 'visible',
 	letterSpacing: 0,
 	invertAlpha : false,
@@ -134,7 +137,8 @@ const _blocks = {
 const _inlines = {
 	fontStyle: 'inherit',
 	fontWeight: 'inherit',
-	color: 'inherit'
+	color: 'inherit',
+	textDecoration: 'inherit',
 }
 
 const _registry = {
@@ -188,7 +192,7 @@ const get = function ( property, type = 'default' ) {
 
 /* eslint-enable no-unused-vars */
 
-class BaseProperty {
+class BaseProperty_BaseProperty {
 
 	/**
 	 *
@@ -260,9 +264,9 @@ class BaseProperty {
 	 */
 	set value( value ) {
 
-		if( ! this.isValid( value) ) return;
+		if ( !this.isValid( value ) ) return;
 
-		if( this._value !== value ) {
+		if ( this._value !== value ) {
 
 			this._value = value;
 
@@ -278,7 +282,7 @@ class BaseProperty {
 	 * @param element
 	 * @param {Object.<string,any>} out
 	 */
-	update( element , out ) { 	/* eslint-enable no-unused-vars */
+	update( element, out ) { 	/* eslint-enable no-unused-vars */
 
 		// the value has been updated from setter
 		// if there is no additional logic
@@ -307,14 +311,13 @@ class BaseProperty {
 	}
 
 
-
 	/**
 	 *
 	 * @param {Out} out
 	 */
 	_outputValue( out ) {
 
-		out[this._id] = this._value;
+		out[ this._id ] = this._value;
 
 	}
 
@@ -336,14 +339,14 @@ class BaseProperty {
 	 *
 	 * @param {MeshUIBaseElement} element
 	 */
-	getInheritedInput ( element ) {
+	getInheritedInput( element ) {
 
-		if( this._value !== 'inherit' ) return this._value;
+		if ( this._value !== 'inherit' ) return this._value;
 
 		const parent = element._parent._value;
-		if( parent && parent[`_${this._id}`] ) {
+		if ( parent && parent[ `_${this._id}` ] ) {
 
-			return parent[`_${this._id}`].getInheritedInput( parent )
+			return parent[ `_${this._id}` ].getInheritedInput( parent )
 
 		}
 
@@ -376,10 +379,22 @@ class BaseProperty {
 	/**
 	 *
 	 */
-	emptyStrategyLogic () {
+	emptyStrategyLogic() {
 
 		throw new Error( `ThreeMeshUI::${this.constructor.name} has empty strategy. Update has not been processed.` );
 
+	}
+
+	requestUpdate() {
+		this._needsUpdate = true;
+	}
+
+	requestProcess() {
+		this._needsProcess = false;
+	}
+
+	requestRender() {
+		this._needsRender = false;
 	}
 
 }
@@ -393,7 +408,7 @@ class BaseProperty {
 ;// CONCATENATED MODULE: ./src/core/properties/RenderOrderProperty.js
 
 
-class RenderOrderProperty extends BaseProperty{
+class RenderOrderProperty extends BaseProperty_BaseProperty{
 
 	constructor() {
 
@@ -468,7 +483,7 @@ class RenderOrderProperty extends BaseProperty{
 ;// CONCATENATED MODULE: ./src/core/properties/InheritableProperty.js
 
 
-class InheritableProperty extends BaseProperty {
+class InheritableProperty extends BaseProperty_BaseProperty {
 
 	/**
 	 *
@@ -568,9 +583,7 @@ class OffsetProperty extends InheritableProperty {
 
 	}
 
-
 	/* eslint-disable no-unused-vars */ update( element, out ) { /* eslint-enable no-unused-vars */
-
 		super.update( element, out);
 
 		// only process if element has ui parent
@@ -622,7 +635,7 @@ function _isValid( value ) {
 ;// CONCATENATED MODULE: external "three"
 var x = y => { var x = {}; __webpack_require__.d(x, y); return x; }
 var y = x => () => x
-const external_three_namespaceObject = x({ ["BackSide"]: () => __WEBPACK_EXTERNAL_MODULE_three__.BackSide, ["BufferAttribute"]: () => __WEBPACK_EXTERNAL_MODULE_three__.BufferAttribute, ["BufferGeometry"]: () => __WEBPACK_EXTERNAL_MODULE_three__.BufferGeometry, ["Color"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Color, ["DoubleSide"]: () => __WEBPACK_EXTERNAL_MODULE_three__.DoubleSide, ["EventDispatcher"]: () => __WEBPACK_EXTERNAL_MODULE_three__.EventDispatcher, ["FileLoader"]: () => __WEBPACK_EXTERNAL_MODULE_three__.FileLoader, ["FrontSide"]: () => __WEBPACK_EXTERNAL_MODULE_three__.FrontSide, ["LinearFilter"]: () => __WEBPACK_EXTERNAL_MODULE_three__.LinearFilter, ["Mesh"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Mesh, ["Object3D"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Object3D, ["Plane"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Plane, ["PlaneGeometry"]: () => __WEBPACK_EXTERNAL_MODULE_three__.PlaneGeometry, ["ShaderMaterial"]: () => __WEBPACK_EXTERNAL_MODULE_three__.ShaderMaterial, ["Texture"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Texture, ["TextureLoader"]: () => __WEBPACK_EXTERNAL_MODULE_three__.TextureLoader, ["Vector2"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Vector2, ["Vector3"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Vector3, ["Vector4"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Vector4 });
+const external_three_namespaceObject = x({ ["BackSide"]: () => __WEBPACK_EXTERNAL_MODULE_three__.BackSide, ["BufferAttribute"]: () => __WEBPACK_EXTERNAL_MODULE_three__.BufferAttribute, ["BufferGeometry"]: () => __WEBPACK_EXTERNAL_MODULE_three__.BufferGeometry, ["Color"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Color, ["DoubleSide"]: () => __WEBPACK_EXTERNAL_MODULE_three__.DoubleSide, ["EventDispatcher"]: () => __WEBPACK_EXTERNAL_MODULE_three__.EventDispatcher, ["FileLoader"]: () => __WEBPACK_EXTERNAL_MODULE_three__.FileLoader, ["FrontSide"]: () => __WEBPACK_EXTERNAL_MODULE_three__.FrontSide, ["LinearFilter"]: () => __WEBPACK_EXTERNAL_MODULE_three__.LinearFilter, ["Mesh"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Mesh, ["MeshBasicMaterial"]: () => __WEBPACK_EXTERNAL_MODULE_three__.MeshBasicMaterial, ["Object3D"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Object3D, ["Plane"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Plane, ["PlaneGeometry"]: () => __WEBPACK_EXTERNAL_MODULE_three__.PlaneGeometry, ["ShaderMaterial"]: () => __WEBPACK_EXTERNAL_MODULE_three__.ShaderMaterial, ["Texture"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Texture, ["TextureLoader"]: () => __WEBPACK_EXTERNAL_MODULE_three__.TextureLoader, ["UniformsLib"]: () => __WEBPACK_EXTERNAL_MODULE_three__.UniformsLib, ["Vector2"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Vector2, ["Vector3"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Vector3, ["Vector4"]: () => __WEBPACK_EXTERNAL_MODULE_three__.Vector4 });
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/SubStyleProperty.js
 
 
@@ -632,7 +645,7 @@ const external_three_namespaceObject = x({ ["BackSide"]: () => __WEBPACK_EXTERNA
 /* eslint-enable no-unused-vars */
 
 /* eslint-disable no-unused-vars */
-class SubStyleProperty extends BaseProperty{
+class SubStyleProperty extends BaseProperty_BaseProperty{
 
 	/**
 	 *
@@ -642,7 +655,7 @@ class SubStyleProperty extends BaseProperty{
 	 */
 	constructor( propertyId, defaultValue, primitive = true) {
 
-		super( propertyId, 'unset', primitive );
+		super( propertyId, defaultValue, primitive );
 
 		/**
 		 * @type {any}
@@ -1034,15 +1047,19 @@ class PaddingProperty extends StyleVector4Property {
 		element._layouter._needsProcess = true;
 		element._renderer._needsRender = true;
 
-		if( element._parent._value ){
-			element._parent._value._layouter._needsProcess = true;
+		const p = element._parent._value;
+		if( p ) {
+
+			p._bounds._needsUpdate = true;
+			p._flexDirection._needsUpdate = true;
+
 		}
+
 	}
 
 }
 
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/Style4DimensionsProperty.js
-
 
 
 
@@ -1056,7 +1073,6 @@ class Style4DimensionsProperty extends StyleVector4Property {
 
 	computeOutputValue( element ) { /* eslint-enable no-unused-vars */
 
-		console.log( this._value, this._input)
 		this._vector4ValueSetterFinal( this._value, this._input, element );
 
 	}
@@ -1150,7 +1166,7 @@ class Style4DimensionsProperty extends StyleVector4Property {
 
 
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/bounds/MarginProperty.js
-
+// import StyleVector4Property from '../StyleVector4Property';
 
 
 
@@ -1299,7 +1315,17 @@ class Mediator{
 
 				// retrieve the mediation transformer to use for this property
 				const mediationTransformer = definition.t ? definition.t : directTransfer;
-				mediationTransformer( target, definition.m, options[subjectProperty] );
+
+				if( Array.isArray( target) ){
+					for (let i = 0; i < target.length; i++) {
+						const targetElement = target[i];
+						mediationTransformer( target, definition.m, options[subjectProperty] );
+					}
+				}else{
+					mediationTransformer( target, definition.m, options[subjectProperty] );
+				}
+
+
 
 				// Also transfert to second target is isset
 				if( secondTarget ) {
@@ -1325,7 +1351,7 @@ class Mediator{
 
 /* eslint-enable no-unused-vars */
 
-class ParentProperty extends BaseProperty {
+class ParentProperty extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -1451,7 +1477,7 @@ const numberPrecise = function ( unprecisedNumber, precision = 6 ) {
 
 
 
-class NumberProperty extends BaseProperty{
+class NumberProperty extends BaseProperty_BaseProperty{
 
 	/**
 	 *
@@ -1535,12 +1561,682 @@ function SideProperty_isValid( value ) {
 
 }
 
+;// CONCATENATED MODULE: ./src/core/elements/glyphs/Line.js
+//JSDoc related imports
+/* eslint-disable no-unused-vars */
+
+/* eslint-enable no-unused-vars */
+
+
+/**
+ * Line represents an horizontal combination of positioned inlines with additional properties
+ */
+class Line extends Array {
+
+	/**
+	 *
+	 * @param {Inline[]} items
+	 */
+	constructor(...items) {
+		super(...items);
+
+		/**
+		 * The width of this line
+		 * @type {number}
+		 */
+		this.width = 0;
+
+		/**
+		 * The maximum lineBase of this line of inlines
+		 * @type {number}
+		 */
+		this.lineBase = 0;
+
+		/**
+		 * The maximum lineHeight of this line of inlines
+		 * @type {number}
+		 */
+		this.lineHeight = 0;
+
+		/**
+		 * The vertical position of this line
+		 * @type {number}
+		 */
+		this.y = 0;
+
+		/**
+		 *
+		 * @type {number}
+		 */
+		this.xHeight = 0;
+
+		/**
+		 *
+		 * @type {number}
+		 */
+		this.capHeight = 0;
+
+	}
+
+}
+
+;// CONCATENATED MODULE: ./src/core/elements/glyphs/Inline.js
+/* eslint-disable no-unused-vars */
+
+/* eslint-enable no-unused-vars */
+
+/**
+ * This is the abstract/base class / interface of any inline
+ * Inline can be positioned according to text rules
+ */
+class Inline {
+
+	constructor() {
+
+		/** @protected */ this._offsetX = 0;
+		/** @protected */ this._offsetY = 0;
+
+		/** @protected */ this._lineBreak = null;
+
+		/** @protected */ this._kerning = 0;
+
+		/** @protected */ this._fontFactor = 1;
+		/** @protected */ this._fontSize = 0;
+
+		/** @protected */ this._cumulativeWidth = 0;
+
+		/** @protected */ this._paddingLeft = 0;
+		/** @protected */ this._paddingRight = 0;
+
+		/** @protected */ this._marginLeft = 0;
+		/** @protected */ this._marginRight = 0;
+
+		/** @internal */ this._lineIndex = -1;
+
+	}
+
+	/**
+	 * @returns {void}
+	 */
+	resetOffsets() {
+
+		this._offsetX = this._offsetY = 0;
+		this._cumulativeWidth = 0;
+
+	}
+
+	/**
+	 * The horizontal distance this inline fills
+	 * @returns {number}
+	 */
+	get xadvance() { return 0 }
+
+	/**
+	 * The offset x of this inline in a line
+	 * @returns {number}
+	 */
+	get xoffset() { return 0 }
+
+	/**
+	 * The offset y of this inline in a line
+	 * @returns {number}
+	 */
+	get yoffset() { return 0 }
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get width() { return 0 }
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get height() { return 0 }
+
+	/**
+	 *
+	 * @param {string|null} value
+	 */
+	set lineBreak( value ) {
+
+		this._lineBreak = value;
+
+	}
+
+	/**
+	 *
+	 * @returns {string|null}
+	 */
+	get lineBreak() { return this._lineBreak; }
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get anchor() { return 0 }
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get kerning() { return this._kerning * this._fontFactor; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set kerning( value ) {
+
+		this._kerning = value;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get fontSize() { return this._fontSize }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set fontSize( value ) {
+
+		this._fontSize = value;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get lineHeight() { return 0 }
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get offsetX() { return this._offsetX; }
+
+	/**
+	 *
+	 * @param value
+	 */
+	set offsetX( value ){
+
+		this._offsetX = value;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get offsetY() { return this._offsetY; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set offsetY( value ){
+
+		this._offsetY = value;
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get cumulativeWidth() { return this._cumulativeWidth; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set cumulativeWidth( value ) {
+
+		this._cumulativeWidth = value;
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get marginLeft() { return this._marginLeft; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set marginLeft( value ) {
+
+		this._marginLeft = value;
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get marginRight() { return this._marginRight; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set marginRight( value ) {
+
+		this._marginRight = value;
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get paddingLeft() { return this._paddingLeft; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set paddingLeft( value ) {
+
+		this._paddingLeft = value;
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get paddingRight() { return this._paddingRight; }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set paddingRight( value ) {
+
+		this._paddingRight = value;
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get xHeight(){ return 0 }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get capHeight(){ return 0 }
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get lineBase() { return 0 }
+
+	/**
+	 *
+	 * @param {number} value
+	 */
+	set fontFactor( value ){
+
+		this._fontFactor = value;
+
+	}
+
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get fontFactor() { return this._fontFactor }
+
+	set lineIndex( v ){
+		this._lineIndex = v;
+	}
+
+	get lineIndex() { return this._lineIndex; }
+
+	set line( v ){
+		this._line = v;
+	}
+
+	/**
+	 *
+	 * @return {./Line}
+	 */
+	get line() { return this._line; }
+
+	get underlineFrom(){
+		return this.cumulativeWidth;
+	}
+
+	get underlineTo(){
+		return 0;
+	}
+}
+
+;// CONCATENATED MODULE: ./src/font/TypographicGlyph.js
+//JSDoc related imports
+/* eslint-disable no-unused-vars */
+
+
+/* eslint-enable no-unused-vars */
+
+/**
+ * @class
+ * @abstract
+ */
+class TypographicGlyph {
+
+	/**
+	 *
+	 * @param {TypographicFont} typographicFont
+	 */
+	constructor( typographicFont ) {
+
+		/** @protected */ this._char = "";
+		/** @protected */ this._width = 1;
+		/** @protected */ this._heigth = 1;
+		/** @protected */ this._xadvance = 1;
+		/** @protected */ this._xoffset = 0;
+		/** @protected */ this._yoffset = 0;
+
+		/** @protected */ this._underlineFrom = 1;
+		/** @protected */ this._underlineTo = 0
+		/**
+		 *
+		 * @type {TypographicFont}
+		 * @protected
+		 */
+		this._font = typographicFont;
+
+	}
+
+	/**
+	 *
+	 * @returns {TypographicFont}
+	 */
+	get font() {
+
+		return this._font;
+
+	}
+
+	/**
+	 *
+	 * @return {string}
+	 */
+	get char() {
+
+		return this._char;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get width() {
+
+		return this._width;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get height() {
+
+		return this._heigth;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get xadvance() {
+
+		return this._xadvance;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get xoffset() {
+
+		return this._xoffset;
+
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get yoffset() {
+
+		return this._yoffset;
+
+	}
+
+	/**
+	 *
+	 * @param value
+	 */
+	set yoffset( value ) {
+
+		this._yoffset = value;
+
+	}
+
+	/**
+	 *
+	 * @abstract
+	 * @param {string} otherChar
+	 * @returns {TypographicGlyph}
+	 */
+	/* eslint-disable no-unused-vars */ clone( otherChar ) { /* eslint-enable no-unused-vars */
+
+		throw new Error("Abstract... Need to be implemented");
+
+	}
+
+	/**
+	 *
+	 * @abstract
+	 * @returns {InlineGlyph}
+	 */
+	asInlineGlyph() {
+
+		throw new Error("Abstract... Need to be implemented")
+
+	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get underlineFrom() { return this._underlineFrom; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get underlineTo() { return this._underlineTo; }
+
+}
+
+;// CONCATENATED MODULE: ./src/font/InlineGlyph.js
+
+
+//JSDoc related imports
+/* eslint-disable no-unused-vars */
+
+/* eslint-enable no-unused-vars */
+
+class InlineGlyph extends Inline {
+
+	/**
+	 *
+	 * @param {TypographicGlyph} characterDesc
+	 */
+	constructor( characterDesc ) {
+
+		super();
+
+		/** @protected */ this._typographic = characterDesc;
+
+	}
+
+	/**
+	 *
+	 * @returns {TypographicGlyph}
+	 */
+	get typographic(){
+
+		return this._typographic;
+
+	}
+
+	/*********************************************************************************************************************
+	 * GETTERS FROM CHARACTER DESCRIPTION
+	 ********************************************************************************************************************/
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get xadvance() { return this._typographic.xadvance * this._fontFactor; }
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get xoffset() { return this._typographic.xoffset * this._fontFactor; }
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get yoffset() { return this._typographic.yoffset * this._fontFactor; }
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get width() { return this._typographic.width * this._fontFactor ; }
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get height() { return this._typographic.height * this._fontFactor; }
+
+	/**
+	 *
+	 * @return {string}
+	 */
+	get char() { return this._typographic.char; }
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get anchor() {
+
+		// const lineHeight = this._typographic.font.lineHeight;
+		// const lineBase = this._typographic.font.lineBase;
+		//
+		// return ( ( this._typographic.yoffset + this._typographic.height - lineBase ) * this._fontSize ) / lineHeight;
+
+		return this.yoffset;
+
+	}
+
+	get underlineFrom(){
+		return this.cumulativeWidth * this._typographic._underlineFrom;
+	}
+
+	get underlineTo(){
+		return this.cumulativeWidth * this._typographic._underlineTo;
+	}
+
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get lineHeight() { return this._typographic.font.lineHeight * this._fontFactor; }
+
+	/**
+	 * @override
+	 * @returns {number}
+	 */
+	get lineBase() { return this._typographic.font.lineBase * this._fontFactor; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get xHeight(){ return this._typographic.font.xHeight * this._fontFactor; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get capHeight() { return this._typographic.font.capHeight * this._fontFactor; }
+
+
+
+}
+
+;// CONCATENATED MODULE: ./src/font/utils/FontUtils.js
+const FONT_WEIGHT_LOOK_UP_TABLE = {
+	'light'		: '100',
+	'normal'	: '400',
+	'bold' 		: '700',
+	'bolder' 	: '900'
+}
+
+/**
+ *
+ * @param weight
+ * @return {string}
+ */
+function uniformizeFontWeight( weight ) {
+
+	if( !isNaN(weight) ) return weight.toString();
+
+	const converted = FONT_WEIGHT_LOOK_UP_TABLE[weight];
+
+	if( converted ) return converted;
+
+	return weight;
+
+}
+
 ;// CONCATENATED MODULE: ./src/font/FontVariant.js
 
 
 
 // JSDoc related imports
 /* eslint-disable no-unused-vars */
+
 
 
 
@@ -1556,8 +2252,8 @@ class FontVariant extends external_three_namespaceObject.EventDispatcher {
 
 	/**
 	 *
-	 * @param {string} weight
-	 * @param {string} style
+	 * @param {import('./../core/elements/MeshUIBaseElement').FontWeightFormat} weight
+	 * @param {"normal"|"italic"} style
 	 */
 	constructor( weight, style ) {
 
@@ -1565,7 +2261,7 @@ class FontVariant extends external_three_namespaceObject.EventDispatcher {
 
 		/** @private */ this._isReady = false;
 
-		/** @protected */ this._weight = weight;
+		/** @protected */ this._weight = uniformizeFontWeight( weight );
 		/** @protected */ this._style = style;
 
 		/** @protected */ this._size = 42;
@@ -1811,7 +2507,7 @@ function _setReady( fontVariant ) {
 
 
 
-class FontProperty extends BaseProperty{
+class FontProperty extends BaseProperty_BaseProperty{
 
 	/**
 	 *
@@ -2279,6 +2975,7 @@ class BackgroundImage extends SubStyleProperty {
 
 	output( out ) {
 
+		if( this._value === 'unset' ) console.warn('Unset');
 		out[this._id] = this._value;
 
 		out['tSize'] = this._textureSize;
@@ -3221,9 +3918,7 @@ class BorderWidth extends StyleVector4Property{
 		// @TODO: Units process could be strategies
 		if( this._units === PERCENT ){
 
-			console.log( "Percent" );
 			// this._valueUV.divideScalar( 100 );
-			console.log( this._valueUV );
 
 		}
 
@@ -3268,7 +3963,7 @@ class BorderWidth extends StyleVector4Property{
 ;// CONCATENATED MODULE: ./src/core/properties/VisibleProperty.js
 
 
-class VisibleProperty extends BaseProperty{
+class VisibleProperty extends BaseProperty_BaseProperty{
 
 	/**
 	 *
@@ -3321,14 +4016,13 @@ class VisibleProperty extends BaseProperty{
 
 
 
-
 class BackgroundColorProperty extends StyleColorProperty {
 
 	constructor( defaultValue ) {
 
 		super( 'backgroundColor', defaultValue, false );
 
-		this._input = new external_three_namespaceObject.Color(defaultValue);
+		this._input = defaultValue;
 
 	}
 
@@ -3339,16 +4033,16 @@ class BackgroundColorProperty extends StyleColorProperty {
 	 */
 	computeOutputValue( element ) { /* eslint-enable no-unused-vars */
 
+
 		element._backgroundMesh.visible = !(this._input === 'none' || this._input === 'transparent');
 
 		if( this._input === 'inherit' ) {
 
+			// @TODO: Background should not be inheritable
 			this._value.set(this.getInheritedInput( element ));
 
-		} else {
-
+		} else if( !(this._input === 'transparent' || this._input === 'none') ) {
 			this._value.set( this._input );
-
 		}
 
 	}
@@ -3381,7 +4075,7 @@ class BackgroundColorProperty extends StyleColorProperty {
 ;// CONCATENATED MODULE: ./src/core/properties/EmptyProperty.js
 
 
-class EmptyProperty extends BaseProperty {
+class EmptyProperty extends BaseProperty_BaseProperty {
 
 	/**
 	 *
@@ -3413,7 +4107,7 @@ class EmptyProperty extends BaseProperty {
 ;// CONCATENATED MODULE: ./src/core/properties/InlineJustificator.js
 
 
-class InlineJustificator extends BaseProperty {
+class InlineJustificator extends BaseProperty_BaseProperty {
 
 	constructor() {
 		super( 'inlineJustificator', null, false );
@@ -3975,10 +4669,10 @@ class HeightProperty extends StyleSideProperty {
 
 
 
-;// CONCATENATED MODULE: ./src/core/properties/TextContentEmpty.js
+;// CONCATENATED MODULE: ./src/core/properties/TextContentDefault.js
 
 
-class TextContentEmpty extends EmptyProperty{
+class TextContentDefault extends EmptyProperty{
 
 	constructor() {
 
@@ -4083,8 +4777,11 @@ class TypographicFont {
 		/** @protected */ this._lineBase = 38;
 		/** @protected */ this._name = "-";
 		/** @protected */ this._charset = "";
+		/** @protected */ this._xHeight = 26;
+		/** @protected */ this._capHeight = 6;
 
 	}
+
 
 	/**
 	 *
@@ -4092,6 +4789,17 @@ class TypographicFont {
 	 */
 	get size() { return this._size; }
 
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get xHeight() { return this._xHeight; }
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get capHeight() { return this._capHeight; }
 	/**
 	 *
 	 * @returns {number}
@@ -4144,7 +4852,19 @@ class MSDFTypographicFont extends TypographicFont{
 
 		this._charset = json.chars.map( char => char.char ).join("");
 
+		this._distanceRange = json.distanceField.distanceRange;
+
+		// currently set by MSDFFontVariant
+		// this._xHeight = ...;
+		this._capHeight = (this._lineHeight/2) - (this._lineHeight-this._lineBase);
+
 	}
+
+	/**
+	 *
+	 * @return {number}
+	 */
+	get distanceRange() { return this._distanceRange; }
 
 	/**
 	 *
@@ -4157,512 +4877,6 @@ class MSDFTypographicFont extends TypographicFont{
 	 * @returns {number}
 	 */
 	get textureHeight() { return this._textureHeight; }
-
-}
-
-;// CONCATENATED MODULE: ./src/font/TypographicGlyph.js
-//JSDoc related imports
-/* eslint-disable no-unused-vars */
-
-
-/* eslint-enable no-unused-vars */
-
-/**
- * @class
- * @abstract
- */
-class TypographicGlyph {
-
-	/**
-	 *
-	 * @param {TypographicFont} typographicFont
-	 */
-	constructor( typographicFont ) {
-
-		/** @protected */ this._char = "";
-		/** @protected */ this._width = 1;
-		/** @protected */ this._heigth = 1;
-		/** @protected */ this._xadvance = 1;
-		/** @protected */ this._xoffset = 0;
-		/** @protected */ this._yoffset = 0;
-
-		/**
-		 *
-		 * @type {TypographicFont}
-		 * @protected
-		 */
-		this._font = typographicFont;
-
-	}
-
-	/**
-	 *
-	 * @returns {TypographicFont}
-	 */
-	get font() {
-
-		return this._font;
-
-	}
-
-	/**
-	 *
-	 * @return {string}
-	 */
-	get char() {
-
-		return this._char;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get width() {
-
-		return this._width;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get height() {
-
-		return this._heigth;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get xadvance() {
-
-		return this._xadvance;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get xoffset() {
-
-		return this._xoffset;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get yoffset() {
-
-		return this._yoffset;
-
-	}
-
-	/**
-	 *
-	 * @param value
-	 */
-	set yoffset( value ) {
-
-		this._yoffset = value;
-
-	}
-
-	/**
-	 *
-	 * @abstract
-	 * @param {string} otherChar
-	 * @returns {TypographicGlyph}
-	 */
-	/* eslint-disable no-unused-vars */ clone( otherChar ) { /* eslint-enable no-unused-vars */
-
-		throw new Error("Abstract... Need to be implemented");
-
-	}
-
-	/**
-	 *
-	 * @abstract
-	 * @returns {InlineGlyph}
-	 */
-	asInlineGlyph() {
-
-		throw new Error("Abstract... Need to be implemented")
-
-	}
-
-}
-
-;// CONCATENATED MODULE: ./src/core/elements/glyphs/Inline.js
-/**
- * This is the abstract/base class / interface of any inline
- * Inline can be positioned according to text rules
- */
-class Inline {
-
-	constructor() {
-
-		/** @protected */ this._offsetX = 0;
-		/** @protected */ this._offsetY = 0;
-
-		/** @protected */ this._lineBreak = null;
-
-		/** @protected */ this._kerning = 0;
-
-		/** @protected */ this._fontFactor = 1;
-		/** @protected */ this._fontSize = 0;
-
-		/** @protected */ this._cumulativeWidth = 0;
-
-		/** @protected */ this._paddingLeft = 0;
-		/** @protected */ this._paddingRight = 0;
-
-		/** @protected */ this._marginLeft = 0;
-		/** @protected */ this._marginRight = 0;
-
-	}
-
-	/**
-	 * @returns {void}
-	 */
-	resetOffsets() {
-
-		this._offsetX = this._offsetY = 0;
-		this._cumulativeWidth = 0;
-
-	}
-
-	/**
-	 * The horizontal distance this inline fills
-	 * @returns {number}
-	 */
-	get xadvance() { return 0 }
-
-	/**
-	 * The offset x of this inline in a line
-	 * @returns {number}
-	 */
-	get xoffset() { return 0 }
-
-	/**
-	 * The offset y of this inline in a line
-	 * @returns {number}
-	 */
-	get yoffset() { return 0 }
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get width() { return 0 }
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get height() { return 0 }
-
-	/**
-	 *
-	 * @param {string|null} value
-	 */
-	set lineBreak( value ) {
-
-		this._lineBreak = value;
-
-	}
-
-	/**
-	 *
-	 * @returns {string|null}
-	 */
-	get lineBreak() { return this._lineBreak; }
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get anchor() { return 0 }
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get kerning() { return this._kerning * this._fontFactor; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set kerning( value ) {
-
-		this._kerning = value;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get fontSize() { return this._fontSize }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set fontSize( value ) {
-
-		this._fontSize = value;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get lineHeight() { return 0 }
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get offsetX() { return this._offsetX; }
-
-	/**
-	 *
-	 * @param value
-	 */
-	set offsetX( value ){
-
-		this._offsetX = value;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get offsetY() { return this._offsetY; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set offsetY( value ){
-
-		this._offsetY = value;
-
-	}
-
-	/**
-	 *
-	 * @return {number}
-	 */
-	get cumulativeWidth() { return this._cumulativeWidth; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set cumulativeWidth( value ) {
-
-		this._cumulativeWidth = value;
-
-	}
-
-	/**
-	 *
-	 * @return {number}
-	 */
-	get marginLeft() { return this._marginLeft; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set marginLeft( value ) {
-
-		this._marginLeft = value;
-
-	}
-
-	/**
-	 *
-	 * @return {number}
-	 */
-	get marginRight() { return this._marginRight; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set marginRight( value ) {
-
-		this._marginRight = value;
-
-	}
-
-	/**
-	 *
-	 * @return {number}
-	 */
-	get paddingLeft() { return this._paddingLeft; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set paddingLeft( value ) {
-
-		this._paddingLeft = value;
-
-	}
-
-	/**
-	 *
-	 * @return {number}
-	 */
-	get paddingRight() { return this._paddingRight; }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set paddingRight( value ) {
-
-		this._paddingRight = value;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get lineBase() { return 0 }
-
-	/**
-	 *
-	 * @param {number} value
-	 */
-	set fontFactor( value ){
-
-		this._fontFactor = value;
-
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get fontFactor() { return this._fontFactor }
-}
-
-;// CONCATENATED MODULE: ./src/font/InlineGlyph.js
-
-
-//JSDoc related imports
-/* eslint-disable no-unused-vars */
-
-/* eslint-enable no-unused-vars */
-
-class InlineGlyph extends Inline {
-
-	/**
-	 *
-	 * @param {TypographicGlyph} characterDesc
-	 */
-	constructor( characterDesc ) {
-
-		super();
-
-		/** @protected */ this._typographic = characterDesc;
-
-	}
-
-	/**
-	 *
-	 * @returns {TypographicGlyph}
-	 */
-	get typographic(){
-
-		return this._typographic;
-
-	}
-
-	/*********************************************************************************************************************
-	 * GETTERS FROM CHARACTER DESCRIPTION
-	 ********************************************************************************************************************/
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get xadvance() { return this._typographic.xadvance * this._fontFactor; }
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get xoffset() { return this._typographic.xoffset * this._fontFactor; }
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get yoffset() { return this._typographic.yoffset * this._fontFactor; }
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get width() { return this._typographic.width * this._fontFactor ; }
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get height() { return this._typographic.height * this._fontFactor; }
-
-	/**
-	 *
-	 * @return {string}
-	 */
-	get char() { return this._typographic.char; }
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get anchor() {
-
-		// const lineHeight = this._typographic.font.lineHeight;
-		// const lineBase = this._typographic.font.lineBase;
-		//
-		// return ( ( this._typographic.yoffset + this._typographic.height - lineBase ) * this._fontSize ) / lineHeight;
-
-		return this.yoffset;
-
-	}
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get lineHeight() { return this._typographic.font.lineHeight * this._fontFactor; }
-
-	/**
-	 * @override
-	 * @returns {number}
-	 */
-	get lineBase() { return this._typographic.font.lineBase * this._fontFactor; }
-
 
 }
 
@@ -4691,9 +4905,28 @@ class MSDFInlineGlyph extends InlineGlyph{
 
 	/**
 	 *
+	 * @returns {MSDFTypographicGlyph}
+	 */
+	get typographic(){
+
+		return this._typographic;
+
+	}
+
+	/**
+	 *
 	 * @returns {{left:number, right:number, top:number, bottom:number}|null}
 	 */
 	get uv() { return this.typographic.uv; }
+
+	/**
+	 * @override
+	 *
+	 * Took distance field into account
+	 *
+	 * @returns {number}
+	 */
+	get lineBase() { return this._typographic.font.lineBase * this._fontFactor + this.typographic.font.distanceRange * this._fontFactor }
 
 }
 
@@ -4742,6 +4975,15 @@ class MSDFTypographicGlyph extends TypographicGlyph {
 		}
 	}
 
+	/**
+	 *
+	 * @returns {MSDFTypographicFont}
+	 */
+	get font() {
+
+		return this._font;
+
+	}
 
 	/**
 	 *
@@ -4837,6 +5079,16 @@ class MSDFGeometricGlyph extends external_three_namespaceObject.PlaneGeometry {
 
 		}
 
+
+		// AlphaGlyph Attribute - Defines if the geometry is glyph or decoration
+		const length = this.getAttribute('uv').array.length;
+		const vertexAlphaDecoration = [];
+		for ( let i = 0; i < length; i+=2 ) vertexAlphaDecoration[i/2] = 0;
+
+		// alpha for decoration
+		this.setAttribute('alphaDecorationFactor', new external_three_namespaceObject.BufferAttribute(new Float32Array(vertexAlphaDecoration), 1));
+
+
 		this.name = "GlyphGeometry";
 		// Demo alter geometry
 		// const maxOffset = inline.fontSize / 10;
@@ -4924,6 +5176,10 @@ class MSDFGeometricGlyph extends external_three_namespaceObject.PlaneGeometry {
 const program = /* glsl */`
 attribute vec2 uvG;
 varying vec2 vUvG;
+
+
+attribute float alphaDecorationFactor;
+varying float vAlphaDecorationFactor;
 `;
 
 /* harmony default export */ const msdf_alphaglyph_pars_vertex_glsl = (program);
@@ -4935,6 +5191,8 @@ varying vec2 vUvG;
  */
 const msdf_alphaglyph_vertex_glsl_program = /* glsl */ `
 vUvG = uvG;
+
+vAlphaDecorationFactor = alphaDecorationFactor;
 `;
 
 /* harmony default export */ const msdf_alphaglyph_vertex_glsl = (msdf_alphaglyph_vertex_glsl_program);
@@ -4957,6 +5215,9 @@ gl_Position.z -= 0.00001;
  */
 const msdf_alphaglyph_pars_fragment_glsl_program = /* glsl */`
 varying vec2 vUvG;
+
+varying float vAlphaDecorationFactor;
+
 uniform sampler2D glyphMap;
 uniform vec2 unitRange;
 // functions from the original msdf repo:
@@ -4979,7 +5240,6 @@ float tap(vec2 offsetUV) {
 	return alpha;
 }
 `;
-
 /* harmony default export */ const msdf_alphaglyph_pars_fragment_glsl = (msdf_alphaglyph_pars_fragment_glsl_program);
 
 ;// CONCATENATED MODULE: ./src/font/msdf/renderers/ShaderChunks/msdf-alphaglyph.fragment.glsl.js
@@ -5024,7 +5284,8 @@ const msdf_alphaglyph_fragment_glsl_program = /* glsl */`
 
 #endif
 
-	diffuseColor.a *= alpha;
+	diffuseColor.a *= max( alpha , (opacity * vAlphaDecorationFactor * 2.) );
+
 `;
 
 /* harmony default export */ const msdf_alphaglyph_fragment_glsl = (msdf_alphaglyph_fragment_glsl_program);
@@ -5147,6 +5408,7 @@ class MSDFFontMaterialUtils {
 	static ensureDefines( threeMaterial ) {
 		if ( !threeMaterial.defines ) {
 			threeMaterial.defines = {};
+			threeMaterial.defines['USE_UV'] = true;
 		}
 	}
 
@@ -5366,10 +5628,11 @@ const _RGSSTransformer = function( fontMaterial, materialProperty, value){
  */
 const mediationDefinitions = {
 	clippingPlanes: { m: 'clippingPlanes' },
+	color: { m: 'color' },
+	fog: { m: 'fog' },
+	font: { m: "glyphMap", t: _fontToGlyphMapTransformer },
 	fontAlphaTest: { m: 'alphaTest', t: alphaTestTransformer },
 	fontSide: { m: 'side' },
-	font: { m: "glyphMap", t: _fontToGlyphMapTransformer },
-	color: { m: 'color' },
 	fontOpacity: { m: 'opacity' },
 	fontSmooth: { m: 'NO_RGSS', t: _RGSSTransformer },
 	invertAlpha: { m: 'INVERT_ALPHA', t: toPreprocessorTriggerTransformer },
@@ -5388,13 +5651,17 @@ const mediationDefinitions = {
  */
 const vertexShader = /* glsl */`
 ${msdf_alphaglyph_pars_vertex_glsl}
+
+#include <fog_pars_vertex>
 #include <clipping_planes_pars_vertex>
+
 void main() {
 	${msdf_alphaglyph_vertex_glsl}
 	#include <begin_vertex>
 	#include <project_vertex>
 	${msdf_offsetglyph_vertex_glsl}
 	#include <clipping_planes_vertex>
+	#include <fog_vertex>
 }
 `
 
@@ -5407,6 +5674,7 @@ uniform vec3 diffuse;
 uniform float opacity;
 ${msdf_alphaglyph_pars_fragment_glsl}
 #include <alphatest_pars_fragment>
+#include <fog_pars_fragment>
 #include <clipping_planes_pars_fragment>
 void main() {
 	// instead of <color_fragment> : vec4 diffuseColor
@@ -5415,9 +5683,54 @@ void main() {
 	#include <alphatest_fragment>
 	// instead of <output_fragment>
 	gl_FragColor = diffuseColor;
+
+
 	#include <clipping_planes_fragment>
+	#include <colorspace_fragment>
+	#include <fog_fragment>
 }
 `
+
+;// CONCATENATED MODULE: ./src/font/msdf/renderers/ShaderLib/msdf-decorationmaterial.glsl.js
+
+
+/**
+ *
+ * @type {string}
+ */
+const decorationVertexShader = /* glsl */`
+#include <fog_pars_vertex>
+#include <clipping_planes_pars_vertex>
+void main() {
+	#include <begin_vertex>
+	#include <project_vertex>
+	${msdf_offsetglyph_vertex_glsl}
+	#include <clipping_planes_vertex>
+	#include <fog_vertex>
+}
+`
+
+/**
+ *
+ * @type {string}
+ */
+const decorationFragmentShader = /* glsl */(/* unused pure expression or super */ null && (`
+uniform vec3 diffuse;
+uniform float opacity;
+#include <alphatest_pars_fragment>
+#include <fog_pars_fragment>
+#include <clipping_planes_pars_fragment>
+void main() {
+	// instead of <color_fragment> : vec4 diffuseColor
+	vec4 diffuseColor = vec4( diffuse, opacity );
+	#include <alphatest_fragment>
+	// instead of <output_fragment>
+	gl_FragColor = diffuseColor;
+	#include <clipping_planes_fragment>
+	#include <colorspace_fragment>
+	#include <fog_fragment>
+}
+`))
 
 ;// CONCATENATED MODULE: ./src/font/msdf/materials/MSDFFontMaterial.js
 
@@ -5426,6 +5739,7 @@ void main() {
 
 // JSDoc related import
 /* eslint-disable no-unused-vars */
+
 
 /* eslint-enable no-unused-vars */
 
@@ -5459,6 +5773,8 @@ class MSDFFontMaterial extends external_three_namespaceObject.ShaderMaterial {
 				'opacity': { value: 1 },
 				'unitRange': { value: new external_three_namespaceObject.Vector2(0,0) }, // vec2
 				'alphaTest': { value: ALPHA_TEST },
+
+				...external_three_namespaceObject.UniformsLib.fog,
 			},
 			transparent: true,
 			clipping: true,
@@ -5476,6 +5792,8 @@ class MSDFFontMaterial extends external_three_namespaceObject.ShaderMaterial {
 		// initiate additional properties
 		this.noRGSS = materialOptions.noRGSS || false;
 
+		// Set fog as default
+		this.fog = false;
 	}
 
 	/**
@@ -5518,9 +5836,6 @@ class MSDFFontMaterial extends external_three_namespaceObject.ShaderMaterial {
 		return this.uniforms.opacity.value;
 
 	}
-
-
-
 
 	/**
 	 * The color will be the diffuse uniform
@@ -5588,6 +5903,10 @@ class MSDFFontMaterial extends external_three_namespaceObject.ShaderMaterial {
 		this.uniforms.alphaTest.value = v;
 	}
 
+	// cloneAsDecorationMaterial(){
+	// 	return new MSDFDecorationMaterial(this.uniforms);
+	// }
+
 }
 
 ;// CONCATENATED MODULE: ./src/font/msdf/MSDFFontVariant.js
@@ -5603,6 +5922,9 @@ class MSDFFontMaterial extends external_three_namespaceObject.ShaderMaterial {
 
 
 /* eslint-enable no-unused-vars */
+
+const xHeightChars = 'xnmoeaosrcuvwz';
+const capHeightChars = 'EFIHMNTLVWZABCD';
 
 /**
  * @extends {FontVariant}
@@ -5689,7 +6011,16 @@ class MSDFFontVariant extends font_FontVariant {
 	 */
 	_buildData( json ) {
 
+		/**
+		 *
+		 * @type {MSDFTypographicFont}
+		 * @private
+		 */
 		this._font = new MSDFTypographicFont( json );
+
+		this._size = json.info.size;
+		this._lineHeight = json.common.lineHeight;
+		this._lineBase = json.common.base;
 
 		/**
 		 *
@@ -5699,13 +6030,51 @@ class MSDFFontVariant extends font_FontVariant {
 		this._kernings = this._buildKerningPairs( json );
 		this._chars = this._buildCharacters( json );
 
+		// find x-height -----------------------------------------------------------
+		let foundXHeight = false;
+		for ( let i = 0; i < xHeightChars.length; i++ ) {
+			const xHeightChar = xHeightChars[ i ];
+
+			if( this._chars[xHeightChar] ) {
+				this._font._xHeight = this._chars[xHeightChar].height - this._font._distanceRange/2;
+				foundXHeight = true;
+				break;
+			}
+		}
+
+		if( !foundXHeight ) {
+			// auto compute x-height
+			const lineHeightDemi = this._lineHeight / 2;
+			const xHeightUp = ( this._lineHeight - this._lineBase ); // x height
+			const xHeightDown = this._lineBase - lineHeightDemi;
+
+			this._font._xHeight = xHeightDown + xHeightUp;
+		}
+
+		// ----------------------------------------------------------- find x-height
+
+		// find cap-height -----------------------------------------------------------
+		let foundCapHeight = false;
+		for ( let i = 0; i < capHeightChars.length; i++ ) {
+			const capHeightChar = capHeightChars[ i ];
+
+			if( this._chars[capHeightChar] ) {
+				this._font._capHeight = this._chars[capHeightChar].height - this._font._distanceRange/2;
+				foundCapHeight = true;
+				break;
+			}
+		}
+
+		if( !foundCapHeight ) {
+			// auto compute cap-height
+			this._font._capHeight = this._font._xHeight + (this._lineHeight-this._lineBase);
+		}
+
+
+
 		this._chars[ " " ] = this._buildCharacterWhite( json );
 		this._chars[ "\n" ] = this._buildCharacterWhite( json, '\n' , 0.001, 1);
 		this._chars[ "\t" ] = this._buildCharacterWhite( json, '\t' , 4, 1);
-
-		this._size = json.info.size;
-		this._lineHeight = json.common.lineHeight;
-		this._lineBase = json.common.base;
 
 		this._distanceRange = json.distanceField.distanceRange;
 
@@ -5985,6 +6354,7 @@ function _loadTexture( fontVariant, textureUrl ) {
 /* eslint-disable no-unused-vars */
 
 
+
 /* eslint-enable no-unused-vars */
 
 class FontFamily extends external_three_namespaceObject.EventDispatcher {
@@ -6101,6 +6471,8 @@ class FontFamily extends external_three_namespaceObject.EventDispatcher {
 	 */
 	getVariant( weight, style ){
 
+		weight = uniformizeFontWeight(weight);
+
 		return this._variants.find( fontVariant => fontVariant.weight === weight && fontVariant.style === style );
 
 	}
@@ -6136,6 +6508,8 @@ function FontFamily_setReady( fontFamily ) {
 	fontFamily.dispatchEvent( FontFamily_readyEvent );
 
 }
+
+
 
 ;// CONCATENATED MODULE: ./src/font/FontLibrary.js
 
@@ -6480,20 +6854,8 @@ class FontSizeProperty extends SubStyleProperty {
 	 */
 	update( element, out ) {
 
-		console.log("fontSize update")
-		// /if( !this._allowsInherit ) {
-
-			this._inheritedInput = this.getInheritedInput( element );
-			console.log( 'inherit?', this._inheritedInput )
-			this._value = _parseValue( this._inheritedInput, element );
-
-		// }else{
-		//
-		// 	console.log( this._input )
-		// 	this._value = _parseValue( this._input, element )
-		// }
-
-		console.log( "    = ", this._value )
+		this._inheritedInput = this.getInheritedInput( element );
+		this._value = _parseValue( this._inheritedInput, element );
 
 		this.computeOutputValue( element );
 
@@ -6514,7 +6876,9 @@ class FontSizeProperty extends SubStyleProperty {
 
 	}
 
+	/* eslint-disable no-unused-vars */
 	computeOutputValue( element ) {}
+	/* eslint-enable no-unused-vars */
 
 }
 
@@ -6528,8 +6892,6 @@ function _parseValue( v, element ){
 
 		element._fontSize._fontRelative = true;
 
-		console.log("VVVVVV", v);
-
 		return parseFloat( v.replace(/[^0-9.]+/,"") ) * element._parent._value._fontSize.getInheritedInput(element._parent._value);
 
 	}
@@ -6540,7 +6902,7 @@ function _parseValue( v, element ){
 ;// CONCATENATED MODULE: ./src/core/properties/geometry/SegmentsProperty.js
 
 
-class SegmentsProperty extends BaseProperty {
+class SegmentsProperty extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -6770,6 +7132,1033 @@ const VerticalAlignProperty_isValid = function ( value ) {
 
 }
 
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.pars.vertex.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_border_pars_vertex_glsl_program = /* glsl */`
+
+// FrameBorder vertex pars
+attribute vec2 uvB;
+varying vec2 vUvB;
+
+#ifdef MULTIPLE_FRAMES
+
+attribute vec2 unitScale;
+varying vec2 vUnitScale;
+
+#endif
+
+
+`;
+
+/* harmony default export */ const frame_border_pars_vertex_glsl = (frame_border_pars_vertex_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.vertex.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_border_vertex_glsl_program = /* glsl */`
+
+	// FrameBorder vertex shader
+	vUvB = uvB;
+
+#ifdef MULTIPLE_FRAMES
+
+	vUnitScale = unitScale;
+
+#endif
+
+`;
+
+/* harmony default export */ const frame_border_vertex_glsl = (frame_border_vertex_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-background.pars.fragment.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_background_pars_fragment_glsl_program = /* glsl */`
+
+#ifdef USE_MAP
+
+vec4 sampleTexture() {
+
+	vec2 uv = vUv;
+
+	// default stretch
+	#if BACKGROUND_MAPPING != 0
+
+	float textureRatio = uTextureSize.x / uTextureSize.y;
+	float panelRatio = frameSize.x / frameSize.y;
+	float ratio = panelRatio / textureRatio;
+	float ratio2 = textureRatio / panelRatio;
+
+		// contain
+		#if BACKGROUND_MAPPING == 1
+		if ( textureRatio < panelRatio ) { // repeat on X
+			float newX = uv.x * ratio;
+			newX += 0.5 - 0.5 * ratio;
+			uv.x = newX;
+		} else { // repeat on Y
+			float newY = uv.y * ratio2;
+			newY += 0.5 - 0.5 * ratio2;
+			uv.y = newY;
+		}
+		#else
+		// cover
+		if ( textureRatio < panelRatio ) { // stretch on Y
+			float newY = uv.y * ratio2;
+			newY += 0.5 - 0.5 * ratio2;
+			uv.y = newY;
+		} else { // stretch on X
+			float newX = uv.x * ratio;
+			newX += 0.5 - 0.5 * ratio;
+			uv.x = newX;
+		}
+
+		#endif
+
+	#endif
+
+	return texture2D( map, uv );
+
+}
+#endif
+`;
+
+/* harmony default export */ const frame_background_pars_fragment_glsl = (frame_background_pars_fragment_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.pars.fragment.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_border_pars_fragment_glsl_program = /* glsl */`
+
+// borders sequences are : x:TOP, y:RIGHT, z:BOTTOM, w:LEFT
+uniform vec4 borderWidth;
+uniform vec3 borderColor;
+uniform float borderOpacity;
+uniform vec4 borderRadius;
+
+uniform vec2 cornerTL;
+uniform vec2 cornerTR;
+uniform vec2 cornerBR;
+uniform vec2 cornerBL;
+
+varying vec2 vUvB;
+
+float getEllipticFactor( vec2 uv, vec2 center, float radiusX, float radiusY )
+{
+
+		float edx = uv.x - center.x;
+		float edy = uv.y - center.y;
+
+		float ddx = (edx * edx) / (radiusX * radiusX);
+		float ddy = (edy * edy) / (radiusY * radiusY);
+
+		return ddx + ddy;
+
+}
+
+#ifdef MULTIPLE_FRAMES
+
+varying vec2 vUnitScale;
+
+vec2 applyMeshScale( vec2 scaleableValue )
+{
+	return scaleableValue * vUnitScale;
+}
+
+vec4 applyMeshScale( vec4 scaleableValue )
+{
+	vec4 result = scaleableValue;
+	result.x *= vUnitScale.y;
+	result.z *= vUnitScale.y;
+	result.y *= vUnitScale.x;
+	result.w *= vUnitScale.x;
+	return result;
+}
+
+#endif
+
+`;
+
+/* harmony default export */ const frame_border_pars_fragment_glsl = (frame_border_pars_fragment_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-common.pars.fragment.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_common_pars_fragment_glsl_program = /*glsl*/`
+
+// To be removed - required for both border and background
+uniform vec3 frameSize;
+uniform vec2 uTextureSize;
+
+
+`;
+
+/* harmony default export */ const frame_common_pars_fragment_glsl = (frame_common_pars_fragment_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-background.fragment.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_background_fragment_glsl_program = /* glsl */`
+#ifdef USE_MAP
+
+	vec4 textureSample = sampleTexture();
+	diffuseColor *= textureSample;
+
+#endif
+`;
+
+/* harmony default export */ const frame_background_fragment_glsl = (frame_background_fragment_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.fragment.glsl.js
+/**
+ *
+ * @type {string}
+ */
+const frame_border_fragment_glsl_program = /* glsl */`
+
+vec4 borderColor = vec4( borderColor, borderOpacity );
+
+#ifdef MULTIPLE_FRAMES
+
+vec4 _bwidth = applyMeshScale( borderWidth );
+
+float v = clamp(cornerTL.x / vUnitScale.x, 0.,0.5);
+vec2 _cornerTL = vec2( v , clamp( 1.- (cornerTL.x / vUnitScale.y) , 0.5, 1.) );
+
+v = 1. - cornerTR.x;
+float vx = clamp( v / vUnitScale.x , 0., 0.5 );
+
+vec2 _cornerTR = vec2(1. -  vx, clamp( 1.- (v / vUnitScale.y) , 0.5, 1.) );
+
+v = clamp(cornerBL.x / vUnitScale.x, 0.,0.5);
+vec2 _cornerBL = vec2( v, clamp( cornerBL.x / vUnitScale.y, 0.,0.5 ) );
+
+v = 1. - cornerBR.x;
+vx = v / vUnitScale.x;
+vec2 _cornerBR = vec2( clamp( 1.-vx, 0.5, 1.0), clamp( v / vUnitScale.y , 0., 0.5));
+
+#else
+
+vec4 _bwidth = borderWidth;
+vec2 _cornerTL = cornerTL;
+vec2 _cornerTR = cornerTR;
+vec2 _cornerBL = cornerBL;
+vec2 _cornerBR = cornerBR;
+
+#endif
+
+
+// This could be tweak to produce more smoothing
+float mult = 1.0;
+
+// Step 1 ----------------------------------------------
+// Draw the four borders ( top - right - bottom - left )
+// Without worrying about radiuses ( Straight boorders )
+
+// Top
+float topBorderUVy = 1.0 - _bwidth.x;
+if( _bwidth.x > 0.0 && vUvB.y > topBorderUVy )
+{
+
+	float w = fwidth( 1.0 - vUvB.y ) * mult;
+	float step = smoothstep( topBorderUVy , topBorderUVy + w , vUvB.y );
+	diffuseColor = mix( diffuseColor, borderColor, step );
+
+}
+
+// Left
+float leftBorderUVx = _bwidth.w;
+if( _bwidth.w > 0.0 && vUvB.x < leftBorderUVx )
+{
+
+	float w = fwidth( vUvB.x ) * mult ;
+	float step = smoothstep( leftBorderUVx , leftBorderUVx - w , vUvB.x );
+	diffuseColor = mix( diffuseColor, borderColor, step );
+
+}
+
+// Bottom
+float bottomBorderUVy = _bwidth.z;
+if( _bwidth.z > 0.0 && vUvB.y < bottomBorderUVy )
+{
+	float w = fwidth( vUvB.y ) * mult;
+	float step = smoothstep( bottomBorderUVy , bottomBorderUVy - w , vUvB.y );
+	diffuseColor = mix( diffuseColor, borderColor, step );
+}
+
+// Right
+float rightBorderUVx = 1.0 - _bwidth.y;
+if( _bwidth.y > 0.0 && vUvB.x > rightBorderUVx )
+{
+	float w = fwidth( 1.0 - vUvB.x ) * mult;
+	float step = smoothstep( rightBorderUVx , rightBorderUVx + w , vUvB.x );
+	diffuseColor = mix( diffuseColor, borderColor, step );
+}
+
+
+// Step 2 ----------------------------------------------
+// Process each corners ( topLeft, topRight, bottomRight, bottomLeft )
+// To transparentize outside radiuses
+// To draw ellipse border on the corner
+
+
+// Top Left corner
+if( vUvB.x < _cornerTL.x && vUvB.y > _cornerTL.y ) {
+
+		// Only draw border if width is set
+		if( _bwidth.w + _bwidth.x > 0.0 ){
+
+			float borderFactor = getEllipticFactor( vUvB, _cornerTL, _cornerTL.x - _bwidth.w,  ( 1.0 - _cornerTL.y ) - _bwidth.x );
+			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
+			diffuseColor = mix( diffuseColor, borderColor, step );
+
+		}
+
+		// Then then radius
+		float radiusFactor = getEllipticFactor( vUvB, _cornerTL, _cornerTL.x, 1.0 - _cornerTL.y );
+		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
+		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
+
+}
+// Bottom Left
+if( vUvB.x < _cornerBL.x && vUvB.y < _cornerBL.y ) {
+
+		if( _bwidth.w + _bwidth.z > 0.0 ){
+
+			float borderFactor = getEllipticFactor( vUvB, _cornerBL, _cornerBL.x - _bwidth.w,  _cornerBL.y - _bwidth.z );
+			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
+			diffuseColor = mix( diffuseColor, borderColor, step );
+
+		}
+
+		float radiusFactor = getEllipticFactor( vUvB, _cornerBL, _cornerBL.x, _cornerBL.y );
+		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
+		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
+
+}
+// Top Right
+if( vUvB.x > _cornerTR.x && vUvB.y > _cornerTR.y ) {
+
+		if( _bwidth.y + _bwidth.x > 0.0 ){
+
+			float borderFactor = getEllipticFactor( vUvB, _cornerTR, ( 1.0 - _cornerTR.x ) - _bwidth.y,  ( 1.0 - _cornerTR.y ) - _bwidth.x );
+			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
+			diffuseColor = mix( diffuseColor, borderColor, step );
+
+		}
+
+		float radiusFactor = getEllipticFactor( vUvB, _cornerTR, 1.0 - _cornerTR.x, 1.0 - _cornerTR.y );
+		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
+		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
+
+}
+// Bottom Right
+if( vUvB.x > _cornerBR.x && vUvB.y < _cornerBR.y ) {
+
+		if( _bwidth.y + _bwidth.z > 0.0 ){
+
+			float borderFactor = getEllipticFactor( vUvB, _cornerBR, ( 1.0 - _cornerBR.x ) - _bwidth.y,  _cornerBR.y - _bwidth.z );
+			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
+			diffuseColor = mix( diffuseColor, borderColor, step );
+
+		}
+
+		float radiusFactor = getEllipticFactor( vUvB, _cornerBR, 1.0 - _cornerBR.x, _cornerBR.y );
+		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
+		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
+
+}
+
+#ifdef MULTIPLE_FRAMES
+
+// diffuseColor = vec4( vUnitScale.x, 0.,0.,diffuseColor.a);
+
+#endif
+
+`;
+
+/* harmony default export */ const frame_border_fragment_glsl = (frame_border_fragment_glsl_program);
+
+;// CONCATENATED MODULE: ./src/frame/renderers/ShaderLib/framematerial.glsl.js
+
+
+
+
+
+
+
+
+const framematerial_glsl_vertexShader = /* glsl */`
+// Would be automatic on three materials and from USE_UV
+#ifdef USE_MAP
+varying vec2 vUv;
+#endif
+
+${frame_border_pars_vertex_glsl}
+
+#include <fog_pars_vertex>
+#include <clipping_planes_pars_vertex>
+
+void main() {
+
+	#ifdef USE_MAP
+	vUv = uv;
+	#endif
+
+	${frame_border_vertex_glsl}
+
+	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
+	gl_Position = projectionMatrix * mvPosition;
+
+	#include <clipping_planes_vertex>
+	#include <fog_vertex>
+
+}
+`
+
+const framematerial_glsl_fragmentShader = /* glsl */`
+
+// Basic
+uniform vec3 diffuse;
+uniform float opacity;
+
+#ifdef USE_ALPHATEST
+	uniform float alphaTest;
+#endif
+
+${frame_common_pars_fragment_glsl}
+
+${frame_border_pars_fragment_glsl}
+
+
+#ifdef USE_MAP
+varying vec2 vUv;
+uniform sampler2D map;
+#endif
+
+${frame_background_pars_fragment_glsl}
+
+#include <fog_pars_fragment>
+#include <clipping_planes_pars_fragment>
+
+void main() {
+
+	vec4 diffuseColor = vec4( diffuse, opacity );
+
+	// map
+	${frame_background_fragment_glsl}
+
+	${frame_border_fragment_glsl}
+
+	#ifdef USE_ALPHATEST
+
+	if ( diffuseColor.a < alphaTest ) discard;
+
+	#endif
+
+	// output
+	gl_FragColor = diffuseColor;
+
+
+	#include <clipping_planes_fragment>
+	#include <colorspace_fragment>
+	#include <fog_fragment>
+}
+`
+
+;// CONCATENATED MODULE: ./src/frame/utils/FrameMaterialUtils.js
+
+
+//JSDoc related import
+/* eslint-disable no-unused-vars */
+
+
+
+
+
+
+
+
+
+/* eslint-enable no-unused-vars */
+
+
+class FrameMaterialUtils {
+
+
+
+	/**
+	 *
+	 * @returns {Object<{m: string, t?: (function((Material|ShaderMaterial), string, *): void)}>}
+	 */
+	static get mediation() {
+
+		return _mediationDefinitions;
+
+	}
+
+
+	/**
+	 * Alter a material options with required fontMaterial options and or default values
+	 * @param {Object.<string,any>} materialOptions
+	 */
+	static ensureMaterialOptions( materialOptions ) {
+		materialOptions.transparent = true;
+		materialOptions.alphaTest = materialOptions.alphaTest || 0.02;
+	}
+
+	/**
+	 * As three-mesh-ui FontMaterial relies on webgl preprocessors,
+	 * lets force the material to have a proper defines object
+	 * @param {Material|ShaderMaterial} threeMaterial
+	 */
+	static ensureDefines( threeMaterial ) {
+		if ( !threeMaterial.defines ) {
+			threeMaterial.defines = {};
+
+			// this is also why three-materials should be used instead of shadermaterials
+			threeMaterial.defines['USE_UV'] = true;
+		}
+	}
+
+	/* eslint-disable no-unused-vars */
+	/**
+	 *
+	 * @param {Material|ShaderMaterial} threeMaterial
+	 * @param {Object.<string,any>} materialOptions
+	 */
+	static ensureUserData( threeMaterial, materialOptions ) {
+		threeMaterial.userData.borderColor = { value: null };
+		threeMaterial.userData.borderRadius = { value: new external_three_namespaceObject.Vector4(0,0,0,0) };
+		// Store corners based on borderRadiuses
+		threeMaterial.userData.cornerTL = { value : new external_three_namespaceObject.Vector2(0,1) };
+		threeMaterial.userData.cornerTR = { value : new external_three_namespaceObject.Vector2(1,1) };
+		threeMaterial.userData.cornerBR = { value : new external_three_namespaceObject.Vector2(1,0) };
+		threeMaterial.userData.cornerBL = { value : new external_three_namespaceObject.Vector2(0,0) };
+
+		threeMaterial.userData.borderWidth = { value: new external_three_namespaceObject.Vector4(0,0,0,0) };
+		threeMaterial.userData.borderOpacity = { value: null };
+		threeMaterial.userData.frameSize = { value: new external_three_namespaceObject.Vector3( 1, 1, 1 ) };
+		threeMaterial.userData.uTextureSize = { value: new external_three_namespaceObject.Vector2( 1, 1 ) };
+
+	}
+	/* eslint-enable no-unused-vars */
+
+	/**
+	 *
+	 * @param {any} shader
+	 * @param {Material|ShaderMaterial} threeMaterial
+	 */
+	static bindUniformsWithUserData( shader, threeMaterial ) {
+
+		shader.uniforms.borderColor = threeMaterial.userData.borderColor;
+		// Border radiuses and corners
+		shader.uniforms.borderRadius = threeMaterial.userData.borderRadius;
+		shader.uniforms.cornerTL = threeMaterial.userData.cornerTL;
+		shader.uniforms.cornerTR = threeMaterial.userData.cornerTR;
+		shader.uniforms.cornerBR = threeMaterial.userData.cornerBR;
+		shader.uniforms.cornerBL = threeMaterial.userData.cornerBL;
+
+		shader.uniforms.borderWidth = threeMaterial.userData.borderWidth;
+		shader.uniforms.borderOpacity = threeMaterial.userData.borderOpacity;
+		shader.uniforms.frameSize = threeMaterial.userData.frameSize;
+		shader.uniforms.uTextureSize = threeMaterial.userData.uTextureSize;
+	}
+
+	/**
+	 *
+	 * @param shader
+	 */
+	static injectShaderChunks( shader ) {
+		FrameMaterialUtils.injectVertexShaderChunks( shader );
+		FrameMaterialUtils.injectFragmentShaderChunks( shader );
+	}
+
+	/**
+	 *
+	 * @param shader
+	 */
+	static injectVertexShaderChunks( shader ) {
+		shader.vertexShader = shader.vertexShader.replace(
+			'#include <uv_pars_vertex>',
+			'#include <uv_pars_vertex>\n' + frame_border_pars_vertex_glsl
+		);
+
+		// vertex chunks
+		shader.vertexShader = shader.vertexShader.replace(
+			'#include <uv_vertex>',
+			'#include <uv_vertex>\n' + frame_border_vertex_glsl
+		)
+
+	}
+
+	/**
+	 *
+	 * @param shader
+	 */
+	static injectFragmentShaderChunks( shader ) {
+		shader.fragmentShader = shader.fragmentShader.replace(
+			'#include <map_pars_fragment>',
+			'#include <map_pars_fragment>\n' + frame_background_pars_fragment_glsl
+		)
+
+		shader.fragmentShader = shader.fragmentShader.replace(
+			'#include <map_pars_fragment>',
+			'#include <map_pars_fragment>\n' + frame_border_pars_fragment_glsl
+		)
+
+		shader.fragmentShader = shader.fragmentShader.replace(
+			'#include <map_pars_fragment>',
+			'#include <map_pars_fragment>\n' + frame_common_pars_fragment_glsl
+		)
+
+		// fragment chunks
+		shader.fragmentShader = shader.fragmentShader.replace(
+			'#include <map_fragment>',
+			frame_background_fragment_glsl
+		)
+
+		shader.fragmentShader = shader.fragmentShader.replace(
+			'#include <alphamap_fragment>',
+			frame_border_fragment_glsl+'\n#include <alphamap_fragment>'
+		)
+
+	}
+
+}
+
+/**
+ *
+ * @param target
+ * @param property
+ * @param value
+ * @private
+ */
+const _backgroundSizeTransformer = function( target, property, value ) {
+
+	value = ['stretch','contain','cover'].indexOf(value);
+	asPreprocessorValueTransformer(target, 'BACKGROUND_MAPPING', value);
+
+}
+
+/**
+ * 7xx
+ * @type {Object.<{m:string, t?:(fontMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
+ */
+const _mediationDefinitions = {
+	clippingPlanes : {m: 'clippingPlanes'},
+	backgroundAlphaTest: { m: 'alphaTest', t: alphaTestTransformer },
+	backgroundSide: { m: 'side' },
+	backgroundImage: { m: 'map'},
+	backgroundColor: { m: 'color' },
+	backgroundOpacity: { m:'opacity' },
+	backgroundSize: { m: 'computedBackgroundSize', t: _backgroundSizeTransformer },
+	borderWidth: { m: 'borderWidth', t: uniformOrUserDataTransformer },
+	borderColor: { m: 'borderColor', t: uniformOrUserDataTransformer },
+	cornerTL : { m: 'cornerTL', t: uniformOrUserDataTransformer },
+	cornerTR : { m: 'cornerTR', t: uniformOrUserDataTransformer },
+	cornerBR : { m: 'cornerBR', t: uniformOrUserDataTransformer },
+	cornerBL : { m: 'cornerBL', t: uniformOrUserDataTransformer },
+	borderOpacity: { m: 'borderOpacity', t: uniformOrUserDataTransformer },
+	fog: {m : "fog"},
+	size: { m: 'frameSize', t: uniformOrUserDataTransformer },
+	tSize: { m: 'uTextureSize', t: uniformOrUserDataTransformer }
+}
+
+;// CONCATENATED MODULE: ./src/frame/materials/FrameMaterial.js
+
+
+
+
+class FrameMaterial extends external_three_namespaceObject.ShaderMaterial {
+
+
+	/**
+	 * This static method is mandatory for extending ThreeMeshUI.FrameMaterial
+	 * It will provide a transfer description for properties from ThreeMeshUI.Text to THREE.Material
+	 * @see {FrameMaterialUtils.mediation}
+	 * @returns {Object.<{m:string, t?:(frameMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
+	 */
+	static get mediation() {
+
+		return FrameMaterialUtils.mediation;
+
+	}
+
+	constructor() {
+		super ( {
+			uniforms: {
+				alphaTest: { value: 0.02 },
+				map: { value: null },
+				diffuse: { value: new external_three_namespaceObject.Color(0xffffff) },
+				opacity: { value: 1.0 },
+				borderColor: { value: new external_three_namespaceObject.Color(0x000000) },
+				borderOpacity: { value: 0 },
+				borderRadius: { value: new external_three_namespaceObject.Vector4(0,0,0,0) },
+				// Corners for customized radius not all starting on center [0.5,0.5];
+				// Corners will be generated from borderRadiuses
+				cornerTL: { value : new external_three_namespaceObject.Vector2(0,1) },
+				cornerTR: { value : new external_three_namespaceObject.Vector2(1,1) },
+				cornerBR: { value : new external_three_namespaceObject.Vector2(1,0) },
+				cornerBL: { value : new external_three_namespaceObject.Vector2(0,0) },
+				borderWidth: { value: new external_three_namespaceObject.Vector4(0,0,0,0) },
+				frameSize: { value: new external_three_namespaceObject.Vector3( 1, 1, 1 ) },
+				uTextureSize: { value: new external_three_namespaceObject.Vector2( 1, 1 ) },
+
+				...external_three_namespaceObject.UniformsLib.fog,
+			},
+			side: external_three_namespaceObject.FrontSide,
+			transparent: true,
+			clipping: true,
+			vertexShader: framematerial_glsl_vertexShader,
+			fragmentShader: framematerial_glsl_fragmentShader,
+			extensions: {
+				derivatives: true
+			}
+		} );
+
+		// webgl preprocessor AlphaTest set by default
+		this.defines[ 'USE_ALPHATEST' ] = '';
+		// Set fog as default
+		this.fog = false;
+
+		this.needsUpdate = true;
+	}
+
+	set map( value ) {
+
+		this.uniforms.map.value = value;
+		if( !value ) {
+
+			if( this.defines['USE_UV'] !== undefined ) {
+
+				delete this.defines['USE_UV'];
+				this.needsUpdate = true;
+
+			}
+
+		} else if( this.defines['USE_UV'] === undefined ) {
+
+			this.defines['USE_UV'] = '';
+			this.needsUpdate = true;
+
+		}
+
+		this.needsUpdate = true;
+
+	}
+
+	get map(){
+		return this.uniforms.map.value;
+	}
+
+	/**
+	 *
+	 * @returns {number}
+	 */
+	get alphaTest() {
+
+		return this.uniforms.alphaTest.value;
+
+	}
+
+
+
+	/**
+	 *
+	 * @param {number} v
+	 */
+	set alphaTest( v ) {
+		this.uniforms.alphaTest.value = v;
+	}
+
+	/**
+	 *
+	 * @param {number} v
+	 */
+	set opacity( v ) {
+
+		if( this.uniforms )
+			this.uniforms.opacity.value = v;
+
+	}
+
+	/**
+	 * The color will be the diffuse uniform
+	 * @returns {number}
+	 */
+	get opacity() {
+
+		return this.uniforms.opacity.value;
+
+	}
+
+	/**
+	 * The color will be the diffuse uniform
+	 * @returns {Color}
+	 */
+	get color() {
+
+		return this.uniforms.diffuse.value;
+
+	}
+
+	/**
+	 *
+	 * @param {Color} v
+	 */
+	set color( v ) {
+
+		this.uniforms.diffuse.value = v;
+
+	}
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/style-properties/font/TextDecorationProperty.js
+
+
+
+class TextDecorationProperty extends SubStyleProperty {
+
+	constructor( defaultValue ) {
+
+		super( 'textDecoration', defaultValue , true );
+
+		this.isValidValue = TextDecorationProperty_isValid;
+
+	}
+
+}
+
+/**
+ *
+ * @type {Array.<string>}
+ */
+const TextDecorationProperty_AVAILABLE_VALUES = ['none', 'inherit', 'underline', 'overline', 'line-through'];
+
+/**
+ *
+ * @param {any} value
+ * @return {boolean}
+ * @private
+ */
+const TextDecorationProperty_isValid = function ( value ) {
+
+
+	const decorations = value.split(' ');
+	for ( let i = 0; i < decorations.length; i++ ) {
+
+		const requestedDecoration = decorations[ i ];
+		if( TextDecorationProperty_AVAILABLE_VALUES.indexOf( requestedDecoration ) === -1 ) {
+
+			console.warn( `(.style) text-decoration value '${requestedDecoration}' is not valid. Aborted` );
+			return false;
+
+		}
+	}
+
+
+	return true;
+
+}
+
+;// CONCATENATED MODULE: ./src/utils/mediator/transformers/MeshTransformers.js
+const renderOrderTransformer = function ( target, targetProperty, value ) {
+
+	/**
+	 * Propagate the render order to each child
+	 */
+	target.traverse( ( child ) => {
+
+		child.renderOrder = value;
+
+	} );
+
+}
+
+const MeshTransformers_layer = function ( target, targetProperty, value ) {
+
+	/**
+	 * Propagate the layer to each child
+	 */
+	target.parent.traverse( ( child ) => {
+
+		child.layers.set( value );
+
+	} );
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/BooleanProperty.js
+
+
+class BooleanProperty extends (/* unused pure expression or super */ null && (BaseProperty)) {
+
+	/**
+	 *
+	 * @param {string} propertyId
+	 * @param {any} [value=null]
+	 */
+	constructor( propertyId, value = true ) {
+
+		super( propertyId, value, true );
+
+		/**
+		 * @override
+		 * @type {boolean}
+		 * @private
+		 */
+		this._value = value;
+
+		this.output = this._outputValue;
+
+	}
+
+	/**
+	 *
+	 * @param {boolean} value
+	 */
+	set value( value ) {
+
+		this._value = value;
+
+		this._needsUpdate = true;
+
+	}
+
+	/**
+	 *
+	 * @return {boolean}
+	 */
+	get value() { return this._value; }
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/geometry/InlineMergeProperty.js
+
+
+class InlineMergeProperty extends InheritableProperty {
+
+	constructor( value = 0) {
+
+		super( 'inlineMerge', value, false );
+
+		this.isValid = InlineMergeProperty_isValid;
+
+	}
+
+}
+
+const InlineMergeProperty_AVAILABLE_VALUES = [ 0, "all", 1, "line", 2, "none" ];
+
+/**
+ *
+ * @param {any} value
+ * @return {boolean}
+ * @private
+ */
+function InlineMergeProperty_isValid( value ) {
+
+	if( InlineMergeProperty_AVAILABLE_VALUES.indexOf( value) === -1 ){
+
+		console.warn(`InlineMergeProperty value '${value}' is not valid. Abort`);
+		return false;
+
+	}
+
+	return true;
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/geometry/MergePivotProperty.js
+
+
+
+
+const _defaultValue = new external_three_namespaceObject.Vector2(0,0);
+
+class MergePivotProperty extends InheritableProperty {
+
+	constructor( value = _defaultValue) {
+
+		super( 'mergePivot', value, false );
+
+		this.isValid = MergePivotProperty_isValid;
+
+	}
+
+	update(element, out) {
+		super.update(element, out);
+
+		element._renderer._needsRender = true;
+	}
+
+}
+
+/**
+ *
+ * @param {any} value
+ * @return {boolean}
+ * @private
+ */
+function MergePivotProperty_isValid( value ) {
+
+	return value.isVector2 || value === 'inherit';
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/geometry/MergePivotReferenceProperty.js
+
+
+
+
+
+class MergePivotReferenceProperty extends InheritableProperty {
+
+	constructor( value = 'self') {
+
+		super( 'mergePivot', value, false );
+
+		this.isValid = MergePivotReferenceProperty_isValid;
+
+	}
+
+}
+
+const MergePivotReferenceProperty_AVAILABLE_VALUES = [ 'self', 'parent' ];
+
+/**
+ *
+ * @param {any} value
+ * @return {boolean}
+ * @private
+ */
+function MergePivotReferenceProperty_isValid( value ) {
+
+	if( MergePivotReferenceProperty_AVAILABLE_VALUES.indexOf( value) === -1 ){
+
+		console.warn(`InlineMergeReferenceProperty value '${value}' is not valid. Abort`);
+		return false;
+
+	}
+
+	return true;
+
+}
+
 ;// CONCATENATED MODULE: ./src/core/elements/MeshUIBaseElement.js
 
 
@@ -6828,6 +8217,13 @@ const VerticalAlignProperty_isValid = function ( value ) {
 
 
 
+
+
+
+
+
+
+
 /* eslint-enable no-unused-vars */
 
 class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
@@ -6850,7 +8246,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 			}
 		);
 
-		let uiType = values.uiType || 'default';
+		const uiType = values.uiType || 'default';
 		if( values.uiType ){
 			delete values.uiType;
 		}
@@ -6877,6 +8273,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 		 * @internal
 		 */
 		this._backgroundMaterial = null;
+		// this._backgroundMaterial = new FrameMaterial();
 
 		/**
 		 *
@@ -6900,8 +8297,11 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 		this._backgroundMeshMediation = {
 			backgroundCastShadow: { m: 'castShadow' },
 			backgroundReceiveShadow: { m: 'receiveShadow' },
-			renderOrder: {m: 'renderOrder' }
+			renderOrder: {m: 'renderOrder', t: renderOrderTransformer }
 		};
+
+
+		this._fog = new InheritableBooleanProperty("fog");
 
 		/**
 		 *
@@ -7044,10 +8444,10 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 
 		/**
 		 *
-		 * @type {TextContentEmpty|TextContentText|TextContentInline}
+		 * @type {TextContentDefault|TextContentText|TextContentInline}
 		 * @internal
 		 */
-		this._textContent = properties.textContent ? new properties.textContent() : new TextContentEmpty();
+		this._textContent = properties.textContent ? new properties.textContent() : new TextContentDefault();
 
 		/**
 		 *
@@ -7070,9 +8470,15 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 
 		this._textAlign = properties.textAlign ? new properties.textAlign() : new TextAlignProperty();
 
+		this._textDecoration = properties.textDecoration ? new properties.textDecoration( defaults.textDecoration ) : new TextDecorationProperty( defaults.textDecoration )
+
 		this._verticalAlign = properties.verticalAlign ? new properties.verticalAlign() : new VerticalAlignProperty();
 
 		this._autoSize = properties.autoSize ? new properties.autoSize() : new EmptyProperty("autoSize");
+
+		this._inlineMerge = properties.inlineMerge ? new properties.inlineMerge() : new InlineMergeProperty();
+		this._mergePivot = properties.mergePivot ? new properties.mergePivot() : new MergePivotProperty();
+		this._pivotReference = properties.mergePivotReference ? new properties.mergePivotReference() : new MergePivotReferenceProperty();
 
 		this._renderer = properties.renderer ? new properties.renderer() : new EmptyProperty("renderer");
 
@@ -7096,6 +8502,8 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 
 			this._autoSize,
 
+
+			this._fog,
 
 			this._fontFamily,
 			this._fontStyle,
@@ -7180,6 +8588,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 			this._inlineJustificator,
 			this._textAlign,
 
+			this._textDecoration,
 
 			// !! this._renderer renderer MUST NOT BE in components !!
 
@@ -7189,6 +8598,10 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 			this._fontMaterial,
 			this._fontCustomDepthMaterial,
 			this._overflow,
+
+			this._mergePivot,
+			this._pivotReference,
+			this._inlineMerge,
 			this._renderer,
 
 		]
@@ -7385,7 +8798,15 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 				// properties
 
 				// As textContent property might alter the hierarchy, do not wait until update
-				// 	case 'textContent' :
+				case 'textContent' :
+					this.textContent = value;
+					break;
+
+					case 'inlineMerge':
+					case 'mergePivot':
+					case 'pivotReference':
+						this[`_${prop}`].value = value;
+						break;
 
 					case 'fontSmooth':
 					case 'renderOrder':
@@ -7428,6 +8849,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 					case 'boxSizing':
 					case 'position':
 					case 'verticalAlign':
+					case 'textDecoration':
 						if( this[`_${prop}`] ){
 							this[`_${prop}`].inline = value;
 						}
@@ -7511,17 +8933,12 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 
 					default:
 
-						console.log(prop)
-
 						if( this[ prop ] !== undefined ) {
-
-							console.log(`--		${prop} has setter`)
-
-							this[ prop ] = value
+							this[ prop ] = value;
 						}else if( this[`_${prop}`] !== undefined ) {
 							this[`_${prop}`].value = value;
 						} else {
-							// error
+							this[ prop ] = value
 						}
 				}
 
@@ -7547,8 +8964,11 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 	 */
 	_rebuildChildrenLists() {
 
-		//console.log( this.name, 'child added' );
+		// prepare a next update on children, usually layouter will also update
 		this._children._needsUpdate = true;
+
+		// but also direct process children, in order to allow selecting them asap
+		this._children._compute(this);
 
 	}
 
@@ -7600,6 +9020,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 
 		}
 
+		// Adding UI children has a direct extra cost, we should use add( child1, child2, child3, ... )
 		if( addedUIChildren ) this._rebuildChildrenLists();
 
 		return this;
@@ -7833,7 +9254,6 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 	 *
 	 * @returns {Material|ShaderMaterial}
 	 */
-	// get fontMaterial() { return this._fontMaterial__; }
 	get fontMaterial() { return this._fontMaterial.value; }
 
 	/**
@@ -7843,6 +9263,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 	set fontMaterial( material ) {
 
 		this._fontMaterial.value = material;
+		this._fontDecorationMaterial = null;
 
 	}
 
@@ -8093,12 +9514,17 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 	 */
 	setFontMesh( mesh ) {
 
+		if( mesh.isObject3D ) mesh = [mesh];
+
 		if( this._fontMesh ) {
 
-			this.remove( this._fontMesh );
+			for (let i = 0; i < this._fontMesh.length; i++) {
+				const fontMesh = this._fontMesh[i];
+				this.remove( fontMesh );
 
-			if ( this._fontMesh.material ) this._fontMesh.material.dispose?.();
-			if ( this._fontMesh.geometry ) this._fontMesh.geometry.dispose?.();
+				if ( fontMesh.material ) fontMesh.material.dispose?.();
+				if ( fontMesh.geometry ) fontMesh.geometry.dispose?.();
+			}
 
 			this._fontMesh = null;
 			// deepDelete( this._fontMesh );
@@ -8111,14 +9537,17 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 
 		if ( this._fontMesh ) {
 
-			this._fontMesh.raycast = () => {};
+			for (let i = 0; i < mesh.length; i++) {
+				const mesh1 = mesh[i];
+
+				mesh1.raycast = () => {};
+				this.add( mesh1 );
+			}
 
 			this.bindFontMeshProperties();
-
 			this._transferToFontMaterial();
 			this._transferToFontMesh();
 
-			this.add( this._fontMesh );
 
 		}
 
@@ -8133,6 +9562,30 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 	 *
 	 */
 	unbindFontMeshProperties () { }
+
+
+	/**
+	 *
+	 * @param {boolean} value
+	 */
+	set fog( value ) {
+
+		this._fog.value = value;
+		console.log( this._fog.value )
+
+	}
+
+	/**
+	 *
+	 * @return {boolean}
+	 */
+	get fog() {
+
+		if ( this._fog ) return this._fog.value;
+
+		return false;
+	}
+
 
 	/**
 	 *
@@ -8243,6 +9696,22 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
 	}
 
 	/**
+	 * Retrieve a property
+	 * @param propertyName
+	 * @return {BaseProperty|null}
+	 */
+	getProperty( propertyName ){
+
+		if( this[`_${propertyName}`] ){
+
+			return this[`_${propertyName}`];
+
+		}
+
+		return null;
+	}
+
+	/**
 	 *
 	 * @param {string} name
 	 * @param {BaseProperty} instance
@@ -8299,7 +9768,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
  * @property [options.segments] {number}
  * @property [options.fontFamily] {FontFamily|string}
  * @property [options.fontStyle] {"normal"|"italic"}
- * @property [options.fontWeight] {"light"|"normal"|"bold"|"bolder"|100|200|300|400|500|600|700|800|900}
+ * @property [options.fontWeight] {"light"|"normal"|"bold"|"bolder"|100|200|300|400|500|600|700|800|900|"100"|"200"|"300"|"400"|"500"|"600"|"700"|"800"|"900"}
  *
  * @property [options.color]{Color|number|string} The font color
  *
@@ -8309,9 +9778,10 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
  * @property [options.backgroundImage] {Texture|string}
  *
  *
+ * @property [options.borderColor] {Color|number|string}
+ * @property [options.borderOpacity] {number}
  * @property [options.borderRadius] {Vector4|Array.<number>|number|string}
  * @property [options.borderWidth] {Vector4|Array.<number>|number|string}
- * @property [options.borderColor] {Color|number|string}
  *
  * @property [options.boxSizing] {"content-box"|"border-box"}
  * @property [options.width] {number|string|"100%"|"auto"}
@@ -8320,6 +9790,7 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
  * @property [options.margin] {Vector4|Array.<number>|number|string}
  *
  * @property [options.textAlign] {"left"|"right"|"center"|"justify"|"justify-left"|"justify-right"}
+ * @property [options.textDecoration] {"none"|"underline"|"overline"|"line-through"|"inherit"}
  * @property [options.visible] {boolean}
  * @property [options.letterSpacing] {number}
  *
@@ -8330,6 +9801,10 @@ class MeshUIBaseElement extends external_three_namespaceObject.Object3D {
  * @property [options.verticalAlign] {"baseline","super","sub","inherit"}
  *
  *
+ */
+
+/**
+ * @typedef {"light"|"normal"|"bold"|"bolder"|100|200|300|400|500|600|700|800|900|"100"|"200"|"300"|"400"|"500"|"600"|"700"|"800"|"900"} FontWeightFormat
  */
 
 ;// CONCATENATED MODULE: ./src/components/core/UpdateManager.js
@@ -8405,294 +9880,6 @@ class UpdateManager {
  */
 UpdateManager.elements = [];
 
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.pars.vertex.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_border_pars_vertex_glsl_program = /* glsl */`
-
-// FrameBorder vertex pars
-attribute vec2 uvB;
-varying vec2 vUvB;
-
-`;
-
-/* harmony default export */ const frame_border_pars_vertex_glsl = (frame_border_pars_vertex_glsl_program);
-
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.vertex.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_border_vertex_glsl_program = /* glsl */`
-
-	// FrameBorder vertex shader
-	vUvB = uvB;
-
-`;
-
-/* harmony default export */ const frame_border_vertex_glsl = (frame_border_vertex_glsl_program);
-
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.pars.fragment.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_border_pars_fragment_glsl_program = /* glsl */`
-
-// borders sequences are : x:TOP, y:RIGHT, z:BOTTOM, w:LEFT
-uniform vec4 borderWidth;
-uniform vec3 borderColor;
-uniform float borderOpacity;
-uniform vec4 borderRadius;
-
-uniform vec2 cornerTL;
-uniform vec2 cornerTR;
-uniform vec2 cornerBR;
-uniform vec2 cornerBL;
-
-varying vec2 vUvB;
-
-float getEllipticFactor( vec2 uv, vec2 center, float radiusX, float radiusY )
-{
-
-		float edx = uv.x - center.x;
-		float edy = uv.y - center.y;
-
-		float ddx = (edx * edx) / (radiusX * radiusX);
-		float ddy = (edy * edy) / (radiusY * radiusY);
-
-		return ddx + ddy;
-
-}
-
-`;
-
-/* harmony default export */ const frame_border_pars_fragment_glsl = (frame_border_pars_fragment_glsl_program);
-
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-border.fragment.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_border_fragment_glsl_program = /* glsl */`
-
-vec4 borderColor = vec4( borderColor, borderOpacity );
-
-// This could be tweak to produce more smoothing
-float mult = 1.0;
-
-// Step 1 ----------------------------------------------
-// Draw the four borders ( top - right - bottom - left )
-// Without worrying about radiuses ( Straight boorders )
-
-// Top
-float topBorderUVy = 1.0 - borderWidth.x;
-if( borderWidth.x > 0.0 && vUvB.y > topBorderUVy )
-{
-
-	float w = fwidth( 1.0 - vUvB.y ) * mult;
-	float step = smoothstep( topBorderUVy , topBorderUVy + w , vUvB.y );
-	diffuseColor = mix( diffuseColor, borderColor, step );
-
-}
-
-// Left
-float leftBorderUVx = borderWidth.w;
-if( borderWidth.w > 0.0 && vUvB.x < leftBorderUVx )
-{
-
-	float w = fwidth( vUvB.x ) * mult ;
-	float step = smoothstep( leftBorderUVx , leftBorderUVx - w , vUvB.x );
-	diffuseColor = mix( diffuseColor, borderColor, step );
-
-}
-
-// Bottom
-float bottomBorderUVy = borderWidth.z;
-if( borderWidth.z > 0.0 && vUvB.y < bottomBorderUVy )
-{
-	float w = fwidth( vUvB.y ) * mult;
-	float step = smoothstep( bottomBorderUVy , bottomBorderUVy - w , vUvB.y );
-	diffuseColor = mix( diffuseColor, borderColor, step );
-}
-
-// Right
-float rightBorderUVx = 1.0 - borderWidth.y;
-if( borderWidth.y > 0.0 && vUvB.x > rightBorderUVx )
-{
-	float w = fwidth( 1.0 - vUvB.x ) * mult;
-	float step = smoothstep( rightBorderUVx , rightBorderUVx + w , vUvB.x );
-	diffuseColor = mix( diffuseColor, borderColor, step );
-}
-
-
-// Step 2 ----------------------------------------------
-// Process each corners ( topLeft, topRight, bottomRight, bottomLeft )
-// To transparentize outside radiuses
-// To draw ellipse border on the corner
-
-
-// Top Left corner
-if( vUvB.x < cornerTL.x && vUvB.y > cornerTL.y ) {
-
-		// Only draw border if width is set
-		if( borderWidth.w + borderWidth.x > 0.0 ){
-
-			float borderFactor = getEllipticFactor( vUvB, cornerTL, cornerTL.x - borderWidth.w,  ( 1.0 - cornerTL.y ) - borderWidth.x );
-			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
-			diffuseColor = mix( diffuseColor, borderColor, step );
-
-		}
-
-		// Then then radius
-		float radiusFactor = getEllipticFactor( vUvB, cornerTL, cornerTL.x, 1.0 - cornerTL.y );
-		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
-		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
-
-}
-// Bottom Left
-if( vUvB.x < cornerBL.x && vUvB.y < cornerBL.y ) {
-
-		if( borderWidth.w + borderWidth.z > 0.0 ){
-
-			float borderFactor = getEllipticFactor( vUvB, cornerBL, cornerBL.x - borderWidth.w,  cornerBL.y - borderWidth.z );
-			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
-			diffuseColor = mix( diffuseColor, borderColor, step );
-
-		}
-
-
-		float radiusFactor = getEllipticFactor( vUvB, cornerBL, cornerBL.x, cornerBL.y );
-		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
-		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
-
-}
-// Top Right
-if( vUvB.x > cornerTR.x && vUvB.y > cornerTR.y ) {
-
-		if( borderWidth.y + borderWidth.x > 0.0 ){
-
-			float borderFactor = getEllipticFactor( vUvB, cornerTR, ( 1.0 - cornerTR.x ) - borderWidth.y,  ( 1.0 - cornerTR.y ) - borderWidth.x );
-			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
-			diffuseColor = mix( diffuseColor, borderColor, step );
-
-		}
-
-		float radiusFactor = getEllipticFactor( vUvB, cornerTR, 1.0 - cornerTR.x, 1.0 - cornerTR.y );
-		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
-		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
-
-}
-// Bottom Right
-if( vUvB.x > cornerBR.x && vUvB.y < cornerBR.y ) {
-
-		if( borderWidth.y + borderWidth.z > 0.0 ){
-
-			float borderFactor = getEllipticFactor( vUvB, cornerBR, ( 1.0 - cornerBR.x ) - borderWidth.y,  cornerBR.y - borderWidth.z );
-			float step = smoothstep( 1.0, 1.0 + fwidth( borderFactor ) * mult, borderFactor );
-			diffuseColor = mix( diffuseColor, borderColor, step );
-
-		}
-
-		float radiusFactor = getEllipticFactor( vUvB, cornerBR, 1.0 - cornerBR.x, cornerBR.y );
-		float alphaStep = smoothstep( 1.0 , 1.0 + fwidth(radiusFactor) * mult , radiusFactor );
-		diffuseColor.a = mix( diffuseColor.a, 0.0, alphaStep );
-
-}
-
-`;
-
-/* harmony default export */ const frame_border_fragment_glsl = (frame_border_fragment_glsl_program);
-
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-common.pars.fragment.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_common_pars_fragment_glsl_program = /* glsl */`
-
-// To be removed - required for both border and background
-uniform vec3 frameSize;
-uniform vec2 textureSize;
-
-`;
-
-/* harmony default export */ const frame_common_pars_fragment_glsl = (frame_common_pars_fragment_glsl_program);
-
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-background.pars.fragment.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_background_pars_fragment_glsl_program = /* glsl */`
-
-#ifdef USE_MAP
-
-vec4 sampleTexture() {
-
-	vec2 uv = vUv;
-
-	// default stretch
-	#if BACKGROUND_MAPPING != 0
-
-	float textureRatio = textureSize.x / textureSize.y;
-	float panelRatio = frameSize.x / frameSize.y;
-	float ratio = panelRatio / textureRatio;
-	float ratio2 = textureRatio / panelRatio;
-
-		// contain
-		#if BACKGROUND_MAPPING == 1
-		if ( textureRatio < panelRatio ) { // repeat on X
-			float newX = uv.x * ratio;
-			newX += 0.5 - 0.5 * ratio;
-			uv.x = newX;
-		} else { // repeat on Y
-			float newY = uv.y * ratio2;
-			newY += 0.5 - 0.5 * ratio2;
-			uv.y = newY;
-		}
-		#else
-		// cover
-		if ( textureRatio < panelRatio ) { // stretch on Y
-			float newY = uv.y * ratio2;
-			newY += 0.5 - 0.5 * ratio2;
-			uv.y = newY;
-		} else { // stretch on X
-			float newX = uv.x * ratio;
-			newX += 0.5 - 0.5 * ratio;
-			uv.x = newX;
-		}
-
-		#endif
-
-	#endif
-
-	return texture2D( map, uv );
-
-}
-#endif
-`;
-
-/* harmony default export */ const frame_background_pars_fragment_glsl = (frame_background_pars_fragment_glsl_program);
-
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderChunk/frame-background.fragment.glsl.js
-/**
- *
- * @type {string}
- */
-const frame_background_fragment_glsl_program = /* glsl */`
-#ifdef USE_MAP
-
-	vec4 textureSample = sampleTexture();
-	diffuseColor *= textureSample;
-
-#endif
-`;
-
-/* harmony default export */ const frame_background_fragment_glsl = (frame_background_fragment_glsl_program);
-
 ;// CONCATENATED MODULE: ./src/renderers/shaders/ShaderChunkUI.js
 
 
@@ -8743,449 +9930,6 @@ const ShaderChunkUI = {
 };
 /* eslint-enable camelcase */
 
-;// CONCATENATED MODULE: ./src/frame/renderers/ShaderLib/framematerial.glsl.js
-
-
-
-
-
-
-
-
-const framematerial_glsl_vertexShader = /* glsl */`
-// Would be automatic on three materials and from USE_UV
-#ifdef USE_MAP
-varying vec2 vUv;
-#endif
-
-${frame_border_pars_vertex_glsl}
-
-#include <clipping_planes_pars_vertex>
-
-void main() {
-
-	#ifdef USE_MAP
-	vUv = uv;
-	#endif
-
-	${frame_border_vertex_glsl}
-
-	vec4 mvPosition = modelViewMatrix * vec4( position, 1.0 );
-	gl_Position = projectionMatrix * mvPosition;
-
-	#include <clipping_planes_vertex>
-
-}
-`
-
-const framematerial_glsl_fragmentShader = /* glsl */`
-
-// Basic
-uniform vec3 diffuse;
-uniform float opacity;
-
-#ifdef USE_ALPHATEST
-	uniform float alphaTest;
-#endif
-
-${frame_common_pars_fragment_glsl}
-
-${frame_border_pars_fragment_glsl}
-
-
-#ifdef USE_MAP
-varying vec2 vUv;
-uniform sampler2D map;
-#endif
-
-${frame_background_pars_fragment_glsl}
-
-#include <clipping_planes_pars_fragment>
-
-void main() {
-
-	vec4 diffuseColor = vec4( diffuse, opacity );
-
-	// map
-	${frame_background_fragment_glsl}
-
-	${frame_border_fragment_glsl}
-
-	#ifdef USE_ALPHATEST
-
-	if ( diffuseColor.a < alphaTest ) discard;
-
-	#endif
-
-	// output
-	gl_FragColor = diffuseColor;
-
-
-	#include <clipping_planes_fragment>
-}
-`
-
-;// CONCATENATED MODULE: ./src/frame/utils/FrameMaterialUtils.js
-
-
-//JSDoc related import
-/* eslint-disable no-unused-vars */
-
-
-
-
-
-
-
-
-
-/* eslint-enable no-unused-vars */
-
-
-class FrameMaterialUtils {
-
-
-
-	/**
-	 *
-	 * @returns {Object<{m: string, t?: (function((Material|ShaderMaterial), string, *): void)}>}
-	 */
-	static get mediation() {
-
-		return _mediationDefinitions;
-
-	}
-
-
-	/**
-	 * Alter a material options with required fontMaterial options and or default values
-	 * @param {Object.<string,any>} materialOptions
-	 */
-	static ensureMaterialOptions( materialOptions ) {
-		materialOptions.transparent = true;
-		materialOptions.alphaTest = materialOptions.alphaTest || 0.02;
-	}
-
-	/**
-	 * As three-mesh-ui FontMaterial relies on webgl preprocessors,
-	 * lets force the material to have a proper defines object
-	 * @param {Material|ShaderMaterial} threeMaterial
-	 */
-	static ensureDefines( threeMaterial ) {
-		if ( !threeMaterial.defines ) {
-			threeMaterial.defines = {};
-		}
-	}
-
-	/* eslint-disable no-unused-vars */
-	/**
-	 *
-	 * @param {Material|ShaderMaterial} threeMaterial
-	 * @param {Object.<string,any>} materialOptions
-	 */
-	static ensureUserData( threeMaterial, materialOptions ) {
-		threeMaterial.userData.borderColor = { value: null };
-		threeMaterial.userData.borderRadius = { value: new external_three_namespaceObject.Vector4(0,0,0,0) };
-		// Store corners based on borderRadiuses
-		threeMaterial.userData.cornerTL = { value : new external_three_namespaceObject.Vector2(0,1) };
-		threeMaterial.userData.cornerTR = { value : new external_three_namespaceObject.Vector2(1,1) };
-		threeMaterial.userData.cornerBR = { value : new external_three_namespaceObject.Vector2(1,0) };
-		threeMaterial.userData.cornerBL = { value : new external_three_namespaceObject.Vector2(0,0) };
-
-		threeMaterial.userData.borderWidth = { value: new external_three_namespaceObject.Vector4(0,0,0,0) };
-		threeMaterial.userData.borderOpacity = { value: null };
-		threeMaterial.userData.frameSize = { value: new external_three_namespaceObject.Vector3( 1, 1, 1 ) };
-		threeMaterial.userData.textureSize = { value: new external_three_namespaceObject.Vector2( 1, 1 ) };
-
-	}
-	/* eslint-enable no-unused-vars */
-
-	/**
-	 *
-	 * @param {any} shader
-	 * @param {Material|ShaderMaterial} threeMaterial
-	 */
-	static bindUniformsWithUserData( shader, threeMaterial ) {
-
-		shader.uniforms.borderColor = threeMaterial.userData.borderColor;
-		// Border radiuses and corners
-		shader.uniforms.borderRadius = threeMaterial.userData.borderRadius;
-		shader.uniforms.cornerTL = threeMaterial.userData.cornerTL;
-		shader.uniforms.cornerTR = threeMaterial.userData.cornerTR;
-		shader.uniforms.cornerBR = threeMaterial.userData.cornerBR;
-		shader.uniforms.cornerBL = threeMaterial.userData.cornerBL;
-
-		shader.uniforms.borderWidth = threeMaterial.userData.borderWidth;
-		shader.uniforms.borderOpacity = threeMaterial.userData.borderOpacity;
-		shader.uniforms.frameSize = threeMaterial.userData.frameSize;
-		shader.uniforms.textureSize = threeMaterial.userData.textureSize;
-	}
-
-	/**
-	 *
-	 * @param shader
-	 */
-	static injectShaderChunks( shader ) {
-		FrameMaterialUtils.injectVertexShaderChunks( shader );
-		FrameMaterialUtils.injectFragmentShaderChunks( shader );
-	}
-
-	/**
-	 *
-	 * @param shader
-	 */
-	static injectVertexShaderChunks( shader ) {
-		shader.vertexShader = shader.vertexShader.replace(
-			'#include <uv_pars_vertex>',
-			'#include <uv_pars_vertex>\n' + frame_border_pars_vertex_glsl
-		);
-
-		// vertex chunks
-		shader.vertexShader = shader.vertexShader.replace(
-			'#include <uv_vertex>',
-			'#include <uv_vertex>\n' + frame_border_vertex_glsl
-		)
-
-	}
-
-	/**
-	 *
-	 * @param shader
-	 */
-	static injectFragmentShaderChunks( shader ) {
-		shader.fragmentShader = shader.fragmentShader.replace(
-			'#include <map_pars_fragment>',
-			'#include <map_pars_fragment>\n' + frame_background_pars_fragment_glsl
-		)
-
-		shader.fragmentShader = shader.fragmentShader.replace(
-			'#include <map_pars_fragment>',
-			'#include <map_pars_fragment>\n' + frame_border_pars_fragment_glsl
-		)
-
-		shader.fragmentShader = shader.fragmentShader.replace(
-			'#include <map_pars_fragment>',
-			'#include <map_pars_fragment>\n' + frame_common_pars_fragment_glsl
-		)
-
-		// fragment chunks
-		shader.fragmentShader = shader.fragmentShader.replace(
-			'#include <map_fragment>',
-			frame_background_fragment_glsl
-		)
-
-		shader.fragmentShader = shader.fragmentShader.replace(
-			'#include <alphamap_fragment>',
-			frame_border_fragment_glsl+'\n#include <alphamap_fragment>'
-		)
-
-	}
-
-}
-
-/**
- *
- * @param target
- * @param property
- * @param value
- * @private
- */
-const _backgroundSizeTransformer = function( target, property, value ) {
-
-	value = ['stretch','contain','cover'].indexOf(value);
-	asPreprocessorValueTransformer(target, 'BACKGROUND_MAPPING', value);
-
-}
-
-// /**
-//  *
-//  * @type {Object.<{m:string, t?:(fontMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
-//  */
-// const _mediationDefinitions = {
-// 	alphaTest: { m: 'alphaTest', t: alphaTestTransformer },
-// 	backgroundTexture: { m: 'map' },
-// 	backgroundColor: { m: 'color' },
-// 	backgroundOpacity: { m:'opacity' },
-// 	backgroundSize: { m: 'u_backgroundMapping', t: _backgroundSizeTransformer },
-// 	_borderWidthComponent: { m: 'borderWidth', t: _linkComponentOutput },
-// 	borderColor: { m: 'borderColor', t: uniformOrUserDataTransformer },
-// 	_borderRadiusComponent: { m: 'computedCorners', t: _linkCornersOutput },
-// 	borderOpacity: { m: 'borderOpacity', t: uniformOrUserDataTransformer },
-// 	size: { m: 'frameSize', t: uniformOrUserDataTransformer },
-// 	tSize: { m: 'textureSize', t: uniformOrUserDataTransformer }
-// }
-
-
-/**
- * 7xx
- * @type {Object.<{m:string, t?:(fontMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
- */
-const _mediationDefinitions = {
-	clippingPlanes : {m: 'clippingPlanes'},
-	backgroundAlphaTest: { m: 'alphaTest', t: alphaTestTransformer },
-	backgroundSide: { m: 'side' },
-	// backgroundTexture: { m: 'map' },
-	backgroundImage: { m: 'map'},
-	backgroundColor: { m: 'color' },
-	backgroundOpacity: { m:'opacity' },
-	backgroundSize: { m: 'computedBackgroundSize', t: _backgroundSizeTransformer },
-	borderWidth: { m: 'borderWidth', t: uniformOrUserDataTransformer },
-	borderColor: { m: 'borderColor', t: uniformOrUserDataTransformer },
-	cornerTL : { m: 'cornerTL', t: uniformOrUserDataTransformer },
-	cornerTR : { m: 'cornerTR', t: uniformOrUserDataTransformer },
-	cornerBR : { m: 'cornerBR', t: uniformOrUserDataTransformer },
-	cornerBL : { m: 'cornerBL', t: uniformOrUserDataTransformer },
-	borderOpacity: { m: 'borderOpacity', t: uniformOrUserDataTransformer },
-	size: { m: 'frameSize', t: uniformOrUserDataTransformer },
-	tSize: { m: 'textureSize', t: uniformOrUserDataTransformer }
-}
-
-;// CONCATENATED MODULE: ./src/frame/materials/FrameMaterial.js
-
-
-
-
-class FrameMaterial extends external_three_namespaceObject.ShaderMaterial {
-
-
-	/**
-	 * This static method is mandatory for extending ThreeMeshUI.FrameMaterial
-	 * It will provide a transfer description for properties from ThreeMeshUI.Text to THREE.Material
-	 * @see {FrameMaterialUtils.mediation}
-	 * @returns {Object.<{m:string, t?:(frameMaterial:Material|ShaderMaterial, materialProperty:string, value:any) => void}>}
-	 */
-	static get mediation() {
-
-		return FrameMaterialUtils.mediation;
-
-	}
-
-	constructor() {
-		super ( {
-			uniforms: {
-				alphaTest: { value: 0.02 },
-				map: { value: null },
-				diffuse: { value: new external_three_namespaceObject.Color(0xffffff) },
-				opacity: { value: 1.0 },
-				borderColor: { value: new external_three_namespaceObject.Color(0x000000) },
-				borderOpacity: { value: 0 },
-				borderRadius: { value: new external_three_namespaceObject.Vector4(0,0,0,0) },
-				// Corners for customized radius not all starting on center [0.5,0.5];
-				// Corners will be generated from borderRadiuses
-				cornerTL: { value : new external_three_namespaceObject.Vector2(0,1) },
-				cornerTR: { value : new external_three_namespaceObject.Vector2(1,1) },
-				cornerBR: { value : new external_three_namespaceObject.Vector2(1,0) },
-				cornerBL: { value : new external_three_namespaceObject.Vector2(0,0) },
-				borderWidth: { value: new external_three_namespaceObject.Vector4(0,0,0,0) },
-
-				frameSize: { value: new external_three_namespaceObject.Vector3( 1, 1, 1 ) },
-				textureSize: { value: new external_three_namespaceObject.Vector2( 1, 1 ) }
-			},
-			side: external_three_namespaceObject.FrontSide,
-			transparent: true,
-			clipping: true,
-			vertexShader: framematerial_glsl_vertexShader,
-			fragmentShader: framematerial_glsl_fragmentShader,
-			extensions: {
-				derivatives: true
-			}
-		} );
-
-		// webgl preprocessor AlphaTest set by default
-		this.defines[ 'USE_ALPHATEST' ] = '';
-		this.needsUpdate = true;
-	}
-
-	set map( value ) {
-
-		this.uniforms.map.value = value;
-		if( !value ) {
-
-			if( this.defines['USE_UV'] !== undefined ) {
-
-				delete this.defines['USE_UV'];
-				this.needsUpdate = true;
-
-			}
-
-		} else if( this.defines['USE_UV'] === undefined ) {
-
-			this.defines['USE_UV'] = '';
-			this.needsUpdate = true;
-
-		}
-
-		this.needsUpdate = true;
-
-	}
-
-	get map(){
-		return this.uniforms.map.value;
-	}
-
-	/**
-	 *
-	 * @returns {number}
-	 */
-	get alphaTest() {
-
-		return this.uniforms.alphaTest.value;
-
-	}
-
-
-
-	/**
-	 *
-	 * @param {number} v
-	 */
-	set alphaTest( v ) {
-		this.uniforms.alphaTest.value = v;
-	}
-
-	/**
-	 *
-	 * @param {number} v
-	 */
-	set opacity( v ) {
-
-		if( this.uniforms )
-			this.uniforms.opacity.value = v;
-
-	}
-
-	/**
-	 * The color will be the diffuse uniform
-	 * @returns {number}
-	 */
-	get opacity() {
-
-		return this.uniforms.opacity.value;
-
-	}
-
-	/**
-	 * The color will be the diffuse uniform
-	 * @returns {Color}
-	 */
-	get color() {
-
-		return this.uniforms.diffuse.value;
-
-	}
-
-	/**
-	 *
-	 * @param {Color} v
-	 */
-	set color( v ) {
-
-		this.uniforms.diffuse.value = v;
-
-	}
-
-}
-
 ;// CONCATENATED MODULE: ./src/core/properties/hierarchy/ChildrenBox.js
 
 
@@ -9194,7 +9938,7 @@ class FrameMaterial extends external_three_namespaceObject.ShaderMaterial {
 
 /* eslint-enable no-unused-vars */
 
-class ChildrenBox extends BaseProperty {
+class ChildrenBox extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -9311,7 +10055,7 @@ class ChildrenBox extends BaseProperty {
 
 
 
-class BoundsBox extends BaseProperty {
+class BoundsBox extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -9381,15 +10125,17 @@ class BoundsBox extends BaseProperty {
 		const width = element._width;
 		const padding = element._padding._value;
 		const borderWidth = element._borderWidth._value;
-		const margin = element._margin._value;
 
+		// check for changes. As reference size, it must look on innerWidth(boxSizing)
+		const margin = element._margin._value;
 		const factor = width._auto ? 1 : width._value;
-		// const newOffsetWidth = (value * factor) - (margin.y + margin.w);
 		const newOffsetWidth = (value * factor) - (margin.y + margin.w);
-		if ( numberEquals( newOffsetWidth, this._offsetWidth ) ) return;
+		const newInnerWidth = newOffsetWidth - ( padding.y + padding.w + borderWidth.y + borderWidth.w );
+		// prevent cascade updates/process/render if no changes detected
+		if ( numberEquals( newInnerWidth, this._innerWidth ) ) return;
 
 		this._offsetWidth = newOffsetWidth;
-		this._innerWidth = this._offsetWidth - ( padding.y + padding.w + borderWidth.y + borderWidth.w );
+		this._innerWidth = newInnerWidth;
 
 		this._centerX = _computeCenterX( element );
 
@@ -9409,15 +10155,17 @@ class BoundsBox extends BaseProperty {
 		const height = element._height;
 		const padding = element._padding._value;
 		const borderWidth = element._borderWidth._value;
+
+		// check for changes. As reference size, it must look on innerHeight(boxSizing)
 		const margin = element._margin._value;
-
 		const factor = height._auto ? 1 : height._value;
-
 		const newOffsetHeight = (value * factor) - ( margin.x + margin.z );
-		if ( numberEquals( newOffsetHeight, this._offsetHeight ) ) return;
+		const newInnerHeight = newOffsetHeight - ( padding.x + padding.z + borderWidth.x + borderWidth.z );
+		// prevent cascade updates/process/render if no changes detected
+		if ( numberEquals( newInnerHeight, this._innerHeight ) ) return;
 
 		this._offsetHeight = newOffsetHeight;
-		this._innerHeight = this._offsetHeight - ( padding.x + padding.z + borderWidth.x + borderWidth.z );
+		this._innerHeight = newInnerHeight;
 		this._centerY = _computeCenterY( element );
 
 		this._propagateHeight( element );
@@ -9518,6 +10266,10 @@ class BoundsBox extends BaseProperty {
 
 		this._size.x = this._offsetWidth;
 		this._size.y = this._offsetHeight;
+
+		if( element._backgroundMesh ){
+			element._backgroundMesh.updateScale();
+		}
 
 		element._renderer._needsRender = true;
 
@@ -10525,11 +11277,12 @@ function _justificationMarginSpaceAround( element, availableSpace = 0, reverse =
 ;// CONCATENATED MODULE: ./src/frame/Frame.js
 
 
-
 //JSDoc related imports
 /* eslint-disable no-unused-vars */
 
 /* eslint-enable no-unused-vars */
+
+let _hiddenMaterial;
 
 /**
  * Returns a basic plane mesh.
@@ -10540,7 +11293,89 @@ class Frame extends external_three_namespaceObject.Mesh {
 	 *
 	 * @param {MeshUIBaseElement} element
 	 */
-	constructor( element ) {
+	constructor( element) {
+
+		const slice = element.slice;
+		const slices = {};
+
+		let w =1, h=1;
+
+		if( slice ) {
+			const segments = 1;
+
+			w = slice.width ? slice.width : 1;
+			h = slice.height ? slice.height : 1;
+
+			if ( slice.top ) {
+				if ( slice.left ) {
+					const topLeftGeometry = new external_three_namespaceObject.PlaneGeometry( slice.left*w, slice.top*h, segments, segments );
+					_sliceUV( topLeftGeometry, 0, slice.left, 1 - slice.top, 1 );
+					topLeftGeometry.translate( slice.left * w / 2, -slice.top*h / 2, 0 );
+					slices.topLeft = topLeftGeometry;
+				}
+
+				const topGeometry = new external_three_namespaceObject.PlaneGeometry( 1, slice.top*h, segments, segments );
+				_sliceUV( topGeometry, slice.left, 1 - slice.right, 1 - slice.top, 1 );
+				topGeometry.translate( 0, -slice.top*h / 2, 0 );
+				slices.top = topGeometry;
+
+				if ( slice.right ) {
+					const topRightGeometry = new external_three_namespaceObject.PlaneGeometry( slice.right*w, slice.top*h, segments, segments );
+					_sliceUV( topRightGeometry, 1 - slice.right, 1, 1 - slice.top, 1 );
+					topRightGeometry.translate( -slice.right*w / 2, -slice.top*h / 2, 0 );
+					slices.topRight = topRightGeometry;
+				}
+
+			}
+
+			if ( slice.left ) {
+				const leftGeometry = new external_three_namespaceObject.PlaneGeometry( slice.left*w, 1, segments, segments )
+				_sliceUV( leftGeometry, 0, slice.left, slice.bottom, 1 - slice.top );
+				leftGeometry.translate( slice.left * w / 2, 0, 0 );
+				slices.left = leftGeometry;
+			}
+
+			const center = new external_three_namespaceObject.PlaneGeometry( 1, 1, segments, segments );
+			_sliceUV( center, slice.left, 1 - slice.right, slice.bottom, 1 - slice.top );
+			// center.translate( 0,0,-0.1)
+			slices.middle = center;
+
+			if ( slice.right ) {
+				const rightGeometry = new external_three_namespaceObject.PlaneGeometry( slice.right*w, 1, segments, segments );
+				_sliceUV( rightGeometry, 1 - slice.right, 1, slice.bottom, 1 - slice.top );
+				rightGeometry.translate( -slice.right * w/ 2, 0, 0 );
+				slices.right = rightGeometry;
+			}
+
+			if ( slice.bottom ) {
+
+				if ( slice.left ) {
+					const bottomLeftGeometry = new external_three_namespaceObject.PlaneGeometry( slice.left * w, slice.bottom * h, segments, segments );
+					_sliceUV( bottomLeftGeometry, 0, slice.left, 0, slice.bottom );
+					bottomLeftGeometry.translate( slice.left * w / 2, slice.bottom * h / 2, 0 )
+					slices.bottomLeft = bottomLeftGeometry;
+				}
+
+				const bottomGeometry = new external_three_namespaceObject.PlaneGeometry( 1, slice.bottom * h, segments, segments );
+				_sliceUV( bottomGeometry, slice.left, 1 - slice.right, 0, slice.bottom );
+				bottomGeometry.translate( 0, slice.bottom * h / 2, 0 )
+				slices.bottom = bottomGeometry;
+
+				if ( slice.right ) {
+					const bottomRightGeometry = new external_three_namespaceObject.PlaneGeometry( slice.right * w, slice.bottom * h, segments, segments );
+					_sliceUV( bottomRightGeometry, 1 - slice.right, 1, 0, slice.bottom );
+					bottomRightGeometry.translate( -slice.right * w / 2, slice.bottom * h / 2, 0 )
+					slices.bottomRight = bottomRightGeometry;
+				}
+			}
+		}
+
+		let material = element.backgroundMaterial;
+		if( slice ){
+			if( !_hiddenMaterial ) _hiddenMaterial = new external_three_namespaceObject.MeshBasicMaterial({alphaTest:1.1});
+			material = _hiddenMaterial;
+		}
+
 
 		const geometry = new external_three_namespaceObject.PlaneGeometry( 1, 1, element._segments.value, element._segments.value );
 
@@ -10548,11 +11383,137 @@ class Frame extends external_three_namespaceObject.Mesh {
 		const uvB = new external_three_namespaceObject.BufferAttribute( new Float32Array( geometry.getAttribute('uv').array ), 2);
 		geometry.setAttribute('uvB', uvB ).name = 'uvB';
 
-		super( geometry, element.backgroundMaterial );
-
+		super( geometry, material );
 		this.name = 'UIBackgroundBox';
 
+
+		if( slice ) {
+
+			this.slice = slice;
+			this.sliceSize = new external_three_namespaceObject.Vector3( 1 - ( slice.left + slice.right ), 1 - ( slice.bottom + slice.top ), 1 )
+			this.sliceScale = new external_three_namespaceObject.Vector3(w,h,1);
+
+			// build slice meshes
+			for ( const sliceSide in slices ) {
+
+				const slice = new external_three_namespaceObject.Mesh( slices[ sliceSide ], element.backgroundMaterial );
+				this.add( slice );
+				slices[ sliceSide ] = slice;
+
+			}
+
+			this.updateScale = this.updateScaleSlice;
+
+			this.slices = slices;
+		}
+
 	}
+
+	updateScale(){}
+
+	updateScaleSlice(){
+
+		const s = new external_three_namespaceObject.Vector3(1,1,1);
+		if( this.scale.x < (this.slice.left+this.slice.right)* this.sliceScale.x ){
+			s.x = this.scale.x / ((this.slice.left+this.slice.right) * this.sliceScale.x);
+		}
+
+		if( this.scale.y < (this.slice.bottom+this.slice.top)* this.sliceScale.y ){
+			s.y = this.scale.y / ((this.slice.bottom+this.slice.top) * this.sliceScale.y);
+		}
+
+		for ( const sliceSide in this.slices ) {
+			const slice = this.slices[sliceSide];
+
+			// Invert size to have constant
+			slice.scale.set( 1/this.scale.x, 1/this.scale.y, this.scale.y )
+
+			const offset = _slicePositions[sliceSide];
+			for ( const offsetAxis in offset ) {
+				slice.position[offsetAxis] = this.scale[offsetAxis] * offset[offsetAxis] * slice.scale[offsetAxis];
+			}
+
+			const scale = _sliceScales[sliceSide];
+			if( scale ) {
+
+				// offset
+				if( scale.x ){
+					slice.position.x = this.sliceScale.x * 0.5 * (this.slice.left - this.slice.right) * (1/this.scale.x);
+				}
+
+				if( scale.y ){
+					slice.position.y = this.sliceScale.y *0.5 * (this.slice.bottom - this.slice.top) * (1/this.scale.y);
+				}
+
+				for ( const scaleAxis in scale ) {
+
+					const natural = this.scale[scaleAxis]-((1-this.sliceSize[scaleAxis])*this.sliceScale[scaleAxis])
+					slice.scale[ scaleAxis ] = Math.max(0,natural * (1/this.scale[scaleAxis]) ) ;
+
+				}
+			}
+		}
+
+		if( s.x !== 1){
+			this.slices.left.scale.x *= s.x;
+			this.slices.topLeft.scale.x *= s.x;
+			this.slices.bottomLeft.scale.x *= s.x;
+			this.slices.right.scale.x *= s.x;
+			this.slices.topRight.scale.x *= s.x;
+			this.slices.bottomRight.scale.x *= s.x;
+		}
+
+		if( s.y !== 1){
+			this.slices.top.scale.y *= s.y;
+			this.slices.topLeft.scale.y *= s.y;
+			this.slices.topRight.scale.y *= s.y;
+			this.slices.bottom.scale.y *= s.y;
+			this.slices.bottomLeft.scale.y *= s.y;
+			this.slices.bottomRight.scale.y *= s.y;
+		}
+
+	}
+}
+
+
+const _slicePositions = {
+	topLeft: {x:-0.5,y:0.5},
+	top: {y:0.5},
+	topRight: {x:0.5,y:0.5},
+	left: {x:-0.5},
+	right: {x:0.5},
+	bottomLeft: {x:-0.5,y:-0.5},
+	bottom: {y:-0.5},
+	bottomRight : {x:0.5,y:-0.5}
+}
+
+const _sliceScales = {
+	top: {x:1},
+	left: {y:1},
+	right: {y:1},
+	bottom: {x:1},
+	middle:{x:1,y:1}
+}
+
+function _sliceUV( geometry, uMin, uMax, vMin, vMax ){
+
+	const uLength = uMax-uMin;
+	const vLength = vMax-vMin;
+
+	const uvAttribute = geometry.attributes.uv;
+
+	for ( let i = 0; i < uvAttribute.count; i ++ ) {
+
+		const u = uvAttribute.getX( i );
+		const v = uvAttribute.getY( i );
+
+		uvAttribute.setXY( i, uMin + u*uLength, vMin + v*vLength );
+
+	}
+
+	// Add additional uv for borders computations by copying initial uv
+	const uvB = new external_three_namespaceObject.BufferAttribute( new Float32Array( geometry.getAttribute('uv').array ), 2);
+	geometry.setAttribute('uvB', uvB ).name = 'uvB';
 
 }
 
@@ -10560,7 +11521,7 @@ class Frame extends external_three_namespaceObject.Mesh {
 
 
 
-class RendererPropertyBox extends BaseProperty{
+class RendererPropertyBox extends BaseProperty_BaseProperty{
 
 	constructor() {
 
@@ -10610,7 +11571,7 @@ class PositionPropertyBox extends PositionProperty {
 /**
  * Autosize are only trigger when natural size changed
  */
-class AutoSizePropertyBox extends BaseProperty {
+class AutoSizePropertyBox extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -10977,53 +11938,6 @@ class BoxElement extends MeshUIBaseElement {
 
 }
 
-;// CONCATENATED MODULE: ./src/core/elements/glyphs/Line.js
-//JSDoc related imports
-/* eslint-disable no-unused-vars */
-
-/* eslint-enable no-unused-vars */
-
-
-/**
- * Line represents an horizontal combination of positioned inlines with additional properties
- */
-class Line extends Array {
-
-	/**
-	 *
-	 * @param {Inline[]} items
-	 */
-	constructor(...items) {
-		super(...items);
-
-		/**
-		 * The width of this line
-		 * @type {number}
-		 */
-		this.width = 0;
-
-		/**
-		 * The maximum lineBase of this line of inlines
-		 * @type {number}
-		 */
-		this.lineBase = 0;
-
-		/**
-		 * The maximum lineHeight of this line of inlines
-		 * @type {number}
-		 */
-		this.lineHeight = 0;
-
-		/**
-		 * The vertical position of this line
-		 * @type {number}
-		 */
-		this.y = 0;
-
-	}
-
-}
-
 ;// CONCATENATED MODULE: ./src/core/properties/BoxLayouter.js
 
 
@@ -11034,7 +11948,7 @@ class Line extends Array {
 
 /* eslint-enable no-unused-vars */
 
-class BoxLayouter extends BaseProperty {
+class BoxLayouter extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -11209,27 +12123,6 @@ class BlockElement extends BoxElement {
 
 }
 
-;// CONCATENATED MODULE: ./src/core/properties/TextContentInline.js
-
-
-class TextContentInline extends BaseProperty{
-
-	constructor() {
-
-		super( "textContent", null, false );
-
-	}
-
-	/* eslint-disable no-unused-vars */ update( element, out ) { 	/* eslint-enable no-unused-vars */
-
-		element._glyphs._needsUpdate = true;
-		element._whiteSpace._needsProcess = true;
-
-	}
-
-
-}
-
 ;// CONCATENATED MODULE: ./src/core/properties/InlinesProperty.js
 
 
@@ -11239,7 +12132,7 @@ class TextContentInline extends BaseProperty{
 
 /* eslint-enable no-unused-vars */
 
-class InlinesProperty extends BaseProperty{
+class InlinesProperty extends BaseProperty_BaseProperty{
 
 	constructor() {
 
@@ -11251,29 +12144,6 @@ class InlinesProperty extends BaseProperty{
 		 * @private
 		 */
 		this._value = null;
-
-		// value
-
-		// 3. Inlines
-		// this._textContentInlines = this._textContentGlyphs.map( ( glyphBox ) => glyphBox.asInlineGlyph() );
-
-		// 4. kerning
-		// this._buildContentKernings();
-
-
-		// 5.? Apply margin and padding on first and last inlines
-		// if( this._textContentInlines.length ) {
-		//
-		// 	// First gets left side
-		// 	this._textContentInlines[0].paddingLeft = this._padding.w;
-		// 	this._textContentInlines[0].marginLeft = this._margin.w;
-		//
-		// 	// Last gets right side
-		// 	const lastIndex = this._textContentInlines.length - 1;
-		// 	this._textContentInlines[lastIndex].paddingRight = this._padding.y;
-		// 	this._textContentInlines[lastIndex].marginRight = this._margin.y;
-		//
-		// }
 
 	}
 
@@ -11319,7 +12189,7 @@ class InlinesProperty extends BaseProperty{
 
 /* eslint-enable no-unused-vars */
 
-class GlyphsProperty extends BaseProperty{
+class GlyphsProperty extends BaseProperty_BaseProperty{
 
 	constructor() {
 
@@ -11434,7 +12304,7 @@ class ColorProperty extends StyleColorProperty {
 /* eslint-disable no-unused-vars */
 /* eslint-enable no-unused-vars */
 
-class LineBreakProperty extends BaseProperty{
+class LineBreakProperty extends BaseProperty_BaseProperty{
 
 	constructor( defaultValue = "- ,.:?!\n" ) {
 
@@ -11507,7 +12377,7 @@ class LineBreakProperty extends BaseProperty{
 ;// CONCATENATED MODULE: ./src/core/properties/InlineLayouter.js
 
 
-class InlineLayouter extends BaseProperty {
+class InlineLayouter extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -11554,7 +12424,6 @@ class InlineLayouter extends BaseProperty {
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/background/BackgroundColorPropertyInline.js
 
 
-
 //JSDoc related imports
 /* eslint-disable no-unused-vars */
 /* eslint-enable no-unused-vars */
@@ -11567,7 +12436,7 @@ class BackgroundColorPropertyInline extends StyleColorProperty {
 
 		this._allowsInherit = false;
 
-		this._input = 'transparent';
+		this._input = defaultValue;
 
 
 	}
@@ -11580,17 +12449,34 @@ class BackgroundColorPropertyInline extends StyleColorProperty {
 	computeOutputValue( element ) { /* eslint-enable no-unused-vars */
 
 		// @TODO : Changes multiple mesh visibility
-		// element._backgroundMesh.visible = !(this._input === 'none' || this._input === 'transparent');
 
-		if( this._input === 'inherit' ) {
+		const visibility = !( this._input === 'none' || this._input === 'transparent' );
+		if ( element._backgroundMesh ) {
 
-			this._value.set(this.getInheritedInput( element ));
+			if ( !visibility ) {
 
-		} else {
+				element._backgroundMesh.visible = false;
+				element._backgroundNone = true;
+
+			}
+
+		} else if ( visibility ) {
+
+			element._backgroundNone = false;
+
+		}
+
+
+		if ( this._input === 'inherit' ) {
+
+			this._value.set( this.getInheritedInput( element ) );
+
+		} else if ( visibility ) {
 
 			this._value.set( this._input );
 
 		}
+
 
 	}
 
@@ -11626,6 +12512,7 @@ class FontStylePropertyInline extends FontStyleProperty {
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/font/FontWeightPropertyInline.js
 
 
+
 class FontWeightPropertyInline extends FontWeightProperty {
 
 	constructor( def ) {
@@ -11636,34 +12523,13 @@ class FontWeightPropertyInline extends FontWeightProperty {
 
 	computeOutputValue( element ) {
 
-		const input = this.getInheritedInput( element );
-
-		const converted = LOOK_UP_TABLE[ input ];
-
-		if ( converted ) {
-
-			this._value = converted
-
-		} else {
-
-			this._value = input;
-
-		}
+		this._value = uniformizeFontWeight( this.getInheritedInput( element )	);
 
 		element._font._needsUpdate = true;
 
 	}
 
 }
-
-// @TODO : Evaluate the need
-const LOOK_UP_TABLE = {
-	// 'light'		: '100',
-	// 'normal'	: '400',
-	// 'bold' 		: '700',
-	// 'bolder' 	: '900'
-}
-
 
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/font/FontFamilyPropertyInline.js
 
@@ -12039,11 +12905,17 @@ function _inlineCollapseSingle( line ) {
 
 	}
 
-	return firstInline.offsetX;
+	return firstInline.offsetX - firstInline._marginLeft - firstInline._paddingLeft;
 
 }
 
-function _inlineCollapseMultiple( line ) {
+/**
+ *
+ * @param line
+ * @return {number}
+ * @private
+ */
+function _inlineCollapseMultiple( line) {
 
 	if ( !line[ 0 ] ) return 0;
 
@@ -12089,7 +12961,8 @@ function _inlineCollapseMultiple( line ) {
 
 	_collapseRightInlines( inlinesToCollapse, collapsingTarget );
 
-	return line[ 0 ].offsetX;
+	const firstInline = line[0];
+	return firstInline.offsetX - firstInline._marginLeft - firstInline._paddingLeft;
 
 }
 
@@ -12101,8 +12974,10 @@ function _inlineCollapseMultiple( line ) {
  */
 function _inlineCollapseNothing( line ) {
 
-	if ( !line[ 0 ] ) return 0;
-	return line[ 0 ].offsetX;
+	const firstInline = line[ 0 ];
+	if ( !firstInline ) return 0;
+
+	return firstInline.offsetX - firstInline._marginLeft - firstInline._paddingLeft;
 
 }
 
@@ -12236,7 +13111,6 @@ class LetterSpacingPropertyInline extends LetterSpacingProperty {
 
 
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/font/FontSizePropertyInline.js
-
 
 
 class FontSizePropertyInline extends FontSizeProperty {
@@ -12424,7 +13298,7 @@ class FontKerningPropertyInline extends FontKerningProperty {
 
 /* eslint-enable no-unused-vars */
 
-class ChildrenInline extends BaseProperty {
+class ChildrenInline extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -12492,12 +13366,6 @@ class ChildrenInline extends BaseProperty {
 ;// CONCATENATED MODULE: ./node_modules/three/examples/jsm/utils/BufferGeometryUtils.js
 
 
-function computeTangents() {
-
-	throw new Error( 'BufferGeometryUtils: computeTangents renamed to computeMikkTSpaceTangents.' );
-
-}
-
 function computeMikkTSpaceTangents( geometry, MikkTSpace, negateSign = true ) {
 
 	if ( ! MikkTSpace || ! MikkTSpace.isReady ) {
@@ -12516,9 +13384,9 @@ function computeMikkTSpaceTangents( geometry, MikkTSpace, negateSign = true ) {
 
 		if ( attribute.normalized || attribute.isInterleavedBufferAttribute ) {
 
-			const dstArray = new Float32Array( attribute.getCount() * attribute.itemSize );
+			const dstArray = new Float32Array( attribute.count * attribute.itemSize );
 
-			for ( let i = 0, j = 0; i < attribute.getCount(); i ++ ) {
+			for ( let i = 0, j = 0; i < attribute.count; i ++ ) {
 
 				dstArray[ j ++ ] = attribute.getX( i );
 				dstArray[ j ++ ] = attribute.getY( i );
@@ -12591,7 +13459,7 @@ function computeMikkTSpaceTangents( geometry, MikkTSpace, negateSign = true ) {
  * @param  {Boolean} useGroups
  * @return {BufferGeometry}
  */
-function mergeBufferGeometries( geometries, useGroups = false ) {
+function mergeGeometries( geometries, useGroups = false ) {
 
 	const isIndexed = geometries[ 0 ].index !== null;
 
@@ -12616,7 +13484,7 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 		if ( isIndexed !== ( geometry.index !== null ) ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed with geometry at index ' + i + '. All geometries must have compatible attributes; make sure index attribute exists among all geometries, or in none of them.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index ' + i + '. All geometries must have compatible attributes; make sure index attribute exists among all geometries, or in none of them.' );
 			return null;
 
 		}
@@ -12627,7 +13495,7 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 			if ( ! attributesUsed.has( name ) ) {
 
-				console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed with geometry at index ' + i + '. All geometries must have compatible attributes; make sure "' + name + '" attribute exists among all geometries, or in none of them.' );
+				console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index ' + i + '. All geometries must have compatible attributes; make sure "' + name + '" attribute exists among all geometries, or in none of them.' );
 				return null;
 
 			}
@@ -12644,7 +13512,7 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 		if ( attributesCount !== attributesUsed.size ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed with geometry at index ' + i + '. Make sure all geometries have the same number of attributes.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index ' + i + '. Make sure all geometries have the same number of attributes.' );
 			return null;
 
 		}
@@ -12653,7 +13521,7 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 		if ( morphTargetsRelative !== geometry.morphTargetsRelative ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed with geometry at index ' + i + '. .morphTargetsRelative must be consistent throughout all geometries.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index ' + i + '. .morphTargetsRelative must be consistent throughout all geometries.' );
 			return null;
 
 		}
@@ -12662,7 +13530,7 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 			if ( ! morphAttributesUsed.has( name ) ) {
 
-				console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed with geometry at index ' + i + '.  .morphAttributes must be consistent throughout all geometries.' );
+				console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index ' + i + '.  .morphAttributes must be consistent throughout all geometries.' );
 				return null;
 
 			}
@@ -12672,11 +13540,6 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 			morphAttributes[ name ].push( geometry.morphAttributes[ name ] );
 
 		}
-
-		// gather .userData
-
-		mergedGeometry.userData.mergedUserData = mergedGeometry.userData.mergedUserData || [];
-		mergedGeometry.userData.mergedUserData.push( geometry.userData );
 
 		if ( useGroups ) {
 
@@ -12692,7 +13555,7 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 			} else {
 
-				console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed with geometry at index ' + i + '. The geometry must have either an index or a position attribute' );
+				console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed with geometry at index ' + i + '. The geometry must have either an index or a position attribute' );
 				return null;
 
 			}
@@ -12734,11 +13597,11 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 	for ( const name in attributes ) {
 
-		const mergedAttribute = mergeBufferAttributes( attributes[ name ] );
+		const mergedAttribute = mergeAttributes( attributes[ name ] );
 
 		if ( ! mergedAttribute ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed while trying to merge the ' + name + ' attribute.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed while trying to merge the ' + name + ' attribute.' );
 			return null;
 
 		}
@@ -12768,11 +13631,11 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
 
 			}
 
-			const mergedMorphAttribute = mergeBufferAttributes( morphAttributesToMerge );
+			const mergedMorphAttribute = mergeAttributes( morphAttributesToMerge );
 
 			if ( ! mergedMorphAttribute ) {
 
-				console.error( 'THREE.BufferGeometryUtils: .mergeBufferGeometries() failed while trying to merge the ' + name + ' morphAttribute.' );
+				console.error( 'THREE.BufferGeometryUtils: .mergeGeometries() failed while trying to merge the ' + name + ' morphAttribute.' );
 				return null;
 
 			}
@@ -12791,11 +13654,12 @@ function mergeBufferGeometries( geometries, useGroups = false ) {
  * @param {Array<BufferAttribute>} attributes
  * @return {BufferAttribute}
  */
-function mergeBufferAttributes( attributes ) {
+function mergeAttributes( attributes ) {
 
 	let TypedArray;
 	let itemSize;
 	let normalized;
+	let gpuType = - 1;
 	let arrayLength = 0;
 
 	for ( let i = 0; i < attributes.length; ++ i ) {
@@ -12804,7 +13668,7 @@ function mergeBufferAttributes( attributes ) {
 
 		if ( attribute.isInterleavedBufferAttribute ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferAttributes() failed. InterleavedBufferAttributes are not supported.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeAttributes() failed. InterleavedBufferAttributes are not supported.' );
 			return null;
 
 		}
@@ -12812,7 +13676,7 @@ function mergeBufferAttributes( attributes ) {
 		if ( TypedArray === undefined ) TypedArray = attribute.array.constructor;
 		if ( TypedArray !== attribute.array.constructor ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferAttributes() failed. BufferAttribute.array must be of consistent array types across matching attributes.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.array must be of consistent array types across matching attributes.' );
 			return null;
 
 		}
@@ -12820,7 +13684,7 @@ function mergeBufferAttributes( attributes ) {
 		if ( itemSize === undefined ) itemSize = attribute.itemSize;
 		if ( itemSize !== attribute.itemSize ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferAttributes() failed. BufferAttribute.itemSize must be consistent across matching attributes.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.itemSize must be consistent across matching attributes.' );
 			return null;
 
 		}
@@ -12828,7 +13692,15 @@ function mergeBufferAttributes( attributes ) {
 		if ( normalized === undefined ) normalized = attribute.normalized;
 		if ( normalized !== attribute.normalized ) {
 
-			console.error( 'THREE.BufferGeometryUtils: .mergeBufferAttributes() failed. BufferAttribute.normalized must be consistent across matching attributes.' );
+			console.error( 'THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.normalized must be consistent across matching attributes.' );
+			return null;
+
+		}
+
+		if ( gpuType === - 1 ) gpuType = attribute.gpuType;
+		if ( gpuType !== attribute.gpuType ) {
+
+			console.error( 'THREE.BufferGeometryUtils: .mergeAttributes() failed. BufferAttribute.gpuType must be consistent across matching attributes.' );
 			return null;
 
 		}
@@ -12848,7 +13720,36 @@ function mergeBufferAttributes( attributes ) {
 
 	}
 
-	return new external_three_namespaceObject.BufferAttribute( array, itemSize, normalized );
+	const result = new external_three_namespaceObject.BufferAttribute( array, itemSize, normalized );
+	if ( gpuType !== undefined ) {
+
+		result.gpuType = gpuType;
+
+	}
+
+	return result;
+
+}
+
+/**
+ * @param {BufferAttribute}
+ * @return {BufferAttribute}
+ */
+function deepCloneAttribute( attribute ) {
+
+	if ( attribute.isInstancedInterleavedBufferAttribute || attribute.isInterleavedBufferAttribute ) {
+
+		return deinterleaveAttribute( attribute );
+
+	}
+
+	if ( attribute.isInstancedBufferAttribute ) {
+
+		return new InstancedBufferAttribute().copy( attribute );
+
+	}
+
+	return new BufferAttribute().copy( attribute );
 
 }
 
@@ -13308,13 +14209,6 @@ function toTrianglesDrawMode( geometry, drawMode ) {
  */
 function computeMorphedAttributes( object ) {
 
-	if ( object.geometry.isBufferGeometry !== true ) {
-
-		console.error( 'THREE.BufferGeometryUtils: Geometry is not of type BufferGeometry.' );
-		return null;
-
-	}
-
 	const _vA = new Vector3();
 	const _vB = new Vector3();
 	const _vC = new Vector3();
@@ -13385,9 +14279,9 @@ function computeMorphedAttributes( object ) {
 
 		if ( object.isSkinnedMesh ) {
 
-			object.boneTransform( a, _vA );
-			object.boneTransform( b, _vB );
-			object.boneTransform( c, _vC );
+			object.applyBoneTransform( a, _vA );
+			object.applyBoneTransform( b, _vB );
+			object.applyBoneTransform( c, _vC );
 
 		}
 
@@ -13690,13 +14584,134 @@ function mergeGroups( geometry ) {
 }
 
 
+// Creates a new, non-indexed geometry with smooth normals everywhere except faces that meet at
+// an angle greater than the crease angle.
+function toCreasedNormals( geometry, creaseAngle = Math.PI / 3 /* 60 degrees */ ) {
+
+	const creaseDot = Math.cos( creaseAngle );
+	const hashMultiplier = ( 1 + 1e-10 ) * 1e2;
+
+	// reusable vertors
+	const verts = [ new Vector3(), new Vector3(), new Vector3() ];
+	const tempVec1 = new Vector3();
+	const tempVec2 = new Vector3();
+	const tempNorm = new Vector3();
+	const tempNorm2 = new Vector3();
+
+	// hashes a vector
+	function hashVertex( v ) {
+
+		const x = ~ ~ ( v.x * hashMultiplier );
+		const y = ~ ~ ( v.y * hashMultiplier );
+		const z = ~ ~ ( v.z * hashMultiplier );
+		return `${x},${y},${z}`;
+
+	}
+
+	const resultGeometry = geometry.toNonIndexed();
+	const posAttr = resultGeometry.attributes.position;
+	const vertexMap = {};
+
+	// find all the normals shared by commonly located vertices
+	for ( let i = 0, l = posAttr.count / 3; i < l; i ++ ) {
+
+		const i3 = 3 * i;
+		const a = verts[ 0 ].fromBufferAttribute( posAttr, i3 + 0 );
+		const b = verts[ 1 ].fromBufferAttribute( posAttr, i3 + 1 );
+		const c = verts[ 2 ].fromBufferAttribute( posAttr, i3 + 2 );
+
+		tempVec1.subVectors( c, b );
+		tempVec2.subVectors( a, b );
+
+		// add the normal to the map for all vertices
+		const normal = new Vector3().crossVectors( tempVec1, tempVec2 ).normalize();
+		for ( let n = 0; n < 3; n ++ ) {
+
+			const vert = verts[ n ];
+			const hash = hashVertex( vert );
+			if ( ! ( hash in vertexMap ) ) {
+
+				vertexMap[ hash ] = [];
+
+			}
+
+			vertexMap[ hash ].push( normal );
+
+		}
+
+	}
+
+	// average normals from all vertices that share a common location if they are within the
+	// provided crease threshold
+	const normalArray = new Float32Array( posAttr.count * 3 );
+	const normAttr = new BufferAttribute( normalArray, 3, false );
+	for ( let i = 0, l = posAttr.count / 3; i < l; i ++ ) {
+
+		// get the face normal for this vertex
+		const i3 = 3 * i;
+		const a = verts[ 0 ].fromBufferAttribute( posAttr, i3 + 0 );
+		const b = verts[ 1 ].fromBufferAttribute( posAttr, i3 + 1 );
+		const c = verts[ 2 ].fromBufferAttribute( posAttr, i3 + 2 );
+
+		tempVec1.subVectors( c, b );
+		tempVec2.subVectors( a, b );
+
+		tempNorm.crossVectors( tempVec1, tempVec2 ).normalize();
+
+		// average all normals that meet the threshold and set the normal value
+		for ( let n = 0; n < 3; n ++ ) {
+
+			const vert = verts[ n ];
+			const hash = hashVertex( vert );
+			const otherNormals = vertexMap[ hash ];
+			tempNorm2.set( 0, 0, 0 );
+
+			for ( let k = 0, lk = otherNormals.length; k < lk; k ++ ) {
+
+				const otherNorm = otherNormals[ k ];
+				if ( tempNorm.dot( otherNorm ) > creaseDot ) {
+
+					tempNorm2.add( otherNorm );
+
+				}
+
+			}
+
+			tempNorm2.normalize();
+			normAttr.setXYZ( i3 + n, tempNorm2.x, tempNorm2.y, tempNorm2.z );
+
+		}
+
+	}
+
+	resultGeometry.setAttribute( 'normal', normAttr );
+	return resultGeometry;
+
+}
+
+function mergeBufferGeometries( geometries, useGroups = false ) {
+
+	console.warn( 'THREE.BufferGeometryUtils: mergeBufferGeometries() has been renamed to mergeGeometries().' ); // @deprecated, r151
+	return mergeGeometries( geometries, useGroups );
+
+}
+
+function mergeBufferAttributes( attributes ) {
+
+	console.warn( 'THREE.BufferGeometryUtils: mergeBufferAttributes() has been renamed to mergeAttributes().' ); // @deprecated, r151
+	return mergeAttributes( attributes );
+
+}
+
+
 
 ;// CONCATENATED MODULE: ./src/core/properties/rendering/RendererPropertyInline.js
 
 
 
 
-class RendererPropertyInline extends BaseProperty{
+
+class RendererPropertyInline extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -13707,25 +14722,243 @@ class RendererPropertyInline extends BaseProperty{
 
 	render( element ) {
 
-		if( !element._inlines._value || !element._inlines._value.length ) return;
+		if ( !element._inlines._value || !element._inlines._value.length ) return;
 
-			const charactersAsGeometries = element._inlines._value.map(
-				inline => {
-					return element._font._fontVariant.getGeometricGlyph( inline, element )
-						.translate( inline.offsetX, inline.offsetY, 0 )
+		console.log("nonon")
+
+		// convert all inlines (glyphs) to geometries
+		const charactersAsGeometries = element._inlines._value.map(
+			inline => {
+				return element._font._fontVariant.getGeometricGlyph( inline, element )
+					.translate( inline.offsetX, inline.offsetY, 0 );
+			}
+		);
+
+
+		const fontMesh = element._inlineMerge.apply( charactersAsGeometries, element);
+		element.setFontMesh( fontMesh );
+
+		// @TODO : this won't apply
+		if( fontMesh.isInlineMesh ) {
+			fontMesh.renderOrder = Infinity;
+		}
+		else
+		{
+			for (let i = 0; i < fontMesh.length; i++) {
+				const fontMesh1 = fontMesh[i];
+				fontMesh1.renderOrder = Infinity;
+			}
+		}
+
+
+		const FONTSIZE = element._fontSize._value;
+		const SCALE_MULT = FONTSIZE / element._font._fontVariant.typographic.size;
+		const LINE_HEIGHT = element._font._fontVariant.typographic.lineHeight * SCALE_MULT;
+		const LINEBASE = element._font._fontVariant.typographic.lineBase * SCALE_MULT;
+
+		const DELTA = LINE_HEIGHT - LINEBASE;
+
+
+		// Starts to have a bit too much responsibilities here
+		if ( element._verticalAlign._value === 'super' ) {
+			element.position.y = LINEBASE * 1.5;
+		}else if(element._verticalAlign._value === 'sub'){
+			element.position.y = -LINEBASE * 0.6;
+		}
+
+		// Background --------------------------------------------------------------
+
+		const inlines = element._inlines._value;
+		const lines = [0];
+		let lastLineIndex = inlines[0].lineIndex;
+
+		for ( let i = 1; i < inlines.length; i++ ) {
+
+			if( inlines[i].lineIndex === lastLineIndex ) continue;
+
+			lines.push( i-1 );
+			lines.push( i );
+
+			lastLineIndex = inlines[i].lineIndex;
+
+		}
+
+		// @TODO : Would be great to have a bit more informations here...
+		// be sure lines are even startInline and endInline
+		if( lines.length % 2 === 1 ) lines.push( inlines.length-1 );
+
+
+		if( !element._backgroundNone ) {
+
+			const bgs = [];
+			for ( let i = 0; i < lines.length -1 ; i+=2 ) {
+
+
+				const firstInlineOfLine = inlines[lines[i]];
+				const lastInlineOfLine = inlines[lines[i+1]];
+
+
+
+				const line = firstInlineOfLine.line;
+
+				const right = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth + lastInlineOfLine._paddingRight;
+				const left = firstInlineOfLine._offsetX - firstInlineOfLine._paddingLeft;
+
+				const width = right - left;
+				const height = LINE_HEIGHT;
+
+				const posX = left;
+				let posY = lastInlineOfLine.line.y;
+
+				// Check for differences
+				if( height < line.lineHeight ){
+					posY -= (line.lineHeight - firstInlineOfLine.lineHeight)/4;
 				}
-			);
 
-			const mergedGeom = mergeBufferGeometries( charactersAsGeometries );
+				const bgGeo = new external_three_namespaceObject.PlaneGeometry( width, height ).translate( posX + width/2, posY - lastInlineOfLine.line.lineHeight /2, 0);
+				const uvA = bgGeo.getAttribute('uv').array;
+				const uvB = new external_three_namespaceObject.BufferAttribute( new Float32Array( uvA ), 2);
+				bgGeo.setAttribute('uvB', uvB ).name = 'uvB';
 
-			element.setFontMesh( new external_three_namespaceObject.Mesh( mergedGeom, element.fontMaterial) );
+				const unitScales = uvA.map( (u,i) => i%2 ? height : width );
+				bgGeo.setAttribute('unitScale', new external_three_namespaceObject.BufferAttribute( new Float32Array( unitScales ), 2) );
 
-			element._fontMesh.renderOrder = Infinity;
+				bgGeo._scale = new external_three_namespaceObject.Vector3(width,height,1);
+				bgs.push( bgGeo );
+
+			}
+
+			if ( bgs.length ) {
+
+				const mergedVg = mergeGeometries( bgs );
+
+				element.backgroundMaterial = new FrameMaterial();
+				element.backgroundMaterial.defines.MULTIPLE_FRAMES = 1;
+
+				const mesh= new external_three_namespaceObject.Mesh( mergedVg, element.backgroundMaterial )
+				element.setBackgroundMesh( mesh );
+
+				mesh.position.z = - element._offset._notInheritedValue / 2;
+
+			}
+		}
 
 
+
+		// Text Decoration ---------------------------------------------------------
+
+		if( element._textDecoration._value !== 'none') {
+
+			const decos = [];
+			const decorations = element._textDecoration._value.split(" ");
+			for ( let i = 0; i < decorations.length; i++ ) {
+				const decoration = decorations[ i ];
+
+				for ( let j = 0; j < lines.length - 1; j += 2 ) {
+
+
+					const firstInlineOfLine = inlines[ lines[ j ] ];
+					const lastInlineOfLine = inlines[ lines[ j + 1 ] ];
+
+					const decoHeight = FONTSIZE / 10;
+
+					let to = lastInlineOfLine.offsetX + lastInlineOfLine.cumulativeWidth;
+					let from = firstInlineOfLine._offsetX;
+
+					let posY;
+					if ( decoration === 'underline' ){
+
+						posY = lastInlineOfLine.line.y - LINE_HEIGHT + ( DELTA / 2 ) - decoHeight/2;
+
+						// check all for under
+						for ( let k = lines[j]; k <= lines[j+1]; k++ ){
+
+							const inl = inlines[k];
+
+							if( inl.offsetY - inl.height <= posY ){
+
+								if( inlines[k] === firstInlineOfLine ) {
+									from = inlines[k].offsetX + inlines[k].underlineFrom;
+									continue;
+								}
+
+								to = inlines[k].offsetX + inlines[k].underlineTo;
+								decos.push( _buildDecorationSegment(from,to,decoHeight, posY))
+								from = inlines[k].offsetX + inlines[k].underlineFrom;
+
+								continue;
+							}
+
+							if( inlines[k] === lastInlineOfLine ){
+								to = inlines[k].offsetX + inlines[k].underlineFrom;
+								decos.push( _buildDecorationSegment(from,to,decoHeight, posY))
+							}
+						}
+
+
+					} else if( decoration === 'overline' ) {
+
+						posY = lastInlineOfLine.line.y - decoHeight/2;
+
+						decos.push( _buildDecorationSegment(from,to,decoHeight, posY) )
+
+					} else if( decoration === 'line-through' ) {
+
+						// posY = firstInlineOfLine.line.y - LINE_HEIGHT/2 - decoHeight/2;
+						posY = firstInlineOfLine.line.y - LINE_HEIGHT/2  - ( DELTA / 2 );
+
+
+
+						decos.push( _buildDecorationSegment(from,to,decoHeight, posY) )
+
+					}
+
+
+				}
+
+			}
+
+
+			if ( decos.length ) {
+
+				const mergedVg = mergeGeometries( decos );
+				const mesh = new external_three_namespaceObject.Mesh( mergedVg, element.fontMaterial );
+
+				mesh.position.z = +element._offset._notInheritedValue / 4;
+
+				if ( element._decoMesh ) {
+					element.remove( element._decoMesh );
+				}
+
+				element._decoMesh = mesh;
+				element.add( mesh );
+
+			}
+
+		}
 
 	}
 
+}
+
+
+function _buildDecorationSegment(from, to, height, y ){
+
+	const width = to - from;
+
+	const posX = from;
+
+	const bgGeo = new external_three_namespaceObject.PlaneGeometry( width, height );
+
+	// AlphaGlyph Attribute - Defines if the geometry is glyph or decoration
+	const length = bgGeo.getAttribute('uv').array.length;
+	const vertexAlphaGlyph = [];
+	for ( let i = 0; i < length; i+=2 ) vertexAlphaGlyph[i/2] = 1.0;
+
+	bgGeo.setAttribute('alphaDecorationFactor', new external_three_namespaceObject.BufferAttribute(new Float32Array(vertexAlphaGlyph), 1));
+	bgGeo.translate( posX + width / 2, y, 0 );
+
+	return bgGeo;
 }
 
 ;// CONCATENATED MODULE: ./src/core/properties/style-properties/font/TextAlignPropertyInline.js
@@ -13776,18 +15009,357 @@ class VerticalAlignPropertyInline extends VerticalAlignProperty {
 
 		this._value = this._inheritedInput;
 
-		this._needsProcess = true;
-		element._layouter._needsProcess = true;
+		element._renderer._needsRender = true;
 
 	}
 
-	process( element ) {
+}
 
-		if( !element._inlines.value ) return;
+;// CONCATENATED MODULE: ./src/core/properties/BoundsInline.js
 
-		element._inlines.value.forEach( inline => {
-			inline.verticalAlign = this._value;
-		});
+
+
+class BoundsInlines extends BaseProperty_BaseProperty {
+
+	constructor() {
+
+		super();
+
+		/**
+		 *
+		 * @type {Vector3}
+		 * @internal
+		 */
+		this._size = new external_three_namespaceObject.Vector3( 1, 1, 1 );
+
+		/**
+		 *
+		 * @type {number}
+		 * @internal
+		 */
+		this._offsetWidth = 1;
+
+		/**
+		 *
+		 * @type {number}
+		 * @internal
+		 */
+		this._offsetHeight = 1;
+
+	}
+
+	update( element, out ) {
+
+		super.update( element, out );
+	}
+
+	/**
+	 *
+	 * @param {Object.<string,any>} out
+	 */
+	output( out ) {
+
+		out[ 'size' ] = this._size;
+
+	}
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/style-properties/font/TextDecorationPropertyInline.js
+
+
+
+class TextDecorationPropertyInline extends TextDecorationProperty {
+
+	constructor( defaultValue ) {
+
+		super( defaultValue );
+
+		// configure
+		this._allowsInherit = false;
+		this._needsUpdate = false;
+
+	}
+
+
+	/* eslint-disable no-unused-vars */ computeOutputValue( element ) { /* eslint-enable no-unused-vars */
+
+		this._value = this._inheritedInput;
+
+		if( this._value === 'none' ) {
+
+			if( element._decoMesh ) {
+
+				element.remove( element._decoMesh );
+				element._decoMesh = null;
+
+			}
+
+		} else {
+
+			element._renderer._needsRender = true;
+
+		}
+
+	}
+
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/geometry/InlineMergePropertyInline.js
+
+
+
+
+class InlineMergePropertyInline extends InlineMergeProperty {
+
+	constructor() {
+
+		super( 'inherit' );
+
+		this._value = 'inherit';
+		this._notInheritedValue = undefined;
+
+		/**
+		 *
+		 * @return Mesh|Mesh[]
+		 */
+		this.apply = applyMergeAll;
+
+	}
+
+
+	/* eslint-disable no-unused-vars */
+	update( element, out ) { 	/* eslint-enable no-unused-vars */
+
+		this._notInheritedValue = this._value;
+		if ( this._notInheritedValue === 'inherit' || this._notInheritedValue === undefined ) {
+
+			this._notInheritedValue = this.getInheritedInput( element );
+
+		}
+
+		switch (this._notInheritedValue) {
+
+			case 0:
+			case "all":
+				this.apply = applyMergeAll;
+				break;
+
+			case 1:
+			case "line":
+				this.apply = applyMergeLine;
+				break;
+
+			case 2:
+			case "none":
+				this.apply = applyMergeNone;
+				break
+		}
+
+		element._layouter._needsUpdate = true;
+
+	}
+
+	/**
+	 *
+	 * @param {number|"inherit"} v
+	 */
+	set value( v ) {
+
+
+		if ( this._value === v ) return;
+
+		this._value = v;
+		this._needsUpdate = true;
+	}
+
+	/**
+	 *
+	 * @override
+	 * @return {number}
+	 */
+	get value() {
+
+		if ( this._value === 'inherit' ) return this._notInheritedValue;
+
+		return this._value;
+
+	}
+
+}
+
+
+function applyMergeAll( geometries, element ){
+	const mesh = new external_three_namespaceObject.Mesh( mergeGeometries( geometries ), element.fontMaterial );
+	mesh.isInlineMesh = true;
+	return mesh;
+}
+
+/**
+ *
+ * @param geometries
+ * @param element
+ * @return {Mesh<*,*>|Mesh<*, *>[]}
+ */
+function applyMergeLine( geometries, element ){
+	const lines = [];
+	const linesInfo = [];
+	const inlines = element._inlines._value;
+    const pivot = element._mergePivot.value;
+    const pivotRef = element._pivotReference.value;
+
+	for ( let i = 0; i < inlines.length; i++ ) {
+
+		const inline = inlines[i];
+		const lineIndex = inline.lineIndex;
+		if( !lines[lineIndex] ) {
+			lines[lineIndex] = [];
+			linesInfo[lineIndex] = inline.line;
+		}
+
+		let tx = 0;
+		let ty = -linesInfo[lineIndex].y + inlines[lineIndex].lineBase / 2;
+
+        if( pivotRef === 'self'){
+            // apply pivot 'self'
+            tx += pivot.x * linesInfo[lineIndex].width;
+            ty += pivot.y * linesInfo[lineIndex].lineBase;
+        }else{
+            tx += pivot.x * linesInfo[lineIndex].width;
+            ty += pivot.y * linesInfo[lineIndex].lineBase;
+        }
+
+
+		lines[lineIndex].push( geometries[i].translate( tx, ty, 0 ) );
+
+	}
+
+
+	return lines.map( (geometries, lineIndex) => {
+		const mesh = new external_three_namespaceObject.Mesh( mergeGeometries(geometries), element.fontMaterial );
+		mesh.isInlineMesh = true;
+
+        let px = 0;
+        let py = linesInfo[lineIndex].y - inlines[lineIndex].lineBase / 2;
+
+        if( pivotRef === 'self'){
+            // apply pivot 'self'
+            px -= pivot.x * linesInfo[lineIndex].width;
+            py -= pivot.y * linesInfo[lineIndex].lineBase;
+        }else{
+            px -= pivot.x * linesInfo[lineIndex].width;
+            py -= pivot.y * linesInfo[lineIndex].lineBase;
+        }
+
+		console.log(px,py)
+		mesh.position.x = px;
+		mesh.position.y = py;
+
+
+
+
+		return mesh;
+	});
+}
+
+function applyMergeNone( geometries, element ){
+	const inlines = element._inlines._value;
+	console.log(element._mergePivot);
+	const pivot = element._mergePivot.value;
+	const pivotRef = element._pivotReference.value;
+
+	return geometries.map( (geometry, index) => {
+
+		// set on center of glyph
+		let tx = -inlines[index].offsetX - inlines[index].width/2;
+		let ty = -inlines[index].offsetY + inlines[index].height/2;
+
+		if( pivotRef === 'self'){
+			// apply pivot 'self'
+			tx += pivot.x * inlines[index].width;
+			ty += pivot.y * inlines[index].height;
+		}else{
+			tx += pivot.x * inlines[index].width;
+			ty += pivot.y * inlines[index].height;
+		}
+
+		geometry.translate(tx, ty ,0 )
+
+		const mesh = new external_three_namespaceObject.Mesh( geometry, element.fontMaterial)
+		mesh.isInlineMesh = true;
+
+		let px = inlines[index].offsetX + inlines[index].width/2;
+		let py = inlines[index].offsetY - inlines[index].height/2;
+
+		if( pivotRef === 'self'){
+			px -= inlines[index].width * pivot.x;
+			py -= inlines[index].height * pivot.y;
+		}else{
+			px -= inlines[index].width * pivot.x;
+			py -= inlines[index].height * pivot.y;
+		}
+
+		mesh.position.x = px;
+		mesh.position.y = py;
+
+		return mesh;
+	} )
+}
+
+;// CONCATENATED MODULE: ./src/core/properties/geometry/MergePivotPropertyInline.js
+
+
+
+
+
+const MergePivotPropertyInline_defaultValue = new external_three_namespaceObject.Vector2(0.5,0.5);
+
+class MergePivotInline extends MergePivotProperty {
+
+	constructor( ) {
+
+		super( 'inherit' );
+
+		this._value = 'inherit'
+
+	}
+
+	/* eslint-disable no-unused-vars */
+	update( element, out ) { 	/* eslint-enable no-unused-vars */
+
+		this._notInheritedValue = this._value;
+
+		if ( this._notInheritedValue === 'inherit' ) {
+
+			this._notInheritedValue = this.getInheritedInput( element );
+
+		}
+
+	}
+
+	/**
+	 *
+	 * @param {number|"inherit"} v
+	 */
+	set value( v ) {
+
+
+		if ( this._value === v ) return;
+
+		this._value = v;
+		this._needsUpdate = true;
+	}
+
+	/**
+	 *
+	 * @override
+	 * @return {number}
+	 */
+	get value() {
+
+		if ( this._value === 'inherit' ) return this._notInheritedValue;
+
+		return this._value;
 
 	}
 
@@ -13819,6 +15391,11 @@ class VerticalAlignPropertyInline extends VerticalAlignProperty {
 /* eslint-disable no-unused-vars */
 
 
+
+
+
+
+
 /* eslint-enable no-unused-vars */
 
 class InlineElement extends MeshUIBaseElement {
@@ -13826,10 +15403,10 @@ class InlineElement extends MeshUIBaseElement {
 	/**
 	 *
 	 * @param {import('./../../core/elements/MeshUIBaseElement').Options} [values={}]
+	 * @param {object} [properties={}]
 	 */
-	constructor( values = { }) {
+	constructor( values = { }, properties = {}) {
 
-		const properties = {};
 		InlineElement.definePropertiesValues( properties, values );
 
 		super( properties, values );
@@ -13861,11 +15438,11 @@ class InlineElement extends MeshUIBaseElement {
 
 				validChildren.push( argument );
 
-				argument.position.z = 0.005;
+				// argument.position.z = 0.005;
 
 			} else {
 
-				console.warn( 'Block element can only contain Box elements.', argument );
+				console.warn( 'Inline element can only contain inline elements.', argument );
 
 			}
 
@@ -13908,11 +15485,12 @@ class InlineElement extends MeshUIBaseElement {
 	static definePropertiesValues( properties, values ) {  /* eslint-enable no-unused-vars */
 
 		if( !properties.children ) properties.children = ChildrenInline;
-		if( !properties.textContent ) properties.textContent = TextContentInline;
+		if( !properties.textContent ) properties.textContent = TextContentProperty;
 		if( !properties.glyphs ) properties.glyphs = GlyphsProperty;
 		if( !properties.inlines ) properties.inlines = InlinesProperty;
 		if( !properties.layouter ) properties.layouter = InlineLayouter;
 		if( !properties.renderer ) properties.renderer = RendererPropertyInline;
+		if( !properties.bounds ) properties.bounds = BoundsInlines;
 
 
 		if( !properties.fontFamily ) properties.fontFamily = FontFamilyPropertyInline;
@@ -13926,13 +15504,20 @@ class InlineElement extends MeshUIBaseElement {
 		if( !properties.whiteSpace ) properties.whiteSpace = WhiteSpacePropertyInline;
 		if( !properties.segments ) properties.segments = SegmentsPropertyInline;
 		if( !properties.textAlign ) properties.textAlign = TextAlignPropertyInline;
+		if( !properties.textDecoration ) properties.textDecoration = TextDecorationPropertyInline;
 		if( !properties.verticalAlign ) properties.verticalAlign = VerticalAlignPropertyInline;
 
 		if( !properties.fontKerning ) properties.fontKerning = FontKerningPropertyInline;
 
+		if( !properties.inlineMerge ) properties.inlineMerge = InlineMergePropertyInline;
+		if( !properties.mergePivot ) properties.mergePivot = MergePivotInline;
+		if( !properties.mergePivotReference ) properties.mergePivotReference = MergePivotReferenceProperty;
+
 		// if( !properties.inlines ) properties.inlines = InlinesProperty;
 
+
 		if( !values.uiType ) values.uiType = 'inline';
+
 
 	}
 
@@ -13951,14 +15536,21 @@ class InlineElement extends MeshUIBaseElement {
 			}
 		);
 
+		/**
+		 *
+		 * @type {boolean}
+		 * @internal
+		 */
+		element._backgroundNone = true;
+
 	}
 }
 
-;// CONCATENATED MODULE: ./src/core/properties/TextContentText.js
+;// CONCATENATED MODULE: ./src/core/properties/TextContentProperty.js
 
 
 
-class TextContentText extends TextContentEmpty{
+class TextContentProperty extends TextContentDefault{
 
 	constructor() {
 
@@ -13974,8 +15566,6 @@ class TextContentText extends TextContentEmpty{
 		if( this._value !== value ) {
 
 			this._value = value;
-
-			console.log( this._value );
 
 			this._needsUpdate = true;
 
@@ -14005,19 +15595,33 @@ class TextContentText extends TextContentEmpty{
 
 		// If a value, add a child
 		if( this._value ) {
-			element.add( new InlineElement({name:'anonymousInline',textContent:this._value}));
+
+			const childrenInlines = this.buildInlines( this._value );
+			if( childrenInlines.length ){
+
+				element.add( ...childrenInlines );
+
+			}
+
 		}
 
+		if( element.isInline ) {
+
+			element._glyphs._needsUpdate = true;
+			element._whiteSpace._needsProcess = true;
+
+		}
 
 	}
 
-	process( element ) {
+	/**
+	 *
+	 * @param {string} textContent
+	 * @return {InlineElement[]}
+	 */
+	buildInlines( textContent ) {
 
-		// If not already updated, return raw values
-		if( this._needsUpdate ) return this._value;
-
-		// or default traverse all children to concat textContent
-		return super.process(element);
+		return [ new InlineElement({name:'anonymousInline',textContent}) ];
 
 	}
 
@@ -14062,7 +15666,7 @@ class Lines extends Array {
 
 
 
-class TextLayouter extends BaseProperty {
+class TextLayouter extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -14140,7 +15744,7 @@ class TextLayouter extends BaseProperty {
 			const inlineWrapper = inlineElement._whiteSpace._inlineWrapper;
 
 			// @TODO : absolute inlines in Texts
-			var remember = lastInlineOffset;
+			const remember = lastInlineOffset;
 			if( POSITION === 'absolute' ){
 					lastInlineOffset = 0;
 			}
@@ -14213,7 +15817,7 @@ class TextLayouter extends BaseProperty {
 		let width = 0, height =0, lineOffsetY = 0;
 
 		// calculates lines
-		lines.forEach( ( line, i ) => {
+		lines.forEach( ( line, lineIndex ) => {
 
 			// starts by processing whitespace, it will return a collapsed left offset
 			const whiteSpaceOffset = inlineCollapser( line );
@@ -14221,25 +15825,35 @@ class TextLayouter extends BaseProperty {
 			//
 			let lineHeight = 0;
 			let lineBase = 0;
+			let xHeight = 0;
+			let capHeight = 0;
 
 			line.forEach( ( inline ) => {
 
 				lineHeight = Math.max( lineHeight, inline.lineHeight );
 				lineBase = Math.max( lineBase, inline.lineBase );
+				xHeight = Math.max( xHeight, inline.xHeight );
+				capHeight = Math.max( capHeight, inline.capHeight );
 
 				inline.offsetX -= whiteSpaceOffset;
+
+				// set line index
+				inline.lineIndex = lineIndex;
+				inline.line = line;
 
 			});
 
 			line.lineHeight = lineHeight;
 			line.lineBase = lineBase;
+			line.xHeight = xHeight;
+			line.capHeight = capHeight;
 
-			const baseLineDelta = lineHeight - lineBase;
+			// const baseLineDelta = lineHeight - lineBase;
 
-			if( i === 0 ){
+			if( lineIndex === 0 ){
 				lineOffsetY = -(lineHeight*INTERLINE - lineHeight) * 0.5;
 			} else {
-				lineOffsetY -= lines[i-1].lineHeight*INTERLINE;
+				lineOffsetY -= lines[lineIndex-1].lineHeight*INTERLINE;
 			}
 
 			line.y = lineOffsetY;
@@ -14250,19 +15864,18 @@ class TextLayouter extends BaseProperty {
 
 				inline.offsetY = lineOffsetY - inline.anchor;
 
-				// VERTICAL ALIGN
+				// // VERTICAL ALIGN @TODO: Move it in property logic
 				if( inline.lineHeight < line.lineHeight ){
-
-					if ( inline.verticalAlign === 'super' ) {
-						inline.offsetY += inline.lineBase / 5;
-					}else if( inline.verticalAlign === 'sub'){
-						inline.offsetY -= line.lineBase * 1.2 - inline.lineBase;
-					}else{
-						// Baseline
+				//
+				// 	if ( inline.verticalAlign === 'super' ) {
+				// 		inline.offsetY += inline.lineBase / 5;
+				// 	}else if( inline.verticalAlign === 'sub'){
+				// 		inline.offsetY -= line.lineBase * 1.2 - inline.lineBase;
+				// 	}else{
+				// 		// Baseline
 							inline.offsetY -= line.lineBase- inline.lineBase;
-					}
-
-
+				// 	}
+				//
 				}
 
 			});
@@ -14282,7 +15895,8 @@ class TextLayouter extends BaseProperty {
 				const lastInline = line[ line.length - 1 ];
 
 				// Right + Left ( left is negative )
-				line.width = ( lastInline.offsetX + lastInline.cumulativeWidth + lastInline.paddingRight + lastInline.marginRight ) + line[ 0 ].offsetX;
+				// line.width = ( lastInline.offsetX + lastInline.cumulativeWidth + lastInline.paddingRight + lastInline.marginRight ) + line[ 0 ].offsetX;
+				line.width = ( lastInline.offsetX + lastInline.cumulativeWidth ) + line[ 0 ].offsetX;
 
 				width = Math.max( width, line.width);
 			}
@@ -14388,7 +16002,7 @@ function _process( element ) {
 		const border = element._borderWidth._value;
 
 		// compute the alignment offset of the line
-		const offsetX = _computeLineOffset( element, line, i === lines.length - 1 , padding);
+		const offsetX = _computeLineOffset( element, line, i === lines.length - 1);
 
 
 
@@ -14472,19 +16086,23 @@ function _process( element ) {
 
 }
 
-function _computeLineOffset ( element, line, lastLine, padding ) {
+function _computeLineOffset ( element, line, lastLine ) {
 
 	switch ( element._textAlign._value ) {
 
 		case 'justify-left':
 		case 'justify':
 		case 'left':
-			return - element._bounds._innerWidth / 2 + padding.w;
+			return - element._bounds._innerWidth / 2;
 
 		case 'justify-right':
 		case 'right':
-			return -line.width + ( element._bounds._innerWidth / 2 ) - padding.y;
 
+			if( line.length ){
+				return -line.width + ( element._bounds._innerWidth / 2 ) + line[0]._paddingLeft - line[line.length-1]._paddingRight ;
+			}
+
+			return -line.width + ( element._bounds._innerWidth / 2 );
 
 		case 'center':
 			return -line.width / 2;
@@ -14498,7 +16116,7 @@ function _computeLineOffset ( element, line, lastLine, padding ) {
 			}
 
 			// left alignment
-			return - element._bounds._innerWidth / 2 + padding.w;
+			return - element._bounds._innerWidth / 2;
 
 		default:
 			console.warn( `textAlign: '${element._textAlign._value}' is not valid` );
@@ -14612,7 +16230,7 @@ class BoundsText extends BoundsBox {
 
 /* eslint-enable no-unused-vars */
 
-class ChildrenText extends BaseProperty {
+class ChildrenText extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -14667,7 +16285,7 @@ class ChildrenText extends BaseProperty {
 	 */
 	process( element ) {
 
-		this._compute( element );
+		// this._compute( element );
 
 		element._overflow._needsRender = true;
 
@@ -14721,7 +16339,7 @@ class ChildrenText extends BaseProperty {
 /**
  * Autosize are only trigger when natural size changed
  */
-class AutoSizePropertyText extends BaseProperty {
+class AutoSizePropertyText extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -14761,6 +16379,7 @@ class AutoSizePropertyText extends BaseProperty {
 ;// CONCATENATED MODULE: ./src/core/properties/rendering/RendererPropertyText.js
 
 
+
 class RendererPropertyText extends RendererPropertyBox{
 
 	constructor() {
@@ -14774,11 +16393,19 @@ class RendererPropertyText extends RendererPropertyBox{
 
 	render( element ) {
 
-		super.render( element );
+		console.log("Render text")
+
+		if( !element._backgroundMesh ) {
+
+			element.setBackgroundMesh( new Frame(element) );
+
+		}
 
 		for ( const inlineElement of element._children._inlines ) {
 
+			console.log( '---',inlineElement )
 			inlineElement._renderer.render( inlineElement );
+			inlineElement._renderer._needsRender = false;
 
 		}
 
@@ -14789,7 +16416,6 @@ class RendererPropertyText extends RendererPropertyBox{
 }
 
 ;// CONCATENATED MODULE: ./src/elements/basic/TextElement.js
-
 
 
 
@@ -14921,7 +16547,7 @@ class TextElement extends BoxElement {
 		properties.renderer = RendererPropertyText;
 
 		if( !properties.children ) properties.children = ChildrenText;
-		if( !properties.textContent ) properties.textContent = TextContentText;
+		if( !properties.textContent ) properties.textContent = TextContentProperty;
 		if( !properties.layouter ) properties.layouter = TextLayouter;
 		if( !properties.lineHeight ) properties.lineHeight = LineHeightPropertyInline;
 		if( !properties.textAlign ) properties.textAlign = TextAlignPropertyText;
@@ -14968,7 +16594,7 @@ class TextElement extends BoxElement {
 /**
  * @property {Array.<InlineGlyph>} value
  */
-class InlinesPropertyInlineBlock extends BaseProperty{
+class InlinesPropertyInlineBlock extends BaseProperty_BaseProperty{
 
 	constructor() {
 
@@ -15002,7 +16628,7 @@ class InlinesPropertyInlineBlock extends BaseProperty{
 
 
 
-class RendererPropertyInlineBox extends BaseProperty{
+class RendererPropertyInlineBox extends BaseProperty_BaseProperty{
 
 	constructor() {
 
@@ -15033,7 +16659,7 @@ class RendererPropertyInlineBox extends BaseProperty{
 
 
 
-class BoundsInlineBlock extends BaseProperty {
+class BoundsInlineBlock extends BaseProperty_BaseProperty {
 
 	constructor() {
 
@@ -15118,6 +16744,7 @@ class BackgroundColorPropertyInlineBlock extends StyleColorProperty {
 	computeOutputValue( element ) { /* eslint-enable no-unused-vars */
 
 		element._backgroundMesh.visible = !(this._input === 'none' || this._input === 'transparent');
+
 
 		if( this._input === 'inherit' ) {
 
@@ -15352,7 +16979,7 @@ class InlineBlockElement extends MeshUIBaseElement {
 
 				validChildren.push( argument );
 
-				argument.position.z = 0.005;
+				// argument.position.z = 0.005;
 
 			} else {
 
@@ -17505,6 +19132,7 @@ class StyleComputedPropertyWrapper {
 
 
 
+
 const update = () => UpdateManager.update();
 
 const ThreeMeshUI = {
@@ -17526,11 +19154,15 @@ const ThreeMeshUI = {
 	StyleComputedPropertyWrapper: StyleComputedPropertyWrapper,
 	ChildrenBox: ChildrenBox,
 	SubStyleProperty: SubStyleProperty,
-	UpdateManager: UpdateManager
+	UpdateManager: UpdateManager,
+	InheritableProperty: InheritableProperty,
+	TextContentProperty: TextContentProperty,
 };
 
 
 if ( typeof global !== 'undefined' ) global.ThreeMeshUI = ThreeMeshUI;
+
+
 
 
 
@@ -17584,9 +19216,10 @@ var __webpack_exports__StyleComputedPropertyWrapper = __webpack_exports__.Tr;
 var __webpack_exports__StylePropertyWrapper = __webpack_exports__.Gp;
 var __webpack_exports__SubStyleProperty = __webpack_exports__.hC;
 var __webpack_exports__Text = __webpack_exports__.xv;
+var __webpack_exports__TextContentProperty = __webpack_exports__.wE;
 var __webpack_exports__TypographicFont = __webpack_exports__.mx;
 var __webpack_exports__TypographicGlyph = __webpack_exports__.gE;
 var __webpack_exports__UpdateManager = __webpack_exports__.cT;
 var __webpack_exports__default = __webpack_exports__.ZP;
 var __webpack_exports__update = __webpack_exports__.Vx;
-export { __webpack_exports__BaseProperty as BaseProperty, __webpack_exports__Behavior as Behavior, __webpack_exports__Block as Block, __webpack_exports__Box as Box, __webpack_exports__ChildrenBox as ChildrenBox, __webpack_exports__DefaultValues as DefaultValues, __webpack_exports__FontLibrary as FontLibrary, __webpack_exports__FontVariant as FontVariant, __webpack_exports__InheritableProperty as InheritableProperty, __webpack_exports__Inline as Inline, __webpack_exports__InlineBlock as InlineBlock, __webpack_exports__InlineGlyph as InlineGlyph, __webpack_exports__MSDFFontMaterialUtils as MSDFFontMaterialUtils, __webpack_exports__MaterialTransformers as MaterialTransformers, __webpack_exports__MeshUIBaseElement as MeshUIBaseElement, __webpack_exports__ShaderChunkUI as ShaderChunkUI, __webpack_exports__StyleComputedPropertyWrapper as StyleComputedPropertyWrapper, __webpack_exports__StylePropertyWrapper as StylePropertyWrapper, __webpack_exports__SubStyleProperty as SubStyleProperty, __webpack_exports__Text as Text, __webpack_exports__TypographicFont as TypographicFont, __webpack_exports__TypographicGlyph as TypographicGlyph, __webpack_exports__UpdateManager as UpdateManager, __webpack_exports__default as default, __webpack_exports__update as update };
+export { __webpack_exports__BaseProperty as BaseProperty, __webpack_exports__Behavior as Behavior, __webpack_exports__Block as Block, __webpack_exports__Box as Box, __webpack_exports__ChildrenBox as ChildrenBox, __webpack_exports__DefaultValues as DefaultValues, __webpack_exports__FontLibrary as FontLibrary, __webpack_exports__FontVariant as FontVariant, __webpack_exports__InheritableProperty as InheritableProperty, __webpack_exports__Inline as Inline, __webpack_exports__InlineBlock as InlineBlock, __webpack_exports__InlineGlyph as InlineGlyph, __webpack_exports__MSDFFontMaterialUtils as MSDFFontMaterialUtils, __webpack_exports__MaterialTransformers as MaterialTransformers, __webpack_exports__MeshUIBaseElement as MeshUIBaseElement, __webpack_exports__ShaderChunkUI as ShaderChunkUI, __webpack_exports__StyleComputedPropertyWrapper as StyleComputedPropertyWrapper, __webpack_exports__StylePropertyWrapper as StylePropertyWrapper, __webpack_exports__SubStyleProperty as SubStyleProperty, __webpack_exports__Text as Text, __webpack_exports__TextContentProperty as TextContentProperty, __webpack_exports__TypographicFont as TypographicFont, __webpack_exports__TypographicGlyph as TypographicGlyph, __webpack_exports__UpdateManager as UpdateManager, __webpack_exports__default as default, __webpack_exports__update as update };

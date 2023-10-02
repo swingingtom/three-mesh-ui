@@ -75,6 +75,6 @@
     "webpack-dev-server": "^4.7.4"
   },
   "peerDependencies": {
-    "three": "^0.154.0"
+    "three": "^0.156.0"
   }
 }
