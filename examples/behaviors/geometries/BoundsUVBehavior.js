@@ -87,7 +87,12 @@ export default class BoundsUVBehavior extends Behavior {
 				const target = this._targets[ i ];
 				let subTargets = [];
 				if( target.isUI && target.isText ) {
-					subTargets = [...target._children._inlines.filter( ie => ie._fontMesh ).map( ie => ie._fontMesh)];
+					target.traverse( c => {
+						console.log( c );
+						if (c.isInlineMesh) {
+							subTargets.push( c );
+						}
+					} );
 				}else{
 					subTargets = [target];
 				}
@@ -99,6 +104,8 @@ export default class BoundsUVBehavior extends Behavior {
 						console.log( "subtarget aborted");
 						continue;
 					}
+
+					console.log(subTarget.geometry);
 
 					const positionAttribute = subTarget.geometry.getAttribute( 'position' );
 					const uvAttribute = subTarget.geometry.getAttribute( this._uvSet );
