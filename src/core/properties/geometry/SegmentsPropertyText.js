@@ -20,6 +20,10 @@ export default class SegmentsPropertyText extends SegmentsProperty {
 
 		}
 
+		// @TODO: Propagate to children
+		this.propagate( element );
+
+
 		element._layouter._needsUpdate = true;
 
 	}

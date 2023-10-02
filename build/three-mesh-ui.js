@@ -6879,7 +6879,7 @@ function _parseValue( v, element ){
 ;// CONCATENATED MODULE: ./src/core/properties/geometry/SegmentsProperty.js
 
 
-class SegmentsProperty extends BaseProperty_BaseProperty {
+class SegmentsProperty extends InheritableProperty {
 
 	constructor() {
 
@@ -13173,6 +13173,10 @@ class SegmentsPropertyText extends SegmentsProperty {
 			this._notInheritedValue = this.getInheritedInput( element );
 
 		}
+
+		// @TODO: Propagate to children
+		this.propagate( element );
+
 
 		element._layouter._needsUpdate = true;
 

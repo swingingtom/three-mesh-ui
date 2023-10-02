@@ -1,6 +1,6 @@
-import BaseProperty from '../BaseProperty';
+import InheritableProperty from "../InheritableProperty";
 
-export default class SegmentsProperty extends BaseProperty {
+export default class SegmentsProperty extends InheritableProperty {
 
 	constructor() {
 
