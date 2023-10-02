@@ -31,7 +31,16 @@ export default class RendererPropertyInline extends BaseProperty {
 		element.setFontMesh( fontMesh );
 
 		// @TODO : this won't apply
-		element._fontMesh.renderOrder = Infinity;
+		if( fontMesh.isInlineMesh ) {
+			fontMesh.renderOrder = Infinity;
+		}
+		else
+		{
+			for (let i = 0; i < fontMesh.length; i++) {
+				const fontMesh1 = fontMesh[i];
+				fontMesh1.renderOrder = Infinity;
+			}
+		}
 
 
 		const FONTSIZE = element._fontSize._value;
