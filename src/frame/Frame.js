@@ -106,6 +106,16 @@ export default class Frame extends Mesh {
 		const uvB = new BufferAttribute( new Float32Array( geometry.getAttribute('uv').array ), 2);
 		geometry.setAttribute('uvB', uvB ).name = 'uvB';
 
+		// ///* @TODO : Injecting vertex colors attributes - Gradients?
+		// const colors = new BufferAttribute( new Float32Array( geometry.getAttribute('position').array ), 3);
+		// for ( let i = 0; i < colors.count; i ++ ) {
+		//
+		// 	colors.setXYZ( i, Math.random(),Math.random(),Math.random() );
+		//
+		// }
+		// geometry.setAttribute('color', colors ).name = 'color';
+		// //*/
+
 		super( geometry, material );
 		this.name = 'UIBackgroundBox';
 

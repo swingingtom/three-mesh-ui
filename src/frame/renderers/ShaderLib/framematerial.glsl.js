@@ -14,6 +14,7 @@ varying vec2 vUv;
 
 ${frameBorderParsVertexGlsl}
 
+#include <color_pars_vertex>
 #include <fog_pars_vertex>
 #include <clipping_planes_pars_vertex>
 
@@ -22,6 +23,8 @@ void main() {
 	#ifdef USE_MAP
 	vUv = uv;
 	#endif
+
+	#include <color_vertex>
 
 	${frameBorderVertexGlsl}
 
@@ -56,6 +59,7 @@ uniform sampler2D map;
 
 ${frameBackgroundParsFragmentGlsl}
 
+#include <color_pars_fragment>
 #include <fog_pars_fragment>
 #include <clipping_planes_pars_fragment>
 
@@ -63,10 +67,13 @@ void main() {
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
+
 	// map
 	${frameBackgroundFragmentGlsl}
 
 	${frameBorderFragmentGlsl}
+
+	#include <color_fragment>
 
 	#ifdef USE_ALPHATEST
 

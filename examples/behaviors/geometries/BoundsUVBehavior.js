@@ -88,7 +88,6 @@ export default class BoundsUVBehavior extends Behavior {
 				let subTargets = [];
 				if( target.isUI && target.isText ) {
 					target.traverse( c => {
-						console.log( c );
 						if (c.isInlineMesh) {
 							subTargets.push( c );
 						}
@@ -101,11 +100,8 @@ export default class BoundsUVBehavior extends Behavior {
 					const subTarget = subTargets[ j ];
 
 					if ( subTarget.type !== 'Mesh' ) {
-						console.log( "subtarget aborted");
 						continue;
 					}
-
-					console.log(subTarget.geometry);
 
 					const positionAttribute = subTarget.geometry.getAttribute( 'position' );
 					const uvAttribute = subTarget.geometry.getAttribute( this._uvSet );

@@ -1,4 +1,4 @@
-import { BufferAttribute, PlaneGeometry } from 'three';
+import {BufferAttribute, Matrix4, PlaneGeometry} from 'three';
 
 //JSDoc related imports
 /* eslint-disable no-unused-vars */
@@ -47,6 +47,14 @@ export default class MSDFGeometricGlyph extends PlaneGeometry {
 
 		}
 
+
+		/* @TODO : Faux italic can be like this
+
+		const matrix = new Matrix4();
+		matrix.makeShear(0, 0, 0.1, 0, 0, 0);
+		this.applyMatrix4(matrix);
+
+		*/
 
 		// AlphaGlyph Attribute - Defines if the geometry is glyph or decoration
 		const length = this.getAttribute('uv').array.length;

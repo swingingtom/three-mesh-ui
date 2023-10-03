@@ -16,8 +16,6 @@ export default class RendererPropertyInline extends BaseProperty {
 
 		if ( !element._inlines._value || !element._inlines._value.length ) return;
 
-		console.log("nonon")
-
 		// convert all inlines (glyphs) to geometries
 		const charactersAsGeometries = element._inlines._value.map(
 			inline => {

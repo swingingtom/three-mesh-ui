@@ -14,8 +14,6 @@ export default class RendererPropertyText extends RendererPropertyBox{
 
 	render( element ) {
 
-		console.log("Render text")
-
 		if( !element._backgroundMesh ) {
 
 			element.setBackgroundMesh( new Frame(element) );
@@ -24,7 +22,6 @@ export default class RendererPropertyText extends RendererPropertyBox{
 
 		for ( const inlineElement of element._children._inlines ) {
 
-			console.log( '---',inlineElement )
 			inlineElement._renderer.render( inlineElement );
 			inlineElement._renderer._needsRender = false;
 

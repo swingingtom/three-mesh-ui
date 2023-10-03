@@ -5080,6 +5080,14 @@ class MSDFGeometricGlyph extends external_three_namespaceObject.PlaneGeometry {
 		}
 
 
+		/* @TODO : Faux italic can be like this
+
+		const matrix = new Matrix4();
+		matrix.makeShear(0, 0, 0.1, 0, 0, 0);
+		this.applyMatrix4(matrix);
+
+		*/
+
 		// AlphaGlyph Attribute - Defines if the geometry is glyph or decoration
 		const length = this.getAttribute('uv').array.length;
 		const vertexAlphaDecoration = [];
@@ -7515,6 +7523,7 @@ varying vec2 vUv;
 
 ${frame_border_pars_vertex_glsl}
 
+#include <color_pars_vertex>
 #include <fog_pars_vertex>
 #include <clipping_planes_pars_vertex>
 
@@ -7523,6 +7532,8 @@ void main() {
 	#ifdef USE_MAP
 	vUv = uv;
 	#endif
+
+	#include <color_vertex>
 
 	${frame_border_vertex_glsl}
 
@@ -7557,6 +7568,7 @@ uniform sampler2D map;
 
 ${frame_background_pars_fragment_glsl}
 
+#include <color_pars_fragment>
 #include <fog_pars_fragment>
 #include <clipping_planes_pars_fragment>
 
@@ -7564,10 +7576,13 @@ void main() {
 
 	vec4 diffuseColor = vec4( diffuse, opacity );
 
+
 	// map
 	${frame_background_fragment_glsl}
 
 	${frame_border_fragment_glsl}
+
+	#include <color_fragment>
 
 	#ifdef USE_ALPHATEST
 
@@ -11390,6 +11405,16 @@ class Frame extends external_three_namespaceObject.Mesh {
 		const uvB = new external_three_namespaceObject.BufferAttribute( new Float32Array( geometry.getAttribute('uv').array ), 2);
 		geometry.setAttribute('uvB', uvB ).name = 'uvB';
 
+		// ///* @TODO : Injecting vertex colors attributes - Gradients?
+		// const colors = new BufferAttribute( new Float32Array( geometry.getAttribute('position').array ), 3);
+		// for ( let i = 0; i < colors.count; i ++ ) {
+		//
+		// 	colors.setXYZ( i, Math.random(),Math.random(),Math.random() );
+		//
+		// }
+		// geometry.setAttribute('color', colors ).name = 'color';
+		// //*/
+
 		super( geometry, material );
 		this.name = 'UIBackgroundBox';
 
@@ -14735,8 +14760,6 @@ class RendererPropertyInline extends BaseProperty_BaseProperty {
 
 		if ( !element._inlines._value || !element._inlines._value.length ) return;
 
-		console.log("nonon")
-
 		// convert all inlines (glyphs) to geometries
 		const charactersAsGeometries = element._inlines._value.map(
 			inline => {
@@ -16404,8 +16427,6 @@ class RendererPropertyText extends RendererPropertyBox{
 
 	render( element ) {
 
-		console.log("Render text")
-
 		if( !element._backgroundMesh ) {
 
 			element.setBackgroundMesh( new Frame(element) );
@@ -16414,7 +16435,6 @@ class RendererPropertyText extends RendererPropertyBox{
 
 		for ( const inlineElement of element._children._inlines ) {
 
-			console.log( '---',inlineElement )
 			inlineElement._renderer.render( inlineElement );
 			inlineElement._renderer._needsRender = false;
 
